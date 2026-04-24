@@ -8,11 +8,7 @@
       <div class="login-left__glow login-left__glow--3"></div>
 
       <div class="login-left__logo">
-        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-          <rect width="28" height="28" rx="8" fill="rgba(255,255,255,0.15)"/>
-          <path d="M7 14h14M7 9h14M7 19h9" stroke="white" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-        <span>Budge</span>
+        <img src="/logobudge.svg" class="login-left__logo-img" alt="Budge" />
       </div>
 
       <div class="login-left__content">
@@ -26,10 +22,7 @@
       <div class="login-card">
         <div class="login-card__head">
           <div class="login-card__icon">
-            <svg width="24" height="24" viewBox="0 0 28 28" fill="none">
-              <rect width="28" height="28" rx="8" fill="#18181B"/>
-              <path d="M7 14h14M7 9h14M7 19h9" stroke="white" stroke-width="2" stroke-linecap="round"/>
-            </svg>
+            <img src="/logobudge.svg" class="login-card__logo-img" alt="Budge" />
           </div>
           <h1 class="login-card__title">Bienvenue !</h1>
           <p class="login-card__sub">Connecte-toi pour accéder à ton espace budget.</p>
@@ -117,9 +110,12 @@ async function login() {
 }
 
 .login-left__logo {
-  display: flex; align-items: center; gap: 10px;
-  font-size: 15px; font-weight: 700; color: rgba(255,255,255,0.9);
   position: relative; z-index: 1;
+}
+.login-left__logo-img {
+  height: 28px; width: auto;
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
 }
 
 .login-left__content {
@@ -165,9 +161,8 @@ async function login() {
   gap: 10px;
   margin-bottom: 32px;
 }
-.login-card__icon {
-  margin-bottom: 4px;
-}
+.login-card__icon { margin-bottom: 4px; }
+.login-card__logo-img { height: 22px; width: auto; }
 .login-card__title {
   font-size: 24px; font-weight: 700; color: #18181b;
   margin: 0; letter-spacing: -0.4px;

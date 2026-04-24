@@ -9,11 +9,7 @@
     <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar__logo">
-        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-          <rect width="28" height="28" rx="8" fill="#18181B"/>
-          <path d="M7 14h14M7 9h14M7 19h9" stroke="white" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-        <span class="sidebar__brand">Budge</span>
+        <img src="/logobudge.svg" class="sidebar__logo-img" alt="Budge" />
       </div>
 
       <FoyerSwitcher />
@@ -311,12 +307,11 @@ const pctCharges = computed(() => {
   overflow-y: auto;
 }
 .sidebar__logo {
-  display: flex; align-items: center; gap: 8px;
-  padding: 0 24px 24px;
+  padding: 0 24px 20px;
   border-bottom: 1px solid var(--sidebar-border);
   margin-bottom: 12px;
 }
-.sidebar__brand { font-size: 15px; font-weight: 700; color: var(--foreground); }
+.sidebar__logo-img { height: 26px; width: auto; display: block; }
 
 .sidebar__nav { flex: 1; padding: 0; display: flex; flex-direction: column; gap: 2px; }
 .sidebar__nav-item {

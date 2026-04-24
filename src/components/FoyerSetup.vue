@@ -8,11 +8,7 @@
 
         <!-- Logo -->
         <div class="onboarding__logo">
-          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-            <rect width="28" height="28" rx="8" fill="#18181B"/>
-            <path d="M7 14h14M7 9h14M7 19h9" stroke="white" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-          <span>Budge</span>
+          <img src="/logobudge.svg" class="onboarding__logo-img" alt="Budge" />
         </div>
 
         <!-- Stepper numéroté -->
@@ -351,10 +347,8 @@ async function onImportCsvOnboarding(e) {
 }
 
 /* Logo */
-.onboarding__logo {
-  display: flex; align-items: center; gap: 8px;
-  font-size: 16px; font-weight: 700; color: #18181b;
-}
+.onboarding__logo { }
+.onboarding__logo-img { height: 26px; width: auto; display: block; }
 
 /* Stepper numéroté */
 .onboarding__stepper {
