@@ -108,12 +108,19 @@
 
         <!-- Étape 2 : Membres -->
         <div v-if="etape === 2" class="onboarding__fields">
-          <div v-for="(p, i) in personnes" :key="i" class="onboarding__membre" :class="{ 'onboarding__membre--gap': i > 0 }">
+
+          <!-- Toggle solo -->
+          <button type="button" class="onboarding__solo-btn" :class="{ 'onboarding__solo-btn--active': modeSolo }" @click="toggleSolo">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+            {{ modeSolo ? '✓ Je configure seul(e)' : 'Je configure seul(e)' }}
+          </button>
+
+          <div v-for="(p, i) in personnes" :key="i" v-show="i === 0 || !modeSolo" class="onboarding__membre" :class="{ 'onboarding__membre--gap': i > 0 }">
             <div class="onboarding__membre-header">
               <div class="onboarding__membre-avatar" :style="{ background: p.couleur }">
                 {{ p.nom ? p.nom[0].toUpperCase() : (i === 0 ? 'A' : 'B') }}
               </div>
-              <span class="onboarding__membre-label">Personne {{ i + 1 }}</span>
+              <span class="onboarding__membre-label">{{ i === 0 ? 'Vous' : 'Votre partenaire' }}</span>
             </div>
             <div class="onboarding__membre-row">
               <div class="onboarding__field">
@@ -121,10 +128,10 @@
                 <input class="onboarding__input" v-model="p.nom" type="text" :placeholder="i === 0 ? 'Ex : Marie' : 'Ex : Thomas'" />
               </div>
               <div class="onboarding__field">
-                <label class="onboarding__label">Salaire net mensuel</label>
+                <label class="onboarding__label">Salaire net / mois</label>
                 <div class="onboarding__input-wrap">
                   <input class="onboarding__input" v-model.number="p.salaire" type="number" min="0" step="100" placeholder="0" />
-                  <span class="onboarding__suffix">€/mois</span>
+                  <span class="onboarding__suffix">€</span>
                 </div>
               </div>
             </div>
@@ -206,11 +213,15 @@
 
         <div v-if="etape === 2" class="fsetup__body">
           <p class="fsetup__hint">Renseignez les informations des membres du foyer.</p>
+          <button type="button" class="fsetup__solo-btn" :class="{ 'fsetup__solo-btn--active': modeSolo }" @click="toggleSolo">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+            {{ modeSolo ? '✓ Je configure seul(e)' : 'Je configure seul(e)' }}
+          </button>
           <div class="fsetup__membres-grid">
-            <div v-for="(p, i) in personnes" :key="i" class="fsetup__membre">
+            <div v-for="(p, i) in personnes" :key="i" v-show="i === 0 || !modeSolo" class="fsetup__membre">
               <div class="fsetup__membre-header">
                 <div class="fsetup__membre-avatar" :style="{ background: p.couleur }">{{ p.nom ? p.nom[0].toUpperCase() : (i === 0 ? 'A' : 'B') }}</div>
-                <span class="fsetup__membre-label">Personne {{ i + 1 }}</span>
+                <span class="fsetup__membre-label">{{ i === 0 ? 'Vous' : 'Votre partenaire' }}</span>
               </div>
               <div class="fsetup__membre-fields">
                 <div class="fsetup__field">
@@ -320,6 +331,15 @@ const couleurs = ['#7C6FCD','#4A9EDB','#10B981','#F59E0B','#EF4444','#EC4899','#
 const copierDepensesDeId = ref(null)
 const keepPersonneIdx    = ref(null)
 const copieActive        = ref(false)
+const modeSolo           = ref(false)
+
+function toggleSolo() {
+  modeSolo.value = !modeSolo.value
+  if (modeSolo.value) {
+    personnes.value[1].nom    = ''
+    personnes.value[1].salaire = 0
+  }
+}
 
 function toggleCopie() {
   copieActive.value = !copieActive.value
@@ -423,12 +443,12 @@ async function onImportCsvOnboarding(e) {
   width: 50%; flex-shrink: 0;
   background: #fff;
   display: flex; align-items: center; justify-content: center;
-  padding: 48px 40px;
+  padding: 32px 28px;
   overflow-y: auto;
 }
 .onboarding__left-inner {
-  width: 100%; max-width: 420px;
-  display: flex; flex-direction: column; gap: 32px;
+  width: 100%; max-width: 460px;
+  display: flex; flex-direction: column; gap: 24px;
 }
 
 /* Stepper numéroté */
@@ -532,7 +552,8 @@ async function onImportCsvOnboarding(e) {
   font-size: 13px; font-weight: 700; color: #fff; flex-shrink: 0;
 }
 .onboarding__membre-label { font-size: 13px; font-weight: 600; color: #18181b; }
-.onboarding__membre-row { display: flex; flex-direction: column; gap: 12px; }
+.onboarding__membre-row { display: flex; flex-direction: row; gap: 10px; }
+.onboarding__membre-row .onboarding__field { flex: 1; min-width: 0; }
 
 /* Récap */
 .onboarding__recap {
@@ -596,6 +617,19 @@ async function onImportCsvOnboarding(e) {
   content: ''; flex: 1; height: 1px; background: #e4e4e7;
 }
 
+/* Bouton solo */
+.onboarding__solo-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  align-self: flex-start;
+  padding: 7px 14px; border-radius: 99px;
+  font-size: 13px; font-weight: 500; font-family: inherit;
+  background: #f4f4f5; border: 1.5px solid #e4e4e7;
+  color: #52525b; cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+.onboarding__solo-btn:hover { border-color: #18181b; color: #18181b; }
+.onboarding__solo-btn--active { background: #18181b; border-color: #18181b; color: #fff; }
+
 /* Import CSV onboarding */
 .onboarding__import-csv {
   display: flex; align-items: center; gap: 12px;
@@ -616,7 +650,7 @@ async function onImportCsvOnboarding(e) {
   background: #18181b;
   position: relative; overflow: hidden;
   display: flex; flex-direction: column; justify-content: space-between;
-  padding: 48px;
+  padding: 36px;
   flex-shrink: 0;
 }
 .onboarding__right-glow {
@@ -759,6 +793,19 @@ async function onImportCsvOnboarding(e) {
 }
 .fsetup__recap-row-nom     { flex: 1; font-size: 13px; font-weight: 500; color: var(--foreground); }
 .fsetup__recap-row-salaire { font-size: 13px; font-weight: 600; color: var(--foreground); }
+/* Bouton solo modale */
+.fsetup__solo-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  align-self: flex-start;
+  padding: 6px 14px; border-radius: 99px;
+  font-size: 12px; font-weight: 500; font-family: inherit;
+  background: var(--muted); border: 1.5px solid var(--border);
+  color: var(--muted-foreground); cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+.fsetup__solo-btn:hover { border-color: var(--foreground); color: var(--foreground); }
+.fsetup__solo-btn--active { background: var(--primary); border-color: var(--primary); color: var(--primary-foreground); }
+
 /* Toggle copie */
 .fsetup__copy-toggle-wrap { display: flex; flex-direction: column; gap: 10px; }
 .fsetup__copy-toggle {
