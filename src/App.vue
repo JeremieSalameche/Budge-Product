@@ -1,5 +1,7 @@
 <template>
-  <div id="app">
+  <LoginPage v-if="!authStore.user && !authStore.loading" />
+  <div v-else-if="authStore.loading" class="app-loading">Chargement…</div>
+  <div v-else id="app">
     <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar__logo">
@@ -30,6 +32,10 @@
         <button class="sidebar__save-btn" @click="manualSave" type="button">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M11.5 12.5H2.5a1 1 0 01-1-1V2.5a1 1 0 011-1h7l2.5 2.5v8a1 1 0 01-1 1z" stroke="currentColor" stroke-width="1.3"/><path d="M9.5 12.5V8h-5v4.5M4.5 1.5V5h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
           Sauvegarder
+        </button>
+        <button class="sidebar__logout-btn" @click="authStore.logout()" type="button" title="Se déconnecter">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 12H2.5A1.5 1.5 0 011 10.5v-7A1.5 1.5 0 012.5 2H5M9.5 10l3-3-3-3M12.5 7H5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Déconnexion
         </button>
       </div>
     </aside>
@@ -119,6 +125,7 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
 import { useBudgetStore } from './stores/budget'
+import { useAuthStore }   from './stores/auth'
 import { useStorage } from './composables/useStorage'
 import Dashboard from './components/Dashboard.vue'
 import DepensesTable from './components/DepensesTable.vue'
@@ -126,10 +133,12 @@ import Enveloppes from './components/Enveloppes.vue'
 import PageEpargne from './components/PageEpargne.vue'
 import PageProjets from './components/PageProjets.vue'
 import CalculateurSelection from './components/CalculateurSelection.vue'
+import LoginPage from './components/LoginPage.vue'
 import { MsNotification } from './components/ui/index.js'
 import FoyerSwitcher from './components/FoyerSwitcher.vue'
 
-const store  = useBudgetStore()
+const store     = useBudgetStore()
+const authStore = useAuthStore()
 const PERSON_COLORS = ['#7C6FCD', '#4A9EDB']
 const { scheduleAutoSave, lastSavedLabel } = useStorage()
 
@@ -166,7 +175,17 @@ watch(() => store.foyers, () => scheduleAutoSave(), { deep: true })
 
 // Retour au dashboard à chaque changement de foyer
 watch(() => store.foyerActifId, () => { activeTab.value = 'dashboard' })
-onMounted(() => store.loadFromStorage())
+
+// Init auth puis charger les données
+onMounted(async () => {
+  await authStore.init()
+  if (authStore.user) await store.loadFromStorage()
+})
+
+// Recharger les données quand l'utilisateur se connecte
+watch(() => authStore.user, async (user) => {
+  if (user) await store.loadFromStorage()
+})
 
 function manualSave() {
   store.saveToStorage()
@@ -425,4 +444,18 @@ const pctCharges = computed(() => {
   position: fixed; bottom: 24px; right: 24px;
   z-index: 2000;
 }
+
+/* ── Auth ──────────────────────────────────────────────────── */
+.app-loading {
+  min-height: 100vh; display: flex; align-items: center;
+  justify-content: center; font-size: 15px; color: #71717a;
+}
+.sidebar__logout-btn {
+  display: flex; align-items: center; gap: 6px;
+  width: 100%; padding: 6px 8px; margin-top: 6px;
+  border: none; border-radius: 6px; background: transparent;
+  font-size: 12px; color: #71717a; cursor: pointer;
+  font-family: inherit; transition: background 0.15s;
+}
+.sidebar__logout-btn:hover { background: rgba(0,0,0,0.06); color: #ef4444; }
 </style>

@@ -1,5 +1,8 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import { doc, getDoc, setDoc } from 'firebase/firestore'
+import { db } from '../firebase'
+import { useAuthStore } from './auth'
 import defaultData from '../../data/budget.json'
 
 function deepClone(obj) { return JSON.parse(JSON.stringify(obj)) }
@@ -136,8 +139,19 @@ export const useBudgetStore = defineStore('budget', () => {
 
   // ─── Loaders ─────────────────────────────────────────────────
   async function loadFromStorage() {
-    // localStorage est la source de vérité (données les plus récentes)
-    // Le fichier JSON est un backup secondaire
+    const authStore = useAuthStore()
+    const uid = authStore.user?.uid
+    // 1. Firestore (si connecté)
+    if (uid) {
+      try {
+        const snap = await getDoc(doc(db, 'users', uid))
+        if (snap.exists()) {
+          const raw = _charger(snap.data())
+          if (raw) { foyers.value = raw.foyers; foyerActifId.value = raw.foyerActifId; return }
+        }
+      } catch {}
+    }
+    // 2. localStorage (cache local)
     const stored = localStorage.getItem('budget-simulator-v1')
     if (stored) {
       try {
@@ -145,21 +159,7 @@ export const useBudgetStore = defineStore('budget', () => {
         if (raw) { foyers.value = raw.foyers; foyerActifId.value = raw.foyerActifId; return }
       } catch {}
     }
-    // Fallback : fichier JSON via l'API
-    try {
-      const res = await fetch('/api/budget')
-      if (res.ok) {
-        const raw = _charger(await res.json())
-        if (raw) {
-          foyers.value = raw.foyers
-          foyerActifId.value = raw.foyerActifId
-          // Sync immédiate vers localStorage pour les prochains chargements
-          localStorage.setItem('budget-simulator-v1', JSON.stringify(raw))
-          return
-        }
-      }
-    } catch {}
-    // Aucune donnée → foyer par défaut
+    // 3. Foyer vide par défaut
     const f = _creerFoyerParDefaut()
     foyers.value = [f]
     foyerActifId.value = f.id
@@ -167,17 +167,17 @@ export const useBudgetStore = defineStore('budget', () => {
 
   async function saveToStorage() {
     const payload = { foyerActifId: foyerActifId.value, foyers: foyers.value }
-    // Toujours sauvegarder dans localStorage (instantané, fiable)
-    localStorage.setItem('budget-simulator-v1', JSON.stringify(payload))
     lastSaved.value = Date.now()
-    // Tenter aussi la sauvegarde fichier via l'API (best-effort)
-    try {
-      await fetch('/api/budget', {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify(payload),
-      })
-    } catch {}
+    // Cache local
+    localStorage.setItem('budget-simulator-v1', JSON.stringify(payload))
+    // Firestore (si connecté)
+    const authStore = useAuthStore()
+    const uid = authStore.user?.uid
+    if (uid) {
+      try {
+        await setDoc(doc(db, 'users', uid), payload)
+      } catch {}
+    }
   }
 
   async function resetData() {
