@@ -8,7 +8,7 @@
       <div class="login-left__glow login-left__glow--3"></div>
 
       <div class="login-left__logo">
-        <img src="/logobudge.svg" class="login-left__logo-img" alt="Budge" />
+        <img src="/logo-budge-white.svg" class="login-left__logo-img" alt="Budge" />
       </div>
 
       <div class="login-left__content">
@@ -114,8 +114,6 @@ async function login() {
 }
 .login-left__logo-img {
   height: 28px; width: auto;
-  filter: brightness(0) invert(1);
-  opacity: 0.9;
 }
 
 .login-left__content {
