@@ -1,307 +1,425 @@
 <template>
-  <div class="dt">
-    <!-- Bloc collé : filtres + tableau -->
-    <div class="dt__block">
-      <!-- Filtres + CTA -->
-      <div class="dt__filters">
-        <div class="dt__filters-left">
-          <select v-model="filterCat" class="dt__select">
-            <option value="">Toutes catégories</option>
-            <option v-for="cat in store.categories" :key="cat.id" :value="cat.id">{{ cat.nom }}</option>
-          </select>
-          <select v-model="filterEnv" class="dt__select">
-            <option value="">Toutes enveloppes</option>
-            <option v-for="env in store.enveloppes" :key="env.id" :value="env.id">{{ env.nom }}</option>
-          </select>
+  <div class="dep">
+
+    <!-- ── Barre de contrôle ─────────────────────────────────── -->
+    <div class="dep__bar">
+      <select v-model="filterCat" class="dep__select">
+        <option value="">Toutes catégories</option>
+        <option v-for="cat in store.categories" :key="cat.id" :value="cat.id">{{ cat.nom }}</option>
+      </select>
+      <MsButton variant="primary" size="sm" @click="openAdd">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0">
+          <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+        Ajouter une dépense
+      </MsButton>
+    </div>
+
+    <!-- ── 3 colonnes ────────────────────────────────────────── -->
+    <div class="dep__cols">
+
+      <!-- Colonne P1 -->
+      <div class="dep__col">
+        <div class="dep__col-head">
+          <div class="dep__col-ava" :style="{ background: p1.couleur }">{{ p1.nom[0]?.toUpperCase() }}</div>
+          <div class="dep__col-headinfo">
+            <span class="dep__col-name">{{ p1.nom }}</span>
+            <span class="dep__col-count">{{ depP1.length }} dépense{{ depP1.length !== 1 ? 's' : '' }}</span>
+          </div>
+          <span class="dep__col-sum">{{ fmt(totalP1) }}</span>
         </div>
-        <MsButton variant="primary" size="sm" @click="addNew">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0">
-            <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-          </svg>
-          Ajouter une dépense
-        </MsButton>
+        <div class="dep__col-body">
+          <div v-if="depP1.length === 0" class="dep__empty">Aucune dépense individuelle</div>
+          <div
+            v-for="dep in depP1" :key="dep.id"
+            :class="['dep__card', { 'dep__card--off': !dep.actif }]"
+            :style="{ '--acc': catColor(dep) }"
+          >
+            <div class="dep__card-accent"></div>
+            <div class="dep__card-content">
+              <div class="dep__card-top">
+                <span class="dep__card-nom">{{ dep.nom || '—' }}</span>
+                <span class="dep__card-amount">{{ fmtMonthly(dep) }}</span>
+              </div>
+              <div class="dep__card-bot">
+                <span class="dep__card-cat" :style="catBadgeStyle(dep)">{{ catNom(dep) }}</span>
+                <span class="dep__card-freq">{{ freqLabel(dep.frequence) }}</span>
+                <div class="dep__card-acts">
+                  <button class="dep__act" @click="openEdit(dep)" title="Modifier" type="button">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  </button>
+                  <button class="dep__act" @click="toggleActif(dep)" :title="dep.actif ? 'Désactiver' : 'Activer'" type="button">
+                    <svg v-if="dep.actif" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <svg v-else width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                  </button>
+                  <button class="dep__act dep__act--del" @click="confirmDelete(dep)" title="Supprimer" type="button">
+                    <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M1.75 3.5H12.25M5.25 3.5V2.333a.583.583 0 01.583-.583h2.334a.583.583 0 01.583.583V3.5M10.5 3.5l-.583 8.167H4.083L3.5 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <!-- Tableau -->
-      <div class="dt__wrap">
-        <table class="dt__table">
-          <thead>
-            <tr>
-              <th class="dt__th dt__th--nom" @click="sortBy('nom')">
-                Nom <span class="dt__sort" :class="{ 'dt__sort--on': sortCol === 'nom' }">{{ sortCol === 'nom' ? (sortDir === 'asc' ? '↑' : '↓') : '↕' }}</span>
-              </th>
-              <th class="dt__th dt__th--amount" v-if="p1">{{ p1.nom }}</th>
-              <th class="dt__th dt__th--amount" v-if="p2">{{ p2.nom }}</th>
-              <th class="dt__th dt__th--total">Total</th>
-              <th class="dt__th">Fréquence</th>
-              <th class="dt__th">Catégorie</th>
-              <th class="dt__th dt__th--date" @click="sortBy('createdAt')">
-                Ajouté le <span class="dt__sort" :class="{ 'dt__sort--on': sortCol === 'createdAt' }">{{ sortCol === 'createdAt' ? (sortDir === 'asc' ? '↑' : '↓') : '↕' }}</span>
-              </th>
-              <th class="dt__th dt__th--actions">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- État vide -->
-            <tr v-if="filteredDepenses.length === 0">
-              <td :colspan="8" class="dt__empty-cell">
-                <div class="dt__empty">
-                  <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect x="6" y="8" width="28" height="24" rx="4" stroke="rgba(0,0,0,0.15)" stroke-width="2"/><path d="M12 16h16M12 22h10" stroke="rgba(0,0,0,0.15)" stroke-width="2" stroke-linecap="round"/></svg>
-                  <p>Aucune dépense. Cliquez sur <strong>+ Ajouter</strong> pour commencer.</p>
+      <!-- Colonne Commun -->
+      <div class="dep__col dep__col--commun">
+        <div class="dep__col-head">
+          <div class="dep__col-ava dep__col-ava--commun">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="dep__col-headinfo">
+            <span class="dep__col-name">Commun</span>
+            <span class="dep__col-count">{{ depCommun.length }} dépense{{ depCommun.length !== 1 ? 's' : '' }}</span>
+          </div>
+          <span class="dep__col-sum">{{ fmt(totalCommun) }}</span>
+        </div>
+        <div class="dep__col-body">
+          <div v-if="depCommun.length === 0" class="dep__empty">Aucune dépense commune</div>
+          <div
+            v-for="dep in depCommun" :key="dep.id"
+            :class="['dep__card', { 'dep__card--off': !dep.actif }]"
+            :style="{ '--acc': catColor(dep) }"
+          >
+            <div class="dep__card-accent"></div>
+            <div class="dep__card-content">
+              <div class="dep__card-top">
+                <span class="dep__card-nom">{{ dep.nom || '—' }}</span>
+                <span class="dep__card-amount">{{ fmtMonthly(dep) }}</span>
+              </div>
+              <div class="dep__card-shares">
+                <span class="dep__share" :style="{ background: p1.couleur + '22', color: p1.couleur }">
+                  {{ p1.nom }} · {{ fmt(store.toMonthly(dep.montantP1 || 0, dep.frequence)) }}
+                </span>
+                <span class="dep__share" :style="{ background: p2.couleur + '22', color: p2.couleur }">
+                  {{ p2.nom }} · {{ fmt(store.toMonthly(dep.montantP2 || 0, dep.frequence)) }}
+                </span>
+              </div>
+              <div class="dep__card-bot">
+                <span class="dep__card-cat" :style="catBadgeStyle(dep)">{{ catNom(dep) }}</span>
+                <span class="dep__card-freq">{{ freqLabel(dep.frequence) }}</span>
+                <div class="dep__card-acts">
+                  <button class="dep__act" @click="openEdit(dep)" title="Modifier" type="button">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  </button>
+                  <button class="dep__act" @click="toggleActif(dep)" :title="dep.actif ? 'Désactiver' : 'Activer'" type="button">
+                    <svg v-if="dep.actif" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <svg v-else width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                  </button>
+                  <button class="dep__act dep__act--del" @click="confirmDelete(dep)" title="Supprimer" type="button">
+                    <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M1.75 3.5H12.25M5.25 3.5V2.333a.583.583 0 01.583-.583h2.334a.583.583 0 01.583.583V3.5M10.5 3.5l-.583 8.167H4.083L3.5 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
                 </div>
-              </td>
-            </tr>
-
-            <tr
-              v-for="dep in filteredDepenses"
-              :key="dep.id"
-              :class="['dt__row', { 'dt__row--inactive': !dep.actif }]"
-            >
-              <td class="dt__td dt__td--nom-cell">
-                <AmountCell :dep="dep" field="nom" type="text" :editing="editing" @start="startEdit" @save="saveEdit" @cancel="cancelEdit" :edit-input-ref="editInputRef" />
-              </td>
-              <td class="dt__td dt__td--amount" v-if="p1">
-                <AmountCell :dep="dep" field="montantP1" type="number" :editing="editing" @start="startEdit" @save="saveEdit" @cancel="cancelEdit" :edit-input-ref="editInputRef" />
-              </td>
-              <td class="dt__td dt__td--amount" v-if="p2">
-                <AmountCell :dep="dep" field="montantP2" type="number" :editing="editing" @start="startEdit" @save="saveEdit" @cancel="cancelEdit" :edit-input-ref="editInputRef" />
-              </td>
-              <td class="dt__td dt__td--total">{{ fmtLine(dep) }}</td>
-              <td class="dt__td">
-                <select v-model="dep.frequence" class="dt__sel" @change="onDepChange(dep)">
-                  <option value="hebdomadaire">Hebdo</option>
-                  <option value="mensuel">Mensuel</option>
-                  <option value="trimestriel">Trimestr.</option>
-                  <option value="annuel">Annuel</option>
-                </select>
-              </td>
-              <td class="dt__td">
-                <div class="dt__cat-wrap">
-                  <span class="dt__cat-icon" v-html="getCatIcon(dep.categorieId)"></span>
-                  <select v-model="dep.categorieId" class="dt__sel" @change="onDepChange(dep)">
-                    <option :value="null">—</option>
-                    <option v-for="cat in store.categories" :key="cat.id" :value="cat.id">{{ cat.nom }}</option>
-                  </select>
-                </div>
-              </td>
-              <td class="dt__td dt__td--date">{{ fmtDate(dep.createdAt) }}</td>
-              <td class="dt__td dt__td--actions">
-                <button class="dt__act dt__act--toggle" @click="toggleActif(dep)" :title="dep.actif ? 'Masquer du budget' : 'Afficher dans le budget'" type="button">
-                  <svg v-if="dep.actif" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
-                  </svg>
-                  <svg v-else width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>
-                  </svg>
-                  {{ dep.actif ? 'Cacher' : 'Afficher' }}
-                </button>
-                <button class="dt__act dt__act--danger" @click="confirmDelete(dep)" title="Supprimer" type="button">
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                    <path d="M1.75 3.5H12.25M5.25 3.5V2.333a.583.583 0 01.583-.583h2.334a.583.583 0 01.583.583V3.5M10.5 3.5l-.583 8.167H4.083L3.5 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-
-          <!-- Totaux -->
-          <tfoot>
-            <tr class="dt__foot-row">
-              <td class="dt__td dt__foot-label">
-                <span>Total mensuel</span>
-                <span v-if="estFiltre" class="dt__filtre-badge">{{ filteredDepenses.length }} filtrée{{ filteredDepenses.length > 1 ? 's' : '' }}</span>
-              </td>
-              <td class="dt__td dt__foot-num" v-if="p1">{{ fmt(totalFiltreMensuelP1) }}</td>
-              <td class="dt__td dt__foot-num" v-if="p2">{{ fmt(totalFiltreMensuelP2) }}</td>
-              <td class="dt__td dt__foot-total">{{ fmt(totalFiltreGlobal) }}</td>
-              <td class="dt__td"></td>
-              <td class="dt__td"></td>
-              <td class="dt__td"></td>
-              <td class="dt__td"></td>
-            </tr>
-          </tfoot>
-        </table>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+
+      <!-- Colonne P2 -->
+      <div class="dep__col">
+        <div class="dep__col-head">
+          <div class="dep__col-ava" :style="{ background: p2.couleur }">{{ p2.nom[0]?.toUpperCase() }}</div>
+          <div class="dep__col-headinfo">
+            <span class="dep__col-name">{{ p2.nom }}</span>
+            <span class="dep__col-count">{{ depP2.length }} dépense{{ depP2.length !== 1 ? 's' : '' }}</span>
+          </div>
+          <span class="dep__col-sum">{{ fmt(totalP2) }}</span>
+        </div>
+        <div class="dep__col-body">
+          <div v-if="depP2.length === 0" class="dep__empty">Aucune dépense individuelle</div>
+          <div
+            v-for="dep in depP2" :key="dep.id"
+            :class="['dep__card', { 'dep__card--off': !dep.actif }]"
+            :style="{ '--acc': catColor(dep) }"
+          >
+            <div class="dep__card-accent"></div>
+            <div class="dep__card-content">
+              <div class="dep__card-top">
+                <span class="dep__card-nom">{{ dep.nom || '—' }}</span>
+                <span class="dep__card-amount">{{ fmtMonthly(dep) }}</span>
+              </div>
+              <div class="dep__card-bot">
+                <span class="dep__card-cat" :style="catBadgeStyle(dep)">{{ catNom(dep) }}</span>
+                <span class="dep__card-freq">{{ freqLabel(dep.frequence) }}</span>
+                <div class="dep__card-acts">
+                  <button class="dep__act" @click="openEdit(dep)" title="Modifier" type="button">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  </button>
+                  <button class="dep__act" @click="toggleActif(dep)" :title="dep.actif ? 'Désactiver' : 'Activer'" type="button">
+                    <svg v-if="dep.actif" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <svg v-else width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                  </button>
+                  <button class="dep__act dep__act--del" @click="confirmDelete(dep)" title="Supprimer" type="button">
+                    <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M1.75 3.5H12.25M5.25 3.5V2.333a.583.583 0 01.583-.583h2.334a.583.583 0 01.583.583V3.5M10.5 3.5l-.583 8.167H4.083L3.5 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
-    <!-- Footer : juste le compteur -->
-    <div class="dt__footer">
-      <span class="dt__count">{{ filteredDepenses.length }} dépense{{ filteredDepenses.length > 1 ? 's' : '' }}</span>
-    </div>
-
-    <!-- Modale suppression -->
+    <!-- ── Modale ajout / édition ─────────────────────────────── -->
     <Teleport to="body">
-      <div v-if="deleteTarget" class="dt__overlay" @click.self="deleteTarget = null">
-        <div class="dt__modal">
-          <h3>Supprimer cette dépense ?</h3>
-          <p>« {{ deleteTarget.nom }} » sera définitivement supprimée.</p>
-          <div class="dt__modal-actions">
-            <MsButton variant="secondary" @click="deleteTarget = null">Annuler</MsButton>
-            <MsButton variant="danger" @click="doDelete">Supprimer</MsButton>
+      <div v-if="modalOpen" class="dep__overlay" @click.self="closeModal">
+        <div class="dep__modal">
+
+          <div class="dep__modal-head">
+            <h3 class="dep__modal-title">{{ editId ? 'Modifier la dépense' : 'Nouvelle dépense' }}</h3>
+            <button class="dep__modal-close" @click="closeModal" type="button">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+
+          <div class="dep__modal-body">
+
+            <!-- Nom -->
+            <div class="dep__mfield">
+              <label class="dep__mlabel">Nom de la dépense</label>
+              <input class="dep__minput" v-model="form.nom" type="text" placeholder="Ex : Loyer, Spotify, Carburant…" autofocus @keydown.enter="canSave && saveModal()" />
+            </div>
+
+            <!-- Catégorie + Fréquence -->
+            <div class="dep__mrow">
+              <div class="dep__mfield">
+                <label class="dep__mlabel">Catégorie</label>
+                <select class="dep__mselect" v-model="form.categorieId">
+                  <option :value="null">— Aucune —</option>
+                  <option v-for="cat in store.categories" :key="cat.id" :value="cat.id">{{ cat.nom }}</option>
+                </select>
+              </div>
+              <div class="dep__mfield">
+                <label class="dep__mlabel">Fréquence</label>
+                <select class="dep__mselect" v-model="form.frequence">
+                  <option value="mensuel">Mensuelle</option>
+                  <option value="hebdomadaire">Hebdomadaire</option>
+                  <option value="trimestriel">Trimestrielle</option>
+                  <option value="annuel">Annuelle</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Qui paie -->
+            <div class="dep__mfield">
+              <label class="dep__mlabel">Qui paie ?</label>
+              <div class="dep__qui">
+                <button
+                  type="button"
+                  :class="['dep__qui-btn', { 'dep__qui-btn--on': form.qui === 'p1' }]"
+                  :style="form.qui === 'p1' ? { borderColor: p1.couleur, background: p1.couleur + '18', color: p1.couleur } : {}"
+                  @click="form.qui = 'p1'"
+                >
+                  <span class="dep__qui-dot" :style="{ background: p1.couleur }"></span>
+                  {{ p1.nom }}
+                </button>
+                <button
+                  type="button"
+                  :class="['dep__qui-btn', { 'dep__qui-btn--on': form.qui === 'commun' }]"
+                  :style="form.qui === 'commun' ? { borderColor: '#18181b', background: '#18181b12', color: '#18181b' } : {}"
+                  @click="form.qui = 'commun'"
+                >
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                  Les deux
+                </button>
+                <button
+                  type="button"
+                  :class="['dep__qui-btn', { 'dep__qui-btn--on': form.qui === 'p2' }]"
+                  :style="form.qui === 'p2' ? { borderColor: p2.couleur, background: p2.couleur + '18', color: p2.couleur } : {}"
+                  @click="form.qui = 'p2'"
+                >
+                  <span class="dep__qui-dot" :style="{ background: p2.couleur }"></span>
+                  {{ p2.nom }}
+                </button>
+              </div>
+            </div>
+
+            <!-- Montant P1 seul -->
+            <div v-if="form.qui === 'p1'" class="dep__mfield">
+              <label class="dep__mlabel">Montant</label>
+              <div class="dep__minput-wrap">
+                <input class="dep__minput dep__minput--num" v-model.number="form.montantP1" type="number" min="0" step="1" placeholder="0" />
+                <span class="dep__minput-suffix">€</span>
+              </div>
+            </div>
+
+            <!-- Montant P2 seul -->
+            <div v-else-if="form.qui === 'p2'" class="dep__mfield">
+              <label class="dep__mlabel">Montant</label>
+              <div class="dep__minput-wrap">
+                <input class="dep__minput dep__minput--num" v-model.number="form.montantP2" type="number" min="0" step="1" placeholder="0" />
+                <span class="dep__minput-suffix">€</span>
+              </div>
+            </div>
+
+            <!-- Montants commun -->
+            <div v-else class="dep__commun-block">
+              <div class="dep__mrow">
+                <div class="dep__mfield">
+                  <label class="dep__mlabel" :style="{ color: p1.couleur }">{{ p1.nom }}</label>
+                  <div class="dep__minput-wrap">
+                    <input class="dep__minput dep__minput--num" v-model.number="form.montantP1" type="number" min="0" step="1" placeholder="0" />
+                    <span class="dep__minput-suffix">€</span>
+                  </div>
+                </div>
+                <div class="dep__mfield">
+                  <label class="dep__mlabel" :style="{ color: p2.couleur }">{{ p2.nom }}</label>
+                  <div class="dep__minput-wrap">
+                    <input class="dep__minput dep__minput--num" v-model.number="form.montantP2" type="number" min="0" step="1" placeholder="0" />
+                    <span class="dep__minput-suffix">€</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Total -->
+              <div v-if="(form.montantP1 || 0) + (form.montantP2 || 0) > 0" class="dep__total-row">
+                <span class="dep__total-label">Total</span>
+                <span class="dep__total-val">
+                  {{ fmt((form.montantP1 || 0) + (form.montantP2 || 0)) }}
+                  <span class="dep__total-freq">/ {{ freqLabel(form.frequence).toLowerCase() }}</span>
+                </span>
+              </div>
+
+              <!-- Indicateur équité -->
+              <div v-if="equityInfo" class="dep__equity" :class="'dep__equity--' + equityInfo.status">
+                <div class="dep__equity-bar">
+                  <div class="dep__equity-bar-p1" :style="{ width: equityInfo.realPct + '%', background: p1.couleur }"></div>
+                  <div class="dep__equity-bar-p2" :style="{ width: (100 - equityInfo.realPct) + '%', background: p2.couleur }"></div>
+                </div>
+                <div class="dep__equity-labels">
+                  <span :style="{ color: p1.couleur }">{{ p1.nom }} {{ equityInfo.realPct }}%</span>
+                  <span class="dep__equity-verdict">
+                    <span v-if="equityInfo.status === 'ok'">✓ Équitable</span>
+                    <span v-else-if="equityInfo.status === 'warn'">⚠ Légèrement déséquilibrée</span>
+                    <span v-else>✗ Déséquilibrée</span>
+                  </span>
+                  <span :style="{ color: p2.couleur }">{{ 100 - equityInfo.realPct }}% {{ p2.nom }}</span>
+                </div>
+                <div class="dep__equity-ideal">
+                  Répartition idéale selon les revenus : {{ equityInfo.idealPct }}% / {{ 100 - equityInfo.idealPct }}%
+                </div>
+              </div>
+
+              <!-- Bouton suggérer -->
+              <button v-if="canSuggest" type="button" class="dep__suggest-btn" @click="suggestSplit">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                Répartir équitablement — {{ equityInfo?.idealPct ?? '…' }}% / {{ equityInfo ? 100 - equityInfo.idealPct : '…' }}%
+              </button>
+            </div>
+
+          </div>
+
+          <div class="dep__modal-foot">
+            <button class="dep__mbtn dep__mbtn--ghost" type="button" @click="closeModal">Annuler</button>
+            <button class="dep__mbtn dep__mbtn--primary" type="button" :disabled="!canSave" @click="saveModal">
+              {{ editId ? 'Enregistrer' : 'Ajouter la dépense' }}
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </Teleport>
+
+    <!-- ── Modale suppression ─────────────────────────────────── -->
+    <Teleport to="body">
+      <div v-if="deleteTarget" class="dep__overlay" @click.self="deleteTarget = null">
+        <div class="dep__modal dep__modal--sm">
+          <div class="dep__modal-head">
+            <h3 class="dep__modal-title">Supprimer cette dépense ?</h3>
+          </div>
+          <div class="dep__modal-body">
+            <p class="dep__modal-text">« {{ deleteTarget.nom }} » sera définitivement supprimée.</p>
+          </div>
+          <div class="dep__modal-foot">
+            <button class="dep__mbtn dep__mbtn--ghost" type="button" @click="deleteTarget = null">Annuler</button>
+            <button class="dep__mbtn dep__mbtn--danger" type="button" @click="doDelete">Supprimer</button>
           </div>
         </div>
       </div>
     </Teleport>
+
   </div>
 </template>
 
 <script setup>
-import { ref, computed, nextTick, h } from 'vue'
+import { ref, computed } from 'vue'
 import { useBudgetStore } from '../stores/budget'
 import { useStorage } from '../composables/useStorage'
 import { MsButton } from './ui/index.js'
 
+defineEmits(['selection-change'])
+
 const store = useBudgetStore()
 const { scheduleAutoSave } = useStorage()
 
+// ── Personnes ─────────────────────────────────────────────
 const p1 = computed(() => store.personnes[0])
 const p2 = computed(() => store.personnes[1])
 
-// ── Filtres & tri ──────────────────────────────────────────
+// ── Filtre ────────────────────────────────────────────────
 const filterCat = ref('')
-const filterEnv = ref('')
-const sortCol     = ref('createdAt')
-const sortDir     = ref('desc')
 
-function sortBy(col) {
-  if (sortCol.value === col) sortDir.value = sortDir.value === 'asc' ? 'desc' : 'asc'
-  else { sortCol.value = col; sortDir.value = 'asc' }
-}
-
-const filteredDepenses = computed(() => {
+const filtered = computed(() => {
   let list = [...store.depenses]
   if (filterCat.value) list = list.filter(d => d.categorieId === filterCat.value)
-  if (filterEnv.value)   list = list.filter(d => d.enveloppeId === filterEnv.value)
-  list.sort((a, b) => {
-    let va = a[sortCol.value] ?? 0, vb = b[sortCol.value] ?? 0
-    if (typeof va === 'string') { va = va.toLowerCase(); vb = (vb + '').toLowerCase() }
-    return sortDir.value === 'asc' ? (va > vb ? 1 : -1) : (va < vb ? 1 : -1)
-  })
   return list
 })
 
-// ── Totaux filtrés ────────────────────────────────────────
-function toMonthly(montant, frequence) {
-  switch (frequence) {
-    case 'hebdomadaire': return montant * 52 / 12
-    case 'trimestriel':  return montant / 3
-    case 'annuel':       return montant / 12
-    default:             return montant
-  }
+// ── Classification ────────────────────────────────────────
+function classify(dep) {
+  const h1 = (dep.montantP1 || 0) > 0
+  const h2 = (dep.montantP2 || 0) > 0
+  if (h1 && h2) return 'commun'
+  if (h1) return 'p1'
+  if (h2) return 'p2'
+  return 'commun'
 }
 
-const totalFiltreMensuelP1 = computed(() =>
-  filteredDepenses.value.reduce((sum, d) => sum + toMonthly(d.montantP1 || 0, d.frequence), 0)
+const depP1     = computed(() => filtered.value.filter(d => classify(d) === 'p1'))
+const depP2     = computed(() => filtered.value.filter(d => classify(d) === 'p2'))
+const depCommun = computed(() => filtered.value.filter(d => classify(d) === 'commun'))
+
+// ── Totaux ────────────────────────────────────────────────
+const totalP1 = computed(() =>
+  depP1.value.reduce((s, d) => s + store.toMonthly(d.montantP1 || 0, d.frequence), 0)
 )
-const totalFiltreMensuelP2 = computed(() =>
-  filteredDepenses.value.reduce((sum, d) => sum + toMonthly(d.montantP2 || 0, d.frequence), 0)
+const totalP2 = computed(() =>
+  depP2.value.reduce((s, d) => s + store.toMonthly(d.montantP2 || 0, d.frequence), 0)
 )
-const totalFiltreGlobal = computed(() =>
-  filteredDepenses.value.reduce((sum, d) =>
-    sum + toMonthly((d.montantP1 || 0) + (d.montantP2 || 0) + (d.montantCommun || 0), d.frequence), 0)
+const totalCommun = computed(() =>
+  depCommun.value.reduce((s, d) =>
+    s + store.toMonthly((d.montantP1 || 0) + (d.montantP2 || 0), d.frequence), 0)
 )
 
-const estFiltre = computed(() => filterCat.value !== '' || filterEnv.value !== '')
-
-
-// ── Édition inline ─────────────────────────────────────────
-const editing      = ref({ id: null, field: null, value: null })
-const editInputRef = ref(null)
-
-function startEdit(dep, field) {
-  editing.value = { id: dep.id, field, value: dep[field] }
-  nextTick(() => {
-    const input = document.querySelector('.ac--focus input')
-    if (input) { input.focus(); input.select?.() }
-  })
+// ── Helpers ───────────────────────────────────────────────
+function fmt(n) {
+  return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n || 0)
+}
+function fmtMonthly(dep) {
+  const total = (dep.montantP1 || 0) + (dep.montantP2 || 0) + (dep.montantCommun || 0)
+  return fmt(store.toMonthly(total, dep.frequence))
+}
+function freqLabel(f) {
+  return { mensuel: 'Mensuel', hebdomadaire: 'Hebdo', trimestriel: 'Trimestr.', annuel: 'Annuel' }[f] ?? f
+}
+function catNom(dep) {
+  return store.categories.find(c => c.id === dep.categorieId)?.nom ?? '—'
+}
+function catColor(dep) {
+  return store.categories.find(c => c.id === dep.categorieId)?.couleur ?? '#a1a1aa'
+}
+function catBadgeStyle(dep) {
+  const c = catColor(dep)
+  return { background: c + '20', color: c }
 }
 
-function saveEdit(dep) {
-  if (editing.value.id !== dep.id) return
-  const { field, value } = editing.value
-  if (field !== 'nom' && value < 0) { cancelEdit(); return }
-  store.updateDepense(dep.id, { [field]: value })
-  scheduleAutoSave()
-  editing.value = { id: null, field: null, value: null }
-}
-
-function cancelEdit() {
-  editing.value = { id: null, field: null, value: null }
-}
-
-// ── Composant AmountCell (render function — pas de template string) ────
-const AmountCell = {
-  props: ['dep', 'field', 'type', 'editing', 'editInputRef'],
-  emits: ['start', 'save', 'cancel'],
-  setup(props, { emit }) {
-    const isEditing = computed(() => props.editing.id === props.dep.id && props.editing.field === props.field)
-    const rawValue  = computed(() => props.dep[props.field])
-
-    function displayText() {
-      if (props.type === 'number') {
-        const v = rawValue.value || 0
-        if (v === 0) return null // affiche "—"
-        return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(v)
-      }
-      return rawValue.value || null
-    }
-
-    return () => {
-      if (isEditing.value) {
-        return h('div', { class: 'ac ac--focus' }, [
-          h('input', {
-            ref: props.editInputRef,
-            class: props.type === 'number' ? 'ac__input ac__input--num' : 'ac__input',
-            type: props.type,
-            min: props.type === 'number' ? 0 : undefined,
-            step: props.type === 'number' ? 1 : undefined,
-            value: props.editing.value,
-            onInput: (e) => {
-              props.editing.value = props.type === 'number' ? parseFloat(e.target.value) || 0 : e.target.value
-            },
-            onBlur: () => emit('save', props.dep),
-            onKeydown: (e) => {
-              if (e.key === 'Enter') { e.preventDefault(); emit('save', props.dep) }
-              if (e.key === 'Escape') emit('cancel')
-              if (e.key === 'Tab') emit('save', props.dep)
-            },
-          }),
-          props.type === 'number' ? h('span', { class: 'ac__suffix' }, '€') : null,
-        ])
-      }
-
-      const text = displayText()
-      return h('div', {
-        class: text ? 'ac ac--filled' : 'ac ac--empty',
-        onClick: () => emit('start', props.dep, props.field),
-      }, [
-        h('span', text || '—'),
-      ])
-    }
-  }
-}
-
-// ── Changements ───────────────────────────────────────────
-function onDepChange(dep) {
-  store.updateDepense(dep.id, { ...dep })
-  scheduleAutoSave()
-}
+// ── Actions ───────────────────────────────────────────────
 function toggleActif(dep) {
   store.toggleDepense(dep.id)
   scheduleAutoSave()
 }
-
-// ── Ajout ─────────────────────────────────────────────────
-function addNew() {
-  const id = store.addDepense({})
-  scheduleAutoSave()
-  nextTick(() => {
-    const dep = store.depenses.find(d => d.id === id)
-    if (dep) startEdit(dep, 'nom')
-  })
-}
-
-// ── Suppression ───────────────────────────────────────────
 const deleteTarget = ref(null)
 function confirmDelete(dep) { deleteTarget.value = dep }
 function doDelete() {
@@ -310,201 +428,363 @@ function doDelete() {
   deleteTarget.value = null
 }
 
-// ── Helpers ───────────────────────────────────────────────
-function fmt(n) {
-  return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n)
-}
-function fmtLine(dep) {
-  const total = store.toMonthly((dep.montantP1||0) + (dep.montantP2||0) + (dep.montantCommun||0), dep.frequence)
-  return fmt(total)
-}
-const CAT_ICONS = {
-  'Abonnements': `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3H8"/><path d="M12 3v4"/></svg>`,
-  'Logement':    `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
-  'Enfants':     `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="4"/><path d="M5.5 21a8.38 8.38 0 0 1 13 0"/></svg>`,
-  'Transport':   `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>`,
-  'Alimentation':`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3z"/><path d="M21 15v7"/></svg>`,
-  'Loisirs':     `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>`,
-  'Loisir':      `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>`,
-  'Santé':       `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>`,
-  'Épargne':     `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>`,
-  'Assurance':   `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
-  'Emprunt':     `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>`,
-}
-const CAT_ICON_DEFAULT = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>`
+// ── Modal ─────────────────────────────────────────────────
+const modalOpen = ref(false)
+const editId    = ref(null)
+const form      = ref({ nom: '', categorieId: null, frequence: 'mensuel', qui: 'commun', montantP1: 0, montantP2: 0 })
 
-function getCatIcon(catId) {
-  const nom = store.categories.find(c => c.id === catId)?.nom
-  return CAT_ICONS[nom] || CAT_ICON_DEFAULT
+function openAdd() {
+  editId.value  = null
+  form.value    = { nom: '', categorieId: null, frequence: 'mensuel', qui: 'commun', montantP1: 0, montantP2: 0 }
+  modalOpen.value = true
 }
 
-function fmtDate(ts) {
-  if (!ts) return '—'
-  return new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'short' }).format(new Date(ts))
+function openEdit(dep) {
+  editId.value = dep.id
+  const h1 = (dep.montantP1 || 0) > 0
+  const h2 = (dep.montantP2 || 0) > 0
+  form.value = {
+    nom:         dep.nom,
+    categorieId: dep.categorieId,
+    frequence:   dep.frequence,
+    qui:         (h1 && h2) ? 'commun' : h2 ? 'p2' : 'p1',
+    montantP1:   dep.montantP1 || 0,
+    montantP2:   dep.montantP2 || 0,
+  }
+  modalOpen.value = true
+}
+
+function closeModal() { modalOpen.value = false }
+
+const canSave = computed(() => {
+  if (!form.value.nom.trim()) return false
+  if (form.value.qui === 'p1') return (form.value.montantP1 || 0) > 0
+  if (form.value.qui === 'p2') return (form.value.montantP2 || 0) > 0
+  return (form.value.montantP1 || 0) > 0 || (form.value.montantP2 || 0) > 0
+})
+
+function saveModal() {
+  if (!canSave.value) return
+  const payload = {
+    nom:          form.value.nom.trim(),
+    categorieId:  form.value.categorieId,
+    frequence:    form.value.frequence,
+    montantP1:    form.value.qui !== 'p2' ? (form.value.montantP1 || 0) : 0,
+    montantP2:    form.value.qui !== 'p1' ? (form.value.montantP2 || 0) : 0,
+    montantCommun: 0,
+  }
+  if (editId.value) {
+    store.updateDepense(editId.value, payload)
+  } else {
+    store.addDepense(payload)
+  }
+  scheduleAutoSave()
+  closeModal()
+}
+
+// ── Équité ────────────────────────────────────────────────
+const equityInfo = computed(() => {
+  if (form.value.qui !== 'commun') return null
+  const total = (form.value.montantP1 || 0) + (form.value.montantP2 || 0)
+  if (total === 0) return null
+  const sal1 = p1.value?.salaire || 0
+  const sal2 = p2.value?.salaire || 0
+  if (sal1 + sal2 === 0) return null
+  const idealPct = Math.round(sal1 / (sal1 + sal2) * 100)
+  const realPct  = Math.round((form.value.montantP1 || 0) / total * 100)
+  const diff = Math.abs(realPct - idealPct)
+  return {
+    idealPct,
+    realPct,
+    diff,
+    status: diff <= 4 ? 'ok' : diff <= 10 ? 'warn' : 'bad',
+  }
+})
+
+const canSuggest = computed(() => {
+  const total = (form.value.montantP1 || 0) + (form.value.montantP2 || 0)
+  return form.value.qui === 'commun'
+    && total > 0
+    && (p1.value?.salaire || 0) + (p2.value?.salaire || 0) > 0
+})
+
+function suggestSplit() {
+  const sal1  = p1.value?.salaire || 0
+  const sal2  = p2.value?.salaire || 0
+  const total = (form.value.montantP1 || 0) + (form.value.montantP2 || 0)
+  form.value.montantP1 = Math.round(total * sal1 / (sal1 + sal2))
+  form.value.montantP2 = total - form.value.montantP1
 }
 </script>
 
 <style scoped>
-.dt { display: flex; flex-direction: column; gap: 12px; width: 100%; box-sizing: border-box; }
+.dep { display: flex; flex-direction: column; gap: 14px; width: 100%; box-sizing: border-box; }
 
-/* Bloc collé filtres + tableau */
-.dt__block {
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-}
-
-/* Filtres */
-.dt__filters {
+/* ── Barre ─────────────────────────────────────────────── */
+.dep__bar {
   display: flex; align-items: center; justify-content: space-between; gap: 8px;
-  background: var(--muted); border-bottom: 1px solid var(--border); padding: 10px 16px;
-  position: sticky; top: 0; z-index: 10;
 }
-.dt__filters-left { display: flex; gap: 8px; align-items: center; }
-.dt__select {
+.dep__select {
   height: 34px; padding: 0 10px;
   border: 1px solid var(--input); border-radius: var(--radius-md);
-  background: #ffffff; font-size: 13px; color: var(--foreground);
+  background: #fff; font-size: 13px; color: var(--foreground);
   outline: none; cursor: pointer; font-family: inherit;
 }
 
-/* Tableau */
-.dt__wrap {
-  overflow-x: auto;
-  background: var(--card);
-  overflow: hidden;
+/* ── Colonnes ──────────────────────────────────────────── */
+.dep__cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  align-items: start;
 }
-.dt__table { width: 100%; border-collapse: collapse; min-width: 800px; }
 
-.dt__th {
-  padding: 10px 12px; text-align: left;
-  font-size: 12px; font-weight: 500; color: var(--muted-foreground);
-  background: var(--muted); border-bottom: 1px solid var(--border);
-  cursor: pointer; white-space: nowrap; user-select: none;
-  text-transform: uppercase; letter-spacing: 0.04em;
+.dep__col {
+  display: flex; flex-direction: column;
+  border: 1.5px solid var(--border);
+  border-radius: 14px; overflow: hidden;
 }
-.dt__th--actions { cursor: default; }
-.dt__th--amount, .dt__th--total { text-align: right; width: 110px; }
-.dt__th--nom { min-width: 160px; }
-.dt__th--actions { width: 80px; }
-.dt__sort { margin-left: 4px; opacity: 0.4; font-size: 11px; }
-.dt__sort--on { opacity: 1; color: var(--primary); }
 
-/* Rows */
-.dt__row:nth-child(even) { background: #fbfbfb; }
-.dt__row--inactive { opacity: 0.45; }
-.dt__row--selected { background: var(--accent); }
-.dt__row:hover { background: var(--accent); }
-
-.dt__td {
-  padding: 10px 12px;
-  border-bottom: 1px solid var(--border);
-  font-size: 13px; vertical-align: middle;
-  color: var(--foreground);
+.dep__col-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 16px;
+  background: #fff;
+  border-bottom: 1.5px solid var(--border);
 }
-.dt__td--nom-cell { display: flex; align-items: center; gap: 8px; }
-.dt__td--amount { text-align: right; width: 110px; }
-.dt__td--total { text-align: right; width: 100px; font-weight: 600; color: var(--muted-foreground); }
-.dt__td--actions { width: 80px; white-space: nowrap; }
 
-.dt__cat-wrap { display: flex; align-items: center; gap: 6px; }
-.dt__cat-icon { display: flex; align-items: center; flex-shrink: 0; color: var(--muted-foreground); }
+.dep__col-ava {
+  width: 34px; height: 34px; border-radius: 10px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700; color: #fff;
+}
+.dep__col-ava--commun { background: #18181b; }
 
-/* ── AmountCell états ─────────────────────────────────────── */
-:deep(.ac) {
-  display: inline-flex; align-items: center;
-  min-width: 70px; max-width: 100%;
-  padding: 5px 8px; border-radius: var(--radius-sm);
-  cursor: text; transition: border 120ms ease, box-shadow 120ms ease;
-  border: 1px solid transparent;
-  font-size: 13px;
-}
-:deep(.ac--filled) { color: var(--foreground); }
-:deep(.ac--empty)  { color: var(--muted-foreground); }
-.dt__row:hover :deep(.ac) { border-color: var(--border); }
-:deep(.ac--focus) {
-  border-color: var(--ring) !important;
-  box-shadow: 0 0 0 2px rgba(24,24,27,0.12) !important;
-  background: var(--background);
-}
-:deep(.ac__input) {
-  border: none; outline: none; background: transparent;
-  font-size: 13px; font-family: inherit; color: var(--foreground);
-  width: 80px; padding: 0;
-}
-:deep(.ac__input--num) { text-align: right; }
-:deep(.ac__input::-webkit-inner-spin-button),
-:deep(.ac__input::-webkit-outer-spin-button) { -webkit-appearance: none; }
-:deep(.ac__suffix) { font-size: 11px; color: var(--muted-foreground); margin-left: 4px; }
+.dep__col-headinfo { flex: 1; display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.dep__col-name { font-size: 13px; font-weight: 600; color: var(--foreground); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dep__col-count { font-size: 11px; color: var(--muted-foreground); }
+.dep__col-sum { font-size: 13px; font-weight: 700; color: var(--foreground); white-space: nowrap; }
 
-/* Selects inline */
-.dt__sel {
-  border: none; background: transparent; outline: none;
-  font-size: 13px; color: var(--foreground); cursor: pointer;
-  padding: 4px 6px; border-radius: var(--radius-sm); font-family: inherit; max-width: 130px;
+.dep__col-body {
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 10px; background: #fafafa; flex: 1;
 }
-.dt__sel:hover { background: var(--accent); }
 
-/* Actions */
-.dt__act {
-  width: 28px; height: 28px; border-radius: var(--radius-sm);
-  display: inline-flex; align-items: center; justify-content: center;
-  font-size: 13px; background: transparent; color: var(--muted-foreground);
-  transition: background 150ms ease, color 150ms ease; cursor: pointer; border: none; padding: 0;
+.dep__empty {
+  text-align: center; font-size: 13px; color: var(--muted-foreground);
+  padding: 28px 12px; opacity: 0.6;
 }
-.dt__act:hover { background: var(--accent); color: var(--foreground); }
-.dt__act--danger:hover { background: var(--color-danger-subtle); color: var(--color-danger); }
 
-.dt__act--toggle {
-  width: auto; height: 24px;
-  padding: 0 8px; gap: 4px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+/* ── Cards ─────────────────────────────────────────────── */
+.dep__card {
+  display: flex;
+  background: #fff;
+  border: 1.5px solid var(--border);
+  border-radius: 10px; overflow: hidden;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.dep__card:hover {
+  border-color: #b0b0b0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+.dep__card--off { opacity: 0.4; }
+
+.dep__card-accent { width: 4px; flex-shrink: 0; background: var(--acc, #a1a1aa); }
+
+.dep__card-content {
+  flex: 1; min-width: 0; padding: 10px 12px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+
+.dep__card-top {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 8px;
+}
+.dep__card-nom {
+  font-size: 13px; font-weight: 600; color: var(--foreground);
+  flex: 1; min-width: 0; word-break: break-word;
+}
+.dep__card-amount {
+  font-size: 13px; font-weight: 700; color: var(--foreground);
+  white-space: nowrap; flex-shrink: 0;
+}
+
+.dep__card-shares { display: flex; gap: 5px; flex-wrap: wrap; }
+.dep__share {
   font-size: 11px; font-weight: 500;
-  font-family: inherit;
-  color: var(--muted-foreground);
-  background: transparent;
-  display: inline-flex; align-items: center;
-  cursor: pointer;
-  transition: border-color 150ms, color 150ms, background 150ms;
+  padding: 2px 8px; border-radius: 20px; white-space: nowrap;
 }
-.dt__act--toggle:hover { border-color: var(--foreground); color: var(--foreground); background: var(--accent); }
 
-/* Tfoot */
-.dt__foot-row { background: var(--muted); }
-.dt__foot-row .dt__td { border-top: 2px solid var(--border); border-bottom: none; }
-.dt__foot-label { font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 8px; }
-.dt__filtre-badge { font-size: 11px; font-weight: 400; color: var(--muted-foreground); }
-.dt__foot-num { text-align: right; font-weight: 600; font-size: 13px; }
-.dt__foot-total { text-align: right; font-weight: 700; font-size: 14px; }
-
-/* Colonne date */
-.dt__th--date { width: 80px; white-space: nowrap; cursor: pointer; }
-.dt__td--date { font-size: 11px; color: var(--muted-foreground); white-space: nowrap; }
-
-/* Footer */
-.dt__footer { display: flex; align-items: center; }
-.dt__count { font-size: 12px; color: var(--muted-foreground); }
-
-/* État vide */
-.dt__empty-cell { padding: 0 !important; border-bottom: none !important; }
-.dt__empty {
-  display: flex; flex-direction: column; align-items: center;
-  gap: 10px; padding: 48px; color: var(--muted-foreground); text-align: center;
+.dep__card-bot {
+  display: flex; align-items: center; gap: 5px; flex-wrap: wrap;
 }
-.dt__empty p { font-size: 14px; }
-.dt__empty strong { color: var(--foreground); }
-
-/* Modale */
-.dt__overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 1000; }
-.dt__modal {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  padding: 24px; max-width: 360px; width: 90%;
-  box-shadow: var(--shadow-xl);
+.dep__card-cat {
+  font-size: 11px; font-weight: 500;
+  padding: 2px 8px; border-radius: 20px; white-space: nowrap;
 }
-.dt__modal h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
-.dt__modal p  { font-size: 14px; color: var(--muted-foreground); margin-bottom: 24px; }
-.dt__modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
+.dep__card-freq {
+  font-size: 11px; font-weight: 500;
+  padding: 2px 8px; border-radius: 20px;
+  background: var(--muted); color: var(--muted-foreground); white-space: nowrap;
+}
+
+.dep__card-acts {
+  display: flex; gap: 2px; margin-left: auto;
+  opacity: 0; transition: opacity 0.15s;
+}
+.dep__card:hover .dep__card-acts { opacity: 1; }
+
+.dep__act {
+  width: 26px; height: 26px; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  background: transparent; border: none;
+  color: var(--muted-foreground); cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+.dep__act:hover { background: var(--muted); color: var(--foreground); }
+.dep__act--del:hover { background: #fff0f0; color: #ef4444; }
+
+/* ── Overlay / Modal ───────────────────────────────────── */
+.dep__overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000; padding: 24px;
+}
+
+.dep__modal {
+  background: #fff; border: 1px solid var(--border);
+  border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.14);
+  width: 100%; max-width: 480px;
+  display: flex; flex-direction: column;
+  max-height: 90vh; overflow-y: auto;
+}
+.dep__modal--sm { max-width: 360px; }
+
+.dep__modal-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 24px 16px; border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; background: #fff; z-index: 1;
+}
+.dep__modal-title { font-size: 16px; font-weight: 700; color: var(--foreground); margin: 0; }
+.dep__modal-close {
+  width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+  border-radius: 7px; background: none; border: none;
+  color: var(--muted-foreground); cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+.dep__modal-close:hover { background: var(--muted); color: var(--foreground); }
+
+.dep__modal-body { padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; }
+.dep__modal-text { font-size: 14px; color: var(--muted-foreground); margin: 0; }
+
+.dep__modal-foot {
+  display: flex; align-items: center; justify-content: flex-end; gap: 8px;
+  padding: 16px 24px; border-top: 1px solid var(--border);
+  position: sticky; bottom: 0; background: #fff;
+}
+
+/* Champs */
+.dep__mfield { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0; }
+.dep__mlabel { font-size: 12px; font-weight: 500; color: var(--muted-foreground); }
+.dep__mrow { display: flex; gap: 12px; }
+
+.dep__minput {
+  height: 40px; padding: 0 12px;
+  border: 1.5px solid var(--input); border-radius: 9px;
+  font-size: 14px; font-family: inherit; color: var(--foreground);
+  background: #fafafa; outline: none; width: 100%; box-sizing: border-box;
+  transition: border-color 0.15s, background 0.15s;
+}
+.dep__minput:focus { border-color: #18181b; background: #fff; }
+.dep__minput--num { text-align: right; padding-right: 32px; }
+
+.dep__minput-wrap { position: relative; }
+.dep__minput-suffix {
+  position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+  font-size: 12px; color: var(--muted-foreground); pointer-events: none;
+}
+
+.dep__mselect {
+  height: 40px; padding: 0 12px;
+  border: 1.5px solid var(--input); border-radius: 9px;
+  font-size: 14px; font-family: inherit; color: var(--foreground);
+  background: #fafafa; outline: none; cursor: pointer; width: 100%;
+  transition: border-color 0.15s;
+}
+.dep__mselect:focus { border-color: #18181b; }
+
+/* Qui paie */
+.dep__qui { display: flex; gap: 8px; }
+.dep__qui-btn {
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: 7px;
+  height: 40px; padding: 0 10px;
+  border: 1.5px solid var(--border); border-radius: 9px;
+  font-size: 13px; font-weight: 500; font-family: inherit;
+  color: var(--muted-foreground); background: #fafafa;
+  cursor: pointer; transition: border-color 0.12s, background 0.12s, color 0.12s;
+}
+.dep__qui-btn:hover { border-color: #a1a1aa; color: var(--foreground); }
+.dep__qui-btn--on { font-weight: 600; }
+.dep__qui-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+/* Commun block */
+.dep__commun-block { display: flex; flex-direction: column; gap: 12px; }
+
+.dep__total-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px; background: var(--muted); border-radius: 9px;
+}
+.dep__total-label { font-size: 13px; color: var(--muted-foreground); }
+.dep__total-val { font-size: 15px; font-weight: 700; color: var(--foreground); }
+.dep__total-freq { font-size: 12px; font-weight: 400; color: var(--muted-foreground); }
+
+/* Équité */
+.dep__equity {
+  padding: 12px 14px; border-radius: 9px; border: 1.5px solid;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.dep__equity--ok   { border-color: #bbf7d0; background: #f0fdf4; }
+.dep__equity--warn { border-color: #fde68a; background: #fffbeb; }
+.dep__equity--bad  { border-color: #fecaca; background: #fff5f5; }
+
+.dep__equity-bar {
+  height: 6px; border-radius: 3px; overflow: hidden; display: flex;
+}
+.dep__equity-bar-p1,
+.dep__equity-bar-p2 { height: 100%; transition: width 0.3s ease; }
+
+.dep__equity-labels {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 12px; font-weight: 500;
+}
+.dep__equity-verdict { font-size: 12px; }
+.dep__equity--ok   .dep__equity-verdict { color: #16a34a; }
+.dep__equity--warn .dep__equity-verdict { color: #d97706; }
+.dep__equity--bad  .dep__equity-verdict { color: #dc2626; }
+
+.dep__equity-ideal { font-size: 11px; color: var(--muted-foreground); }
+
+/* Bouton suggérer */
+.dep__suggest-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  height: 36px; padding: 0 14px;
+  border: 1.5px solid var(--border); border-radius: 8px;
+  font-size: 13px; font-weight: 500; font-family: inherit;
+  color: var(--foreground); background: var(--muted);
+  cursor: pointer; transition: border-color 0.12s, background 0.12s;
+  align-self: flex-start;
+}
+.dep__suggest-btn:hover { border-color: #a1a1aa; background: #ebebeb; }
+
+/* Boutons modale */
+.dep__mbtn {
+  height: 38px; padding: 0 20px; border-radius: 8px;
+  font-size: 13px; font-weight: 500; font-family: inherit;
+  cursor: pointer; border: none; transition: background 0.12s, opacity 0.12s;
+}
+.dep__mbtn--ghost { background: none; border: 1.5px solid var(--border); color: var(--foreground); }
+.dep__mbtn--ghost:hover { background: var(--muted); }
+.dep__mbtn--primary { background: #18181b; color: #fff; }
+.dep__mbtn--primary:hover:not(:disabled) { background: #27272a; }
+.dep__mbtn--primary:disabled { opacity: 0.35; cursor: not-allowed; }
+.dep__mbtn--danger { background: #ef4444; color: #fff; }
+.dep__mbtn--danger:hover { background: #dc2626; }
 </style>
