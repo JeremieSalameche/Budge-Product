@@ -3,7 +3,29 @@ import { ref, computed } from 'vue'
 import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { db } from '../firebase'
 import { useAuthStore } from './auth'
-import defaultData from '../../data/budget.json'
+const defaultData = {
+  config: {
+    personnes: [
+      { id: 'p1', nom: 'Personne 1', salaire: 0, couleur: '#7C6FCD' },
+      { id: 'p2', nom: 'Personne 2', salaire: 0, couleur: '#4A9EDB' },
+    ]
+  },
+  categories: [
+    { id: 'cat1',  nom: 'Logement',     couleur: '#E8643A' },
+    { id: 'cat2',  nom: 'Transport',    couleur: '#F08C46' },
+    { id: 'cat3',  nom: 'Alimentation', couleur: '#2CA87F' },
+    { id: 'cat4',  nom: 'Loisirs',      couleur: '#25566E' },
+    { id: 'cat5',  nom: 'Santé',        couleur: '#D4A84B' },
+    { id: 'cat6',  nom: 'Épargne',      couleur: '#22C55E' },
+    { id: 'cat7',  nom: 'Abonnements',  couleur: '#71717A' },
+    { id: 'cat8',  nom: 'Enfants',      couleur: '#E8643A' },
+    { id: 'cat9',  nom: 'Assurance',    couleur: '#60A5FA' },
+    { id: 'cat10', nom: 'Emprunt',      couleur: '#A78BFA' },
+  ],
+  depenses:   [],
+  enveloppes: [],
+  epargnes:   [],
+}
 
 function deepClone(obj) { return JSON.parse(JSON.stringify(obj)) }
 
