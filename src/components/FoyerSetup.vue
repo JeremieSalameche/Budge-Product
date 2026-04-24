@@ -525,9 +525,10 @@ async function onImportCsvOnboarding(e) {
   flex-shrink: 0;
 }
 .onboarding__right-glow {
-  position: absolute; bottom: -120px; left: -80px;
-  width: 520px; height: 520px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(236,72,153,0.45) 0%, rgba(124,111,205,0.4) 40%, transparent 70%);
+  position: absolute; bottom: -200px; left: -150px;
+  width: 800px; height: 800px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(236,72,153,0.3) 0%, rgba(124,111,205,0.25) 35%, transparent 65%);
+  filter: blur(40px);
   pointer-events: none;
 }
 .onboarding__right-top { position: relative; z-index: 1; }

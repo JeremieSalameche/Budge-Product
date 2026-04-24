@@ -94,19 +94,22 @@ async function login() {
   pointer-events: none;
 }
 .login-left__glow--1 {
-  width: 500px; height: 500px;
-  bottom: -140px; left: -80px;
-  background: radial-gradient(circle, rgba(236,72,153,0.45) 0%, transparent 70%);
+  width: 800px; height: 800px;
+  bottom: -280px; left: -150px;
+  background: radial-gradient(circle, rgba(236,72,153,0.3) 0%, transparent 60%);
+  filter: blur(40px);
 }
 .login-left__glow--2 {
-  width: 400px; height: 400px;
-  bottom: -80px; left: 30%;
-  background: radial-gradient(circle, rgba(124,111,205,0.4) 0%, transparent 70%);
+  width: 600px; height: 600px;
+  bottom: -200px; left: 20%;
+  background: radial-gradient(circle, rgba(124,111,205,0.25) 0%, transparent 60%);
+  filter: blur(40px);
 }
 .login-left__glow--3 {
-  width: 280px; height: 280px;
-  bottom: 60px; right: -40px;
-  background: radial-gradient(circle, rgba(74,158,219,0.3) 0%, transparent 70%);
+  width: 400px; height: 400px;
+  bottom: -60px; right: -80px;
+  background: radial-gradient(circle, rgba(74,158,219,0.2) 0%, transparent 60%);
+  filter: blur(40px);
 }
 
 .login-left__logo {
