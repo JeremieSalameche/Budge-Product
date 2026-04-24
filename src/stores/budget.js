@@ -681,8 +681,8 @@ export const useBudgetStore = defineStore('budget', () => {
   })
 
   const chargesParPersonne = computed(() => {
-    const p1 = depensesActives.value.reduce((s, d) => s + toMonthly(d.montantP1 || 0, d.frequence), 0)
-    const p2 = depensesActives.value.reduce((s, d) => s + toMonthly(d.montantP2 || 0, d.frequence), 0)
+    const p1 = depensesActives.value.reduce((s, d) => s + toMonthly(d.montantP1 || 0, d.frequence) + toMonthly(d.montantCommun || 0, d.frequence) / 2, 0)
+    const p2 = depensesActives.value.reduce((s, d) => s + toMonthly(d.montantP2 || 0, d.frequence) + toMonthly(d.montantCommun || 0, d.frequence) / 2, 0)
     return { p1: Math.round(p1), p2: Math.round(p2) }
   })
 
