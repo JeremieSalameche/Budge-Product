@@ -32,6 +32,33 @@
       <Transition name="sum-expand">
         <div v-if="sumOpen" class="sum__panel">
 
+          <!-- Réalité numérique -->
+          <div class="sum__reality">
+            <div class="sum__reality-chips">
+              <span class="sum__chip">🏠 Loyer</span>
+              <span class="sum__chip">📱 Abonnements</span>
+              <span class="sum__chip">⚡ Énergie</span>
+              <span class="sum__chip">🛒 Courses en ligne</span>
+              <span class="sum__chip">🏥 Mutuelle</span>
+            </div>
+            <p class="sum__reality-text">
+              En 2026, presque toutes vos charges sont <strong>numériques</strong> — loyer par virement, Netflix/Spotify/salle de sport par prélèvement CB, Engie ou EDF par prélèvement automatique, achats en ligne…
+              Les enveloppes en papier avec du cash que les influenceurs budget vantent ne s'appliquent pas à cette réalité.
+            </p>
+            <p class="sum__reality-text">
+              Et l'épargne — Livret A, PEL, ou matelas à la maison — c'est votre affaire. Budge ne la juge pas.
+            </p>
+            <div class="sum__anxiety-box">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <span>La vraie anxiété : <em>« Est-ce que tous mes prélèvements du mois sont passés avant que je dépense ce qu'il reste sur mon compte ? »</em></span>
+            </div>
+          </div>
+
+          <!-- Séparateur -->
+          <div class="sum__divider">
+            <span>Une solution concrète</span>
+          </div>
+
           <!-- Logo + tagline -->
           <div class="sum__header">
             <div class="sum__logo">
@@ -44,7 +71,7 @@
 
           <!-- Accroche -->
           <p class="sum__pitch">
-            Compartimentez vos finances avec de vrais comptes bancaires dédiés — chacun avec son propre IBAN et sa CB. Vos abonnements, votre loyer, vos crédits sont payés depuis le bon compte, sans jamais toucher à votre épargne ou à votre compte principal.
+            Ouvrez de vrais comptes bancaires dédiés — chacun avec son propre IBAN et sa CB. Le 1er du mois, vous virez exactement le bon montant sur chaque compte (Budge vous dit combien). Loyer, abonnements, énergie sont prélevés depuis le bon compte. Votre compte principal ne voit plus passer que des virements sortants — plus d'anxiété sur le solde.
           </p>
 
           <!-- Points clés -->
@@ -53,21 +80,21 @@
               <span class="sum__feature-icon">🏦</span>
               <div>
                 <div class="sum__feature-title">IBAN + CB dédiée par compte</div>
-                <div class="sum__feature-sub">Payez vos charges directement — loyer par virement, abos par CB, sans mélanger avec votre compte principal</div>
+                <div class="sum__feature-sub">Loyer par virement, abos par CB, énergie par prélèvement — chaque dépense sort du bon compte, jamais de votre compte principal</div>
               </div>
             </div>
             <div class="sum__feature">
               <span class="sum__feature-icon">🔄</span>
               <div>
-                <div class="sum__feature-title">Virements automatiques programmables</div>
-                <div class="sum__feature-sub">Depuis votre banque classique, programmez un virement mensuel vers chaque compte Sumeria — Budge vous dit exactement combien</div>
+                <div class="sum__feature-title">Virement mensuel automatique</div>
+                <div class="sum__feature-sub">Programmez un virement depuis votre banque classique — Budge calcule exactement combien mettre sur chaque compte</div>
               </div>
             </div>
             <div class="sum__feature">
               <span class="sum__feature-icon">🔒</span>
               <div>
-                <div class="sum__feature-title">Votre compte principal reste une forteresse</div>
-                <div class="sum__feature-sub">Crédit Agricole, BNP, LCL… devenez juste un point de collecte et de sécurité. Plus de prélèvements imprévisibles sur votre compte principal</div>
+                <div class="sum__feature-title">Votre compte principal devient une forteresse</div>
+                <div class="sum__feature-sub">Crédit Agricole, BNP, LCL… devient juste un point de collecte. Zéro prélèvement imprévisible, zéro anxiété de solde en fin de mois</div>
               </div>
             </div>
             <div class="sum__feature">
@@ -108,21 +135,23 @@
 
     <!-- Grille comptes -->
     <div class="env__grid" v-if="store.enveloppes.length">
-      <div v-for="env in store.enveloppes" :key="env.id" class="env__card">
-        <div class="env__card-stripe" :style="{ background: env.couleur }"></div>
+      <div v-for="env in store.enveloppes" :key="env.id"
+           class="env__card"
+           :style="{ '--env-color': env.couleur }">
+        <div class="env__card-stripe"></div>
         <div class="env__card-body">
 
           <!-- Header compte -->
           <div class="env__card-header">
             <div class="env__card-left">
-              <div class="env__dot" :style="{ background: env.couleur }"></div>
+              <div class="env__dot"></div>
               <div>
                 <div class="env__card-name">{{ env.nom }}</div>
                 <div class="env__card-sub">{{ depensesOfEnv(env.id).length }} charge{{ depensesOfEnv(env.id).length > 1 ? 's' : '' }} assignée{{ depensesOfEnv(env.id).length > 1 ? 's' : '' }}</div>
               </div>
             </div>
             <div class="env__card-right">
-              <span :class="['env__badge', 'env__badge--' + (env.appartientA || 'tous')]">{{ badgeLabel(env) }}</span>
+              <span class="env__badge" :style="badgeStyle(env)">{{ badgeLabel(env) }}</span>
               <div class="env__card-actions">
                 <button class="env__icon-btn" @click="openEditModal(env)" title="Modifier" type="button">
                   <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M9 2l2 2-6 6H3V8l6-6z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
@@ -135,33 +164,38 @@
           </div>
 
           <!-- Montant à virer -->
-          <div class="env__virement">
-            <div class="env__virement-main">
-              <span class="env__virement-label">À virer le 1er du mois</span>
-              <span class="env__virement-amount">{{ fmt(getTotal(env.id)) }}</span>
-            </div>
+          <div class="env__virement" :style="virementStyle(env)">
+            <span class="env__virement-label">À virer le 1er du mois</span>
+            <span class="env__virement-amount">{{ fmt(getTotal(env.id)) }}</span>
           </div>
 
           <!-- Détail par personne si "tous" -->
           <div v-if="(!env.appartientA || env.appartientA === 'tous') && !isSolo" class="env__persons-row">
-            <div class="env__person-chip" v-if="store.personnes[0]">
+            <div class="env__person-chip" v-if="store.personnes[0]"
+                 :style="{ background: hexToRgba(store.personnes[0].couleur, 0.09), borderColor: hexToRgba(store.personnes[0].couleur, 0.22) }">
               <span class="env__person-dot" :style="{ background: store.personnes[0].couleur }"></span>
               <span class="env__person-name">{{ store.personnes[0].nom }}</span>
-              <span class="env__person-amt">{{ fmt(store.totalParEnveloppe[env.id]?.p1Charge || 0) }}</span>
+              <span class="env__person-amt" :style="{ color: store.personnes[0].couleur }">{{ fmt(store.totalParEnveloppe[env.id]?.p1Charge || 0) }}</span>
             </div>
-            <div class="env__person-chip" v-if="store.personnes[1]">
+            <div class="env__person-chip" v-if="store.personnes[1]"
+                 :style="{ background: hexToRgba(store.personnes[1].couleur, 0.09), borderColor: hexToRgba(store.personnes[1].couleur, 0.22) }">
               <span class="env__person-dot" :style="{ background: store.personnes[1].couleur }"></span>
               <span class="env__person-name">{{ store.personnes[1].nom }}</span>
-              <span class="env__person-amt">{{ fmt(store.totalParEnveloppe[env.id]?.p2Charge || 0) }}</span>
+              <span class="env__person-amt" :style="{ color: store.personnes[1].couleur }">{{ fmt(store.totalParEnveloppe[env.id]?.p2Charge || 0) }}</span>
             </div>
           </div>
 
           <!-- Liste charges -->
           <div class="env__lines" v-if="depensesOfEnv(env.id).length">
             <div v-for="dep in depensesOfEnv(env.id)" :key="dep.id" class="env__line">
-              <div class="env__line-dot" :style="{ background: getCatColor(dep.categorieId) }"></div>
-              <span class="env__line-nom" :class="{ 'env__line-inactive': !dep.actif }">{{ dep.nom }}</span>
-              <span class="env__line-montant">{{ fmt(getMontantDepense(dep, env)) }}</span>
+              <div class="env__line-cat">
+                <span class="env__line-cat-dot" :style="{ background: getCatColor(dep.categorieId) }"></span>
+                <span class="env__line-cat-nom">{{ getCatNom(dep) }}</span>
+              </div>
+              <div class="env__line-main">
+                <span class="env__line-nom" :class="{ 'env__line-inactive': !dep.actif }">{{ dep.nom }}</span>
+                <span class="env__line-montant">{{ fmt(getMontantDepense(dep, env)) }}</span>
+              </div>
             </div>
           </div>
           <p v-else class="env__empty">Aucune charge assignée</p>
@@ -284,6 +318,9 @@ function fmt(n) {
 function getCatColor(catId) {
   return store.categories.find(c => c.id === catId)?.couleur || '#E5E7EB'
 }
+function getCatNom(dep) {
+  return store.categories.find(c => c.id === dep.categorieId)?.nom ?? '—'
+}
 function depensesOfEnv(envId) {
   return store.depenses.filter(d => d.enveloppeId === envId)
 }
@@ -301,6 +338,36 @@ function badgeLabel(env) {
   if (ap === 'p1') return store.personnes[0]?.nom || 'P1'
   if (ap === 'p2') return store.personnes[1]?.nom || 'P2'
   return 'Commun'
+}
+
+function hexToRgba(hex, alpha) {
+  if (!hex || !hex.startsWith('#')) return `rgba(0,0,0,${alpha})`
+  const h = hex.replace('#', '')
+  const r = parseInt(h.substring(0, 2), 16)
+  const g = parseInt(h.substring(2, 4), 16)
+  const b = parseInt(h.substring(4, 6), 16)
+  return `rgba(${r},${g},${b},${alpha})`
+}
+
+function badgeStyle(env) {
+  const ap = env.appartientA || 'tous'
+  if (ap === 'p1') {
+    const col = store.personnes[0]?.couleur
+    if (!col) return {}
+    return { background: hexToRgba(col, 0.12), color: col, border: `1px solid ${hexToRgba(col, 0.28)}` }
+  }
+  if (ap === 'p2') {
+    const col = store.personnes[1]?.couleur
+    if (!col) return {}
+    return { background: hexToRgba(col, 0.12), color: col, border: `1px solid ${hexToRgba(col, 0.28)}` }
+  }
+  return {}
+}
+
+function virementStyle(env) {
+  const col = env.couleur
+  if (!col) return {}
+  return { background: hexToRgba(col, 0.07), borderColor: hexToRgba(col, 0.2) }
 }
 
 // Totaux virements par personne
@@ -424,9 +491,39 @@ function doDeleteEnv() {
   display: flex; flex-direction: column; gap: 16px;
 }
 
+/* Réalité numérique */
+.sum__reality { display: flex; flex-direction: column; gap: 10px; padding-top: 18px; }
+.sum__reality-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.sum__chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: 99px;
+  background: var(--muted); border: 1px solid var(--border);
+  font-size: 12px; font-weight: 500; color: var(--foreground);
+}
+.sum__reality-text {
+  font-size: 13px; color: var(--muted-foreground); line-height: 1.65; margin: 0;
+}
+.sum__reality-text strong { color: var(--foreground); font-weight: 600; }
+.sum__anxiety-box {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 10px 14px; border-radius: 8px;
+  background: #fefce8; border: 1px solid #fde047;
+  font-size: 13px; color: #713f12; line-height: 1.55;
+}
+.sum__anxiety-box em { font-style: italic; }
+
+/* Séparateur */
+.sum__divider {
+  display: flex; align-items: center; gap: 12px;
+  color: var(--muted-foreground); font-size: 11px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+.sum__divider::before, .sum__divider::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+
 .sum__header {
   display: flex; align-items: center; justify-content: space-between;
-  padding-top: 18px;
 }
 .sum__logo { display: flex; align-items: center; gap: 8px; }
 .sum__logo-text { font-size: 18px; font-weight: 800; color: #1a1aff; letter-spacing: -0.5px; }
@@ -486,29 +583,35 @@ function doDeleteEnv() {
 @media (max-width: 900px) { .env__grid { grid-template-columns: minmax(0, 1fr); } }
 
 .env__card {
-  background: var(--card); border-radius: 12px;
-  border: 1px solid var(--border); box-shadow: var(--shadow-xs);
+  background: var(--card); border-radius: 14px;
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
   overflow: hidden; display: flex; flex-direction: column;
+  transition: box-shadow 0.2s ease, transform 0.18s ease;
 }
-.env__card-stripe { height: 4px; width: 100%; flex-shrink: 0; }
+.env__card:hover {
+  box-shadow: 0 6px 20px rgba(0,0,0,0.09), 0 2px 6px rgba(0,0,0,0.06);
+  transform: translateY(-2px);
+}
+.env__card-stripe { height: 5px; width: 100%; flex-shrink: 0; background: var(--env-color, #e5e7eb); }
 .env__card-body { padding: 18px; display: flex; flex-direction: column; gap: 14px; }
 
 .env__card-header { display: flex; align-items: flex-start; justify-content: space-between; }
 .env__card-left { display: flex; align-items: flex-start; gap: 10px; }
 .env__card-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
-.env__dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
+.env__dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; background: var(--env-color, #e5e7eb); }
 .env__card-name { font-size: 15px; font-weight: 600; color: var(--foreground); }
 .env__card-sub  { font-size: 12px; color: var(--muted-foreground); margin-top: 2px; }
-.env__card-actions { display: flex; gap: 4px; }
+.env__card-actions { display: flex; gap: 4px; opacity: 0; transition: opacity 0.15s; }
+.env__card:hover .env__card-actions { opacity: 1; }
 
 .env__badge {
   font-size: 11px; padding: 2px 10px;
   border-radius: var(--radius-full);
-  white-space: nowrap; font-weight: 500;
+  white-space: nowrap; font-weight: 600;
+  background: var(--secondary); color: var(--secondary-foreground);
+  border: 1px solid var(--border);
 }
-.env__badge--tous { background: var(--secondary); color: var(--secondary-foreground); }
-.env__badge--p1   { background: var(--primary); color: var(--primary-foreground); }
-.env__badge--p2   { background: var(--muted); border: 1px solid var(--border); color: var(--muted-foreground); }
 
 .env__icon-btn {
   width: 28px; height: 28px; border-radius: var(--radius-sm);
@@ -521,39 +624,48 @@ function doDeleteEnv() {
 
 /* Virement principal */
 .env__virement {
-  background: #f8faff; border: 1px solid #e0e9ff;
+  border: 1px solid transparent;
   border-radius: 10px; padding: 14px 16px;
-  display: flex; flex-direction: column; gap: 8px;
+  display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
 }
-.env__virement-main { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
-.env__virement-label { font-size: 11px; font-weight: 600; color: var(--primary); text-transform: uppercase; letter-spacing: 0.04em; }
-.env__virement-amount { font-size: 22px; font-weight: 800; color: var(--foreground); }
-.env__virement-budget { display: flex; flex-direction: column; gap: 4px; }
-.env__budget-label { font-size: 11px; color: var(--muted-foreground); }
-.env__set-budget-btn { font-size: 12px; color: var(--primary); background: transparent; border: none; cursor: pointer; padding: 0; text-align: left; }
-.env__set-budget-btn:hover { text-decoration: underline; }
+.env__virement-label { font-size: 11px; font-weight: 600; color: var(--primary); text-transform: uppercase; letter-spacing: 0.05em; }
+.env__virement-amount { font-size: 24px; font-weight: 800; color: var(--foreground); letter-spacing: -0.5px; }
 
 /* Chips personnes */
 .env__persons-row { display: flex; gap: 8px; flex-wrap: wrap; }
 .env__person-chip {
   display: flex; align-items: center; gap: 6px;
-  background: var(--muted); border-radius: 8px; padding: 6px 10px;
+  border: 1px solid transparent; border-radius: 8px; padding: 7px 10px;
   flex: 1; min-width: 0;
 }
 .env__person-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 .env__person-name { font-size: 12px; font-weight: 500; color: var(--foreground); flex: 1; }
-.env__person-amt { font-size: 12px; font-weight: 700; color: var(--foreground); }
+.env__person-amt { font-size: 13px; font-weight: 700; }
 
 /* Charges */
 .env__lines { display: flex; flex-direction: column; }
 .env__line {
-  display: flex; align-items: center; gap: 8px;
-  padding: 7px 0; border-bottom: 1px solid var(--border);
+  display: flex; flex-direction: column; gap: 3px;
+  padding: 8px 0; border-bottom: 1px solid var(--border);
 }
 .env__line:last-child { border-bottom: none; }
-.env__line-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-.env__line-nom  { flex: 1; font-size: 13px; color: var(--foreground); }
-.env__line-montant { font-size: 13px; font-weight: 600; color: var(--muted-foreground); }
+
+.env__line-cat {
+  display: flex; align-items: center; gap: 5px;
+}
+.env__line-cat-dot {
+  width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+}
+.env__line-cat-nom {
+  font-size: 10px; font-weight: 600; color: var(--muted-foreground);
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+
+.env__line-main {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
+}
+.env__line-nom  { flex: 1; font-size: 13px; font-weight: 500; color: var(--foreground); }
+.env__line-montant { font-size: 13px; font-weight: 600; color: var(--muted-foreground); flex-shrink: 0; }
 .env__line-inactive { opacity: 0.4; text-decoration: line-through; }
 .env__empty { font-size: 13px; color: var(--muted-foreground); text-align: center; padding: 8px 0; }
 
