@@ -92,11 +92,6 @@
               <span class="env__virement-label">À virer le 1er du mois</span>
               <span class="env__virement-amount">{{ fmt(getTotal(env.id)) }}</span>
             </div>
-            <div v-if="env.budgetMax > 0" class="env__virement-budget">
-              <MsProgress :value="getTotal(env.id) / env.budgetMax * 100" :show-label="false" size="sm" />
-              <span class="env__budget-label">{{ fmt(getTotal(env.id)) }} / {{ fmt(env.budgetMax) }} budget</span>
-            </div>
-            <button v-else class="env__set-budget-btn" @click="openEditModal(env)" type="button">+ Définir un budget max</button>
           </div>
 
           <!-- Détail par personne si "tous" -->
@@ -157,11 +152,6 @@
           <h3>Configurer le compte</h3>
 
           <MsInput label="Nom du compte" v-model="editNom" placeholder="Ex: Charges fixes" />
-
-          <div class="env__edit-field">
-            <label class="env__edit-label">Budget max (€/mois) — laisser vide = pas de limite</label>
-            <input class="env__edit-input" type="number" min="0" step="50" v-model.number="editBudget" placeholder="Ex: 1500" />
-          </div>
 
           <div class="env__edit-field">
             <label class="env__edit-label">Couleur</label>
@@ -230,7 +220,7 @@
 import { ref, computed } from 'vue'
 import { useBudgetStore } from '../stores/budget'
 import { useStorage } from '../composables/useStorage'
-import { MsButton, MsInput, MsProgress } from './ui/index.js'
+import { MsButton, MsInput } from './ui/index.js'
 
 const store = useBudgetStore()
 const { scheduleAutoSave } = useStorage()
@@ -286,7 +276,6 @@ function createEnveloppe() {
 // ── Édition complète ──────────────────────────────────────
 const editTarget      = ref(null)
 const editNom         = ref('')
-const editBudget      = ref(0)
 const editCouleur     = ref(COLORS[0])
 const editLignes      = ref([])
 const editAppartientA = ref('tous')
@@ -308,7 +297,6 @@ function montantPourPerson(dep) {
 function openEditModal(env) {
   editTarget.value      = env
   editNom.value         = env.nom
-  editBudget.value      = env.budgetMax || ''
   editCouleur.value     = env.couleur || COLORS[0]
   editAppartientA.value = env.appartientA || 'tous'
   editLignes.value      = store.depenses.filter(d => d.enveloppeId === env.id).map(d => d.id)
@@ -326,7 +314,6 @@ function saveEdit() {
   store.updateEnveloppe(envId, {
     nom:         editNom.value.trim() || editTarget.value.nom,
     couleur:     editCouleur.value,
-    budgetMax:   parseFloat(editBudget.value) || 0,
     appartientA: editAppartientA.value,
   })
   store.depenses.forEach(d => {
