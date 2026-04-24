@@ -1,22 +1,9 @@
 <template>
-  <div class="login-page">
-
-    <!-- Glows background -->
-    <div class="login-glow login-glow--1"></div>
-    <div class="login-glow login-glow--2"></div>
-    <div class="login-glow login-glow--3"></div>
-
-    <!-- Logo top center -->
-    <div class="login-top-logo">
-      <img src="/logo-budge-white.svg" class="login-top-logo__img" alt="Budge" />
-    </div>
-
-    <!-- Card centrée -->
-    <div class="login-card">
-
-      <div class="login-card__body">
-        <h1 class="login-card__title">Votre budget.<br>Sous contrôle.</h1>
-        <p class="login-card__sub">Connecte-toi pour accéder à ton espace budget.</p>
+  <div class="login-form">
+    <div class="login-form__inner">
+      <div class="login-form__head">
+        <h1 class="login-form__title">Votre budget.<br>Sous contrôle.</h1>
+        <p class="login-form__sub">Connecte-toi pour accéder à ton espace budget.</p>
       </div>
 
       <button class="login-google" @click="login" :disabled="loading" type="button">
@@ -29,10 +16,8 @@
         {{ loading ? 'Connexion…' : 'Continuer avec Google' }}
       </button>
 
-      <p class="login-card__legal">En continuant, tu acceptes nos conditions d'utilisation.</p>
-
+      <p class="login-form__legal">En continuant, tu acceptes nos conditions d'utilisation.</p>
     </div>
-
   </div>
 </template>
 
@@ -54,71 +39,23 @@ async function login() {
 </script>
 
 <style scoped>
-* { box-sizing: border-box; }
-
-.login-page {
-  position: fixed; inset: 0;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  background: #0d0d0f;
-  font-family: system-ui, -apple-system, sans-serif;
-  padding: 40px 24px 24px;
+.login-form {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  padding: 40px;
 }
-
-.login-top-logo {
-  position: absolute;
-  top: 40px; left: 0; right: 0;
-  display: flex; justify-content: center;
-  z-index: 1;
-}
-.login-top-logo__img { height: 50px; width: auto; }
-
-/* Glows */
-.login-glow {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  pointer-events: none;
-}
-.login-glow--1 {
-  width: 700px; height: 700px;
-  bottom: -250px; left: -150px;
-  background: radial-gradient(circle, rgba(236,72,153,0.28) 0%, transparent 60%);
-  filter: blur(60px);
-}
-.login-glow--2 {
-  width: 600px; height: 600px;
-  bottom: -200px; left: 15%;
-  background: radial-gradient(circle, rgba(124,111,205,0.22) 0%, transparent 60%);
-  filter: blur(60px);
-}
-.login-glow--3 {
-  width: 500px; height: 500px;
-  bottom: -100px; right: -100px;
-  background: radial-gradient(circle, rgba(74,158,219,0.18) 0%, transparent 60%);
-  filter: blur(60px);
-}
-
-/* Card */
-.login-card {
-  position: relative; z-index: 1;
+.login-form__inner {
   width: 100%; max-width: 400px;
-  background: #ffffff;
-  border-radius: 20px;
-  padding: 40px 36px 32px;
-  display: flex; flex-direction: column; gap: 24px;
-  box-shadow: 0 32px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06);
+  display: flex; flex-direction: column; gap: 28px;
 }
-
-.login-card__body { display: flex; flex-direction: column; gap: 8px; }
-.login-card__title {
-  font-size: 22px; font-weight: 700; color: #18181b;
+.login-form__head { display: flex; flex-direction: column; gap: 10px; }
+.login-form__title {
+  font-size: 26px; font-weight: 700; color: #18181b;
   margin: 0; letter-spacing: -0.5px; line-height: 1.2;
 }
-.login-card__sub {
-  font-size: 14px; color: #71717a;
-  margin: 0; line-height: 1.5;
+.login-form__sub {
+  font-size: 14px; color: #71717a; margin: 0; line-height: 1.5;
 }
-
 .login-google {
   display: flex; align-items: center; justify-content: center; gap: 10px;
   width: 100%; height: 48px;
@@ -129,14 +66,11 @@ async function login() {
   transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
 }
 .login-google:hover:not(:disabled) {
-  background: #fafafa;
-  border-color: #d4d4d8;
+  background: #fafafa; border-color: #d4d4d8;
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 .login-google:disabled { opacity: 0.55; cursor: not-allowed; }
-
-.login-card__legal {
-  font-size: 11px; color: #a1a1aa;
-  text-align: center; margin: 0; line-height: 1.5;
+.login-form__legal {
+  font-size: 11px; color: #a1a1aa; text-align: center; margin: 0; line-height: 1.5;
 }
 </style>

@@ -2,8 +2,8 @@
   <!-- Mode onboarding : split-screen pleine page -->
   <div v-if="premierDemarrage" class="onboarding">
 
-    <!-- Gauche : panel marketing -->
-    <div class="onboarding__right">
+    <!-- Gauche : panel marketing (masqué si soloForm) -->
+    <div v-if="!soloForm" class="onboarding__right">
       <div class="onboarding__right-glow"></div>
 
       <div class="onboarding__right-top">
@@ -260,6 +260,7 @@ import { useBudgetStore } from '../stores/budget'
 
 const props = defineProps({
   premierDemarrage: { type: Boolean, default: false },
+  soloForm:         { type: Boolean, default: false },
 })
 const emit = defineEmits(['fermer'])
 

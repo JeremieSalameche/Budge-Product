@@ -1,11 +1,58 @@
 <template>
-  <LoginPage v-if="!authStore.user && !authStore.loading" />
-  <div v-else-if="authStore.loading || appLoading" class="app-loading">
+  <div v-if="authStore.loading || appLoading" class="app-loading">
     <div class="app-loading__spinner"></div>
   </div>
+
+  <!-- Layout partagé : login → onboarding (left panel fixe, right switch) -->
+  <div v-else-if="!authStore.user || needsOnboarding" class="preapp">
+    <!-- Left : dark panel permanent -->
+    <div class="preapp__left">
+      <div class="preapp__glow preapp__glow--1"></div>
+      <div class="preapp__glow preapp__glow--2"></div>
+      <div class="preapp__glow preapp__glow--3"></div>
+      <div class="preapp__left-top">
+        <img src="/logo-budge-white.svg" class="preapp__logo" alt="Budge" />
+      </div>
+      <div class="preapp__left-content">
+        <div class="preapp__badge">✦ Nouveau</div>
+        <h2 class="preapp__title">Gérez votre budget, seul ou à deux, simplement.</h2>
+        <p class="preapp__sub">Visualisez vos dépenses, partagez les charges équitablement et atteignez vos objectifs ensemble.</p>
+      </div>
+      <div class="preapp__features">
+        <div class="preapp__feature">
+          <div class="preapp__feature-icon">⚖️</div>
+          <div>
+            <div class="preapp__feature-title">Partage équitable</div>
+            <div class="preapp__feature-desc">Charges réparties selon les revenus de chacun</div>
+          </div>
+        </div>
+        <div class="preapp__feature">
+          <div class="preapp__feature-icon">📊</div>
+          <div>
+            <div class="preapp__feature-title">Vue claire</div>
+            <div class="preapp__feature-desc">Dashboard complet avec reste à vivre en temps réel</div>
+          </div>
+        </div>
+        <div class="preapp__feature">
+          <div class="preapp__feature-icon">☁️</div>
+          <div>
+            <div class="preapp__feature-title">Sync cloud</div>
+            <div class="preapp__feature-desc">Accédez à vos données depuis n'importe quel appareil</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Right : login ou onboarding -->
+    <div class="preapp__right">
+      <Transition name="preapp-slide" mode="out-in">
+        <LoginPage v-if="!authStore.user" key="login" />
+        <FoyerSetup v-else key="onboarding" :premierDemarrage="true" :soloForm="true" @fermer="needsOnboarding = false" />
+      </Transition>
+    </div>
+  </div>
+
   <template v-else>
-    <FoyerSetup v-if="needsOnboarding" :premierDemarrage="true" @fermer="needsOnboarding = false" />
-    <div v-else id="app">
+    <div id="app">
     <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar__logo">
@@ -160,6 +207,7 @@
     </div>
   </div>
   </template>
+
 </template>
 
 <script setup>
@@ -549,6 +597,83 @@ const pctCharges = computed(() => {
 .notif-zone {
   position: fixed; bottom: 24px; right: 24px;
   z-index: 2000;
+}
+
+/* ── Pre-app layout partagé ────────────────────────────────── */
+.preapp {
+  position: fixed; inset: 0;
+  display: flex;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+.preapp__left {
+  width: 50%; flex-shrink: 0;
+  background: #18181b;
+  position: relative; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: space-between;
+  padding: 48px;
+}
+.preapp__glow {
+  position: absolute; border-radius: 50%;
+  pointer-events: none;
+}
+.preapp__glow--1 {
+  width: 700px; height: 700px;
+  bottom: -250px; left: -150px;
+  background: radial-gradient(circle, rgba(236,72,153,0.28) 0%, transparent 60%);
+  filter: blur(60px);
+}
+.preapp__glow--2 {
+  width: 600px; height: 600px;
+  bottom: -200px; left: 15%;
+  background: radial-gradient(circle, rgba(124,111,205,0.22) 0%, transparent 60%);
+  filter: blur(60px);
+}
+.preapp__glow--3 {
+  width: 500px; height: 500px;
+  bottom: -100px; right: -100px;
+  background: radial-gradient(circle, rgba(74,158,219,0.18) 0%, transparent 60%);
+  filter: blur(60px);
+}
+.preapp__left-top { position: relative; z-index: 1; }
+.preapp__logo { height: 50px; width: auto; display: block; }
+.preapp__left-content { position: relative; z-index: 1; }
+.preapp__badge {
+  display: inline-flex; align-items: center;
+  padding: 5px 12px; border-radius: 20px;
+  background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7);
+  font-size: 12px; font-weight: 500; margin-bottom: 24px;
+}
+.preapp__title {
+  font-size: 32px; font-weight: 700; color: #fff;
+  line-height: 1.25; letter-spacing: -0.5px; margin: 0 0 16px; max-width: 360px;
+}
+.preapp__sub {
+  font-size: 15px; color: rgba(255,255,255,0.5); line-height: 1.6; margin: 0; max-width: 340px;
+}
+.preapp__features { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 20px; }
+.preapp__feature { display: flex; align-items: flex-start; gap: 14px; }
+.preapp__feature-icon {
+  font-size: 20px; width: 40px; height: 40px;
+  background: rgba(255,255,255,0.08); border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.preapp__feature-title { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 2px; }
+.preapp__feature-desc  { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.4; }
+
+.preapp__right {
+  flex: 1; background: #fff;
+  position: relative; overflow: hidden;
+}
+
+/* Transition slide */
+.preapp-slide-enter-active,
+.preapp-slide-leave-active { transition: opacity 0.25s ease, transform 0.25s ease; }
+.preapp-slide-enter-from   { opacity: 0; transform: translateX(16px); }
+.preapp-slide-leave-to     { opacity: 0; transform: translateX(-16px); }
+
+@media (max-width: 768px) {
+  .preapp__left { display: none; }
+  .preapp__right { width: 100%; }
 }
 
 /* ── Auth ──────────────────────────────────────────────────── */
