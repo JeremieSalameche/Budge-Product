@@ -93,6 +93,17 @@
               ></button>
             </div>
           </div>
+
+          <div class="onboarding__divider"><span>ou</span></div>
+
+          <button class="onboarding__import-csv" type="button" @click="$refs.budgeImport.click()">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 14V6M5 9l3-3 3 3M2 4V3a1.5 1.5 0 011.5-1.5h9A1.5 1.5 0 0114 3v1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div>
+              <div class="onboarding__import-csv-title">Vous avez déjà un export Budge ?</div>
+              <div class="onboarding__import-csv-sub">Importez votre fichier .budge pour tout récupérer en un clic</div>
+            </div>
+          </button>
+          <input ref="budgeImport" type="file" accept=".budge,.json" style="display:none" @change="onImportCsvOnboarding" />
         </div>
 
         <!-- Étape 2 : Membres -->
@@ -137,15 +148,6 @@
             </div>
           </div>
 
-          <!-- Import CSV -->
-          <button class="onboarding__import-csv" type="button" @click="$refs.budgeImport.click()">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 14V6M5 9l3-3 3 3M2 4V3a1.5 1.5 0 011.5-1.5h9A1.5 1.5 0 0114 3v1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <div>
-              <div class="onboarding__import-csv-title">Vous avez déjà un export Budge ?</div>
-              <div class="onboarding__import-csv-sub">Importez votre fichier .budge pour tout récupérer</div>
-            </div>
-          </button>
-          <input ref="budgeImport" type="file" accept=".budge,.json" style="display:none" @change="onImportCsvOnboarding" />
         </div>
 
         <!-- Footer nav -->
@@ -316,9 +318,11 @@ async function onImportCsvOnboarding(e) {
   const file = e.target.files?.[0]
   if (!file) return
   e.target.value = ''
-  creer()
+  // Crée un foyer vide pour qu'importBudge ait un foyer actif à patcher
+  store.creerFoyer({ nom: '_import', couleur: couleur.value, personnes: personnes.value, remplacerDefaut: props.premierDemarrage })
   try {
     await store.importBudge(file)
+    emit('fermer') // ferme l'onboarding immédiatement, pas besoin des étapes 2 et 3
   } catch (err) {
     store.showNotification(err.message || 'Import échoué', 'error')
   }
@@ -507,6 +511,16 @@ async function onImportCsvOnboarding(e) {
   border: none;
 }
 .onboarding__btn--ghost:hover { color: #18181b; }
+
+/* Séparateur "ou" */
+.onboarding__divider {
+  display: flex; align-items: center; gap: 12px;
+  color: #d4d4d8; font-size: 12px;
+}
+.onboarding__divider::before,
+.onboarding__divider::after {
+  content: ''; flex: 1; height: 1px; background: #e4e4e7;
+}
 
 /* Import CSV onboarding */
 .onboarding__import-csv {
