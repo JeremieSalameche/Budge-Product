@@ -6,6 +6,7 @@
     <div class="onboarding__left">
       <div class="onboarding__left-inner">
 
+        <!-- Logo -->
         <div class="onboarding__logo">
           <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
             <rect width="28" height="28" rx="8" fill="#18181B"/>
@@ -14,17 +15,24 @@
           <span>Budge</span>
         </div>
 
-        <div class="onboarding__steps">
-          <div
-            v-for="i in totalEtapes"
-            :key="i"
-            class="onboarding__step-dot"
-            :class="{ 'onboarding__step-dot--active': i === etape, 'onboarding__step-dot--done': i < etape }"
-          ></div>
+        <!-- Stepper numéroté -->
+        <div class="onboarding__stepper">
+          <template v-for="i in totalEtapes" :key="i">
+            <div class="onboarding__stepper-step" :class="{ 'is-done': i < etape, 'is-active': i === etape }">
+              <div class="onboarding__stepper-circle">
+                <svg v-if="i < etape" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                  <path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span v-else>{{ i }}</span>
+              </div>
+              <span class="onboarding__stepper-label">{{ stepperLabels[i - 1] }}</span>
+            </div>
+            <div v-if="i < totalEtapes" class="onboarding__stepper-line" :class="{ 'is-done': i < etape }"></div>
+          </template>
         </div>
 
+        <!-- Titre de l'étape -->
         <div class="onboarding__form-head">
-          <p class="onboarding__step-label">Étape {{ etape }} sur {{ totalEtapes }}</p>
           <h2 class="onboarding__title">{{ titresEtapes[etape - 1] }}</h2>
           <p class="onboarding__hint">{{ hintEtapes[etape - 1] }}</p>
         </div>
@@ -103,16 +111,19 @@
 
         <!-- Footer nav -->
         <div class="onboarding__nav">
-          <button v-if="etape > 1" class="onboarding__btn onboarding__btn--ghost" type="button" @click="precedent">
-            ← Retour
-          </button>
           <button
             class="onboarding__btn onboarding__btn--primary"
             type="button"
             :disabled="!peutContinuer"
             @click="etape < totalEtapes ? suivant() : creer()"
           >
-            {{ etape < totalEtapes ? 'Continuer →' : 'Créer mon foyer' }}
+            <span>{{ etape < totalEtapes ? 'Continuer' : 'Créer mon foyer' }}</span>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button v-if="etape > 1" class="onboarding__btn onboarding__btn--ghost" type="button" @click="precedent">
+            ← Retour
           </button>
         </div>
 
@@ -247,12 +258,13 @@ const emit = defineEmits(['fermer'])
 
 const store = useBudgetStore()
 
-const totalEtapes  = 3
-const titresEtapes = ['Votre foyer', 'Les membres', 'Confirmation']
-const hintEtapes   = [
-  'Donnez un nom et une couleur à votre foyer.',
-  'Ajoutez les membres et leurs revenus.',
-  'Vérifiez les informations avant de créer.',
+const totalEtapes   = 3
+const stepperLabels = ['Foyer', 'Membres', 'Récap']
+const titresEtapes  = ['Configurez votre foyer', 'Qui fait partie du foyer ?', 'Tout est prêt !']
+const hintEtapes    = [
+  'Donnez un nom et une couleur à votre espace budgétaire.',
+  'Renseignez les membres et leurs revenus mensuels nets.',
+  'Vérifiez vos informations avant de démarrer.',
 ]
 
 const etape   = ref(1)
@@ -308,64 +320,112 @@ function creer() {
   width: 50%; min-width: 380px;
   background: #fff;
   display: flex; align-items: center; justify-content: center;
-  padding: 40px;
+  padding: 48px 40px;
   overflow-y: auto;
 }
 .onboarding__left-inner {
-  width: 100%; max-width: 400px;
-  display: flex; flex-direction: column; gap: 28px;
+  width: 100%; max-width: 420px;
+  display: flex; flex-direction: column; gap: 32px;
 }
 
+/* Logo */
 .onboarding__logo {
   display: flex; align-items: center; gap: 8px;
   font-size: 16px; font-weight: 700; color: #18181b;
 }
 
-.onboarding__steps {
-  display: flex; gap: 6px;
+/* Stepper numéroté */
+.onboarding__stepper {
+  display: flex;
+  align-items: flex-start;
 }
-.onboarding__step-dot {
-  height: 4px; border-radius: 2px;
-  flex: 1; background: #e4e4e7;
+.onboarding__stepper-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.onboarding__stepper-circle {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 600;
+  border: 2px solid #e4e4e7;
+  background: #fff;
+  color: #a1a1aa;
+  transition: background 0.25s, border-color 0.25s, color 0.25s;
+}
+.onboarding__stepper-step.is-active .onboarding__stepper-circle {
+  background: #18181b;
+  border-color: #18181b;
+  color: #fff;
+}
+.onboarding__stepper-step.is-done .onboarding__stepper-circle {
+  background: #18181b;
+  border-color: #18181b;
+  color: #fff;
+}
+.onboarding__stepper-label {
+  font-size: 11px; font-weight: 500;
+  color: #a1a1aa;
+  white-space: nowrap;
+  transition: color 0.25s, font-weight 0.25s;
+}
+.onboarding__stepper-step.is-active .onboarding__stepper-label,
+.onboarding__stepper-step.is-done .onboarding__stepper-label {
+  color: #18181b;
+  font-weight: 600;
+}
+.onboarding__stepper-line {
+  flex: 1;
+  height: 2px;
+  background: #e4e4e7;
+  margin-top: 15px;
+  min-width: 24px;
   transition: background 0.3s;
 }
-.onboarding__step-dot--active { background: #18181b; }
-.onboarding__step-dot--done   { background: #18181b; opacity: 0.4; }
+.onboarding__stepper-line.is-done { background: #18181b; }
 
-.onboarding__form-head { display: flex; flex-direction: column; gap: 4px; }
-.onboarding__step-label { font-size: 12px; color: #71717a; margin: 0; }
-.onboarding__title { font-size: 22px; font-weight: 700; color: #18181b; margin: 0; letter-spacing: -0.3px; }
-.onboarding__hint  { font-size: 14px; color: #71717a; margin: 0; }
+/* Step header */
+.onboarding__form-head { display: flex; flex-direction: column; gap: 6px; }
+.onboarding__title { font-size: 24px; font-weight: 700; color: #18181b; margin: 0; letter-spacing: -0.4px; line-height: 1.2; }
+.onboarding__hint  { font-size: 14px; color: #71717a; margin: 0; line-height: 1.5; }
 
+/* Fields */
 .onboarding__fields { display: flex; flex-direction: column; gap: 18px; }
 .onboarding__field  { display: flex; flex-direction: column; gap: 6px; }
-.onboarding__label  { font-size: 12px; font-weight: 500; color: #71717a; }
+.onboarding__label  { font-size: 12px; font-weight: 500; color: #52525b; }
 .onboarding__input-wrap { position: relative; display: flex; align-items: center; }
 .onboarding__input {
-  width: 100%; height: 44px; padding: 0 14px;
-  background: #fff; border: 1.5px solid #e4e4e7;
+  width: 100%; height: 46px; padding: 0 14px;
+  background: #fafafa; border: 1.5px solid #e4e4e7;
   border-radius: 10px; font-size: 14px; font-family: inherit; color: #18181b;
-  outline: none; box-sizing: border-box; transition: border-color 0.15s;
+  outline: none; box-sizing: border-box; transition: border-color 0.15s, background 0.15s;
 }
-.onboarding__input-wrap .onboarding__input { padding-right: 60px; }
-.onboarding__input:focus { border-color: #18181b; }
+.onboarding__input-wrap .onboarding__input { padding-right: 64px; }
+.onboarding__input:focus { border-color: #18181b; background: #fff; }
+.onboarding__input::placeholder { color: #a1a1aa; }
 .onboarding__suffix {
   position: absolute; right: 14px;
   font-size: 12px; color: #71717a; pointer-events: none;
 }
 
-.onboarding__colors { display: flex; gap: 8px; flex-wrap: wrap; }
+/* Color picker */
+.onboarding__colors { display: flex; gap: 10px; flex-wrap: wrap; }
 .onboarding__color-btn {
-  width: 28px; height: 28px; border-radius: 50%;
+  width: 30px; height: 30px; border-radius: 50%;
   border: 2.5px solid transparent; cursor: pointer;
   transition: transform 0.12s, border-color 0.12s;
+  flex-shrink: 0;
 }
-.onboarding__color-btn:hover { transform: scale(1.12); }
-.onboarding__color-btn--active { border-color: #18181b; transform: scale(1.12); }
+.onboarding__color-btn:hover { transform: scale(1.15); }
+.onboarding__color-btn--active { border-color: #18181b; transform: scale(1.15); }
 
+/* Membres */
 .onboarding__membre {
   background: #f9f9f9; border-radius: 12px; padding: 16px;
   display: flex; flex-direction: column; gap: 12px;
+  border: 1.5px solid #f4f4f5;
 }
 .onboarding__membre-header { display: flex; align-items: center; gap: 10px; }
 .onboarding__membre-avatar {
@@ -376,9 +436,11 @@ function creer() {
 .onboarding__membre-label { font-size: 13px; font-weight: 600; color: #18181b; }
 .onboarding__membre-row { display: flex; flex-direction: column; gap: 12px; }
 
+/* Récap */
 .onboarding__recap {
   display: flex; align-items: center; gap: 14px;
   background: #f9f9f9; border-radius: 12px; padding: 16px;
+  border: 1.5px solid #f4f4f5;
 }
 .onboarding__recap-avatar {
   width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0;
@@ -392,6 +454,7 @@ function creer() {
 .onboarding__recap-row {
   display: flex; align-items: center; gap: 10px;
   padding: 10px 14px; background: #f9f9f9; border-radius: 10px;
+  border: 1.5px solid #f4f4f5;
 }
 .onboarding__recap-row-avatar {
   width: 28px; height: 28px; border-radius: 6px; flex-shrink: 0;
@@ -401,17 +464,29 @@ function creer() {
 .onboarding__recap-row-nom     { flex: 1; font-size: 13px; font-weight: 500; color: #18181b; }
 .onboarding__recap-row-salaire { font-size: 13px; font-weight: 600; color: #18181b; }
 
-.onboarding__nav { display: flex; gap: 10px; align-items: center; }
-.onboarding__btn {
-  height: 44px; padding: 0 24px; border-radius: 10px;
-  font-size: 14px; font-weight: 500; font-family: inherit;
-  cursor: pointer; border: none; transition: background 0.15s, opacity 0.15s;
+/* Navigation */
+.onboarding__nav {
+  display: flex; flex-direction: column; gap: 10px;
 }
-.onboarding__btn--ghost   { background: #f4f4f5; color: #18181b; border: 1.5px solid #e4e4e7; }
-.onboarding__btn--ghost:hover { background: #e4e4e7; }
-.onboarding__btn--primary { background: #18181b; color: #fff; margin-left: auto; }
+.onboarding__btn {
+  width: 100%; height: 48px;
+  border-radius: 12px;
+  font-size: 15px; font-weight: 500; font-family: inherit;
+  cursor: pointer; border: none;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: background 0.15s, opacity 0.15s, color 0.15s;
+}
+.onboarding__btn--primary {
+  background: #18181b; color: #fff;
+}
 .onboarding__btn--primary:hover:not(:disabled) { background: #27272a; }
-.onboarding__btn--primary:disabled { opacity: 0.35; cursor: not-allowed; }
+.onboarding__btn--primary:disabled { opacity: 0.3; cursor: not-allowed; }
+.onboarding__btn--ghost {
+  background: transparent; color: #71717a;
+  font-size: 13px; height: 36px;
+  border: none;
+}
+.onboarding__btn--ghost:hover { color: #18181b; }
 
 /* ── Droite ── */
 .onboarding__right {
