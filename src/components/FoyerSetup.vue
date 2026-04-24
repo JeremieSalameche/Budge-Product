@@ -689,8 +689,9 @@ async function onImportCsvOnboarding(e) {
 .fsetup {
   background: var(--background); border: 1px solid var(--border);
   border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);
-  width: 100%; max-width: 480px;
+  width: 100%; max-width: 560px;
   display: flex; flex-direction: column; overflow: hidden;
+  max-height: 90vh; overflow-y: auto;
 }
 .fsetup__header {
   display: flex; align-items: center; justify-content: space-between;
@@ -803,9 +804,9 @@ async function onImportCsvOnboarding(e) {
 /* Sélection de profil (modale) */
 .fsetup__profil-pick { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
 .fsetup__profil-title { font-size: 12px; font-weight: 500; color: var(--muted-foreground); margin: 0; }
-.fsetup__profil-btns { display: flex; gap: 8px; }
+.fsetup__profil-btns { display: flex; gap: 8px; flex-wrap: wrap; }
 .fsetup__profil-btn {
-  flex: 1; display: flex; align-items: center; gap: 10px;
+  flex: 1; min-width: 180px; display: flex; align-items: center; gap: 10px;
   padding: 10px 12px; border-radius: var(--radius-md);
   background: var(--muted); border: 1.5px solid transparent;
   cursor: pointer; font-family: inherit; text-align: left;
