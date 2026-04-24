@@ -2,14 +2,47 @@
   <!-- Mode onboarding : split-screen pleine page -->
   <div v-if="premierDemarrage" class="onboarding">
 
-    <!-- Gauche : formulaire -->
+    <!-- Gauche : panel marketing -->
+    <div class="onboarding__right">
+      <div class="onboarding__right-glow"></div>
+
+      <div class="onboarding__right-top">
+        <img src="/logo-budge-white.svg" class="onboarding__right-logo" alt="Budge" />
+      </div>
+
+      <div class="onboarding__right-content">
+        <div class="onboarding__right-badge">✦ Nouveau</div>
+        <h3 class="onboarding__right-title">Gérez votre budget, seul ou à deux, simplement.</h3>
+        <p class="onboarding__right-sub">Visualisez vos dépenses, partagez les charges équitablement et atteignez vos objectifs ensemble.</p>
+      </div>
+      <div class="onboarding__right-features">
+        <div class="onboarding__feature">
+          <div class="onboarding__feature-icon">⚖️</div>
+          <div>
+            <div class="onboarding__feature-title">Partage équitable</div>
+            <div class="onboarding__feature-desc">Charges réparties selon les revenus de chacun</div>
+          </div>
+        </div>
+        <div class="onboarding__feature">
+          <div class="onboarding__feature-icon">📊</div>
+          <div>
+            <div class="onboarding__feature-title">Vue claire</div>
+            <div class="onboarding__feature-desc">Dashboard complet avec reste à vivre en temps réel</div>
+          </div>
+        </div>
+        <div class="onboarding__feature">
+          <div class="onboarding__feature-icon">☁️</div>
+          <div>
+            <div class="onboarding__feature-title">Sync cloud</div>
+            <div class="onboarding__feature-desc">Accédez à vos données depuis n'importe quel appareil</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Droite : formulaire -->
     <div class="onboarding__left">
       <div class="onboarding__left-inner">
-
-        <!-- Logo -->
-        <div class="onboarding__logo">
-          <img src="/logobudge.svg" class="onboarding__logo-img" alt="Budge" />
-        </div>
 
         <!-- Stepper numéroté -->
         <div class="onboarding__stepper">
@@ -136,38 +169,6 @@
       </div>
     </div>
 
-    <!-- Droite : panel marketing -->
-    <div class="onboarding__right">
-      <div class="onboarding__right-glow"></div>
-      <div class="onboarding__right-content">
-        <div class="onboarding__right-badge">✦ Nouveau</div>
-        <h3 class="onboarding__right-title">Gérez votre budget, seul ou à deux, simplement.</h3>
-        <p class="onboarding__right-sub">Visualisez vos dépenses, partagez les charges équitablement et atteignez vos objectifs ensemble.</p>
-      </div>
-      <div class="onboarding__right-features">
-        <div class="onboarding__feature">
-          <div class="onboarding__feature-icon">⚖️</div>
-          <div>
-            <div class="onboarding__feature-title">Partage équitable</div>
-            <div class="onboarding__feature-desc">Charges réparties selon les revenus de chacun</div>
-          </div>
-        </div>
-        <div class="onboarding__feature">
-          <div class="onboarding__feature-icon">📊</div>
-          <div>
-            <div class="onboarding__feature-title">Vue claire</div>
-            <div class="onboarding__feature-desc">Dashboard complet avec reste à vivre en temps réel</div>
-          </div>
-        </div>
-        <div class="onboarding__feature">
-          <div class="onboarding__feature-icon">☁️</div>
-          <div>
-            <div class="onboarding__feature-title">Sync cloud</div>
-            <div class="onboarding__feature-desc">Accédez à vos données depuis n'importe quel appareil</div>
-          </div>
-        </div>
-      </div>
-    </div>
 
   </div>
 
@@ -346,10 +347,6 @@ async function onImportCsvOnboarding(e) {
   display: flex; flex-direction: column; gap: 32px;
 }
 
-/* Logo */
-.onboarding__logo { }
-.onboarding__logo-img { height: 26px; width: auto; display: block; }
-
 /* Stepper numéroté */
 .onboarding__stepper {
   display: flex;
@@ -518,20 +515,23 @@ async function onImportCsvOnboarding(e) {
 .onboarding__import-csv-title { font-size: 13px; font-weight: 500; color: #18181b; }
 .onboarding__import-csv-sub   { font-size: 12px; color: #71717a; margin-top: 1px; }
 
-/* ── Droite ── */
+/* ── Panel dark (gauche) ── */
 .onboarding__right {
-  flex: 1;
+  width: 45%;
   background: #18181b;
   position: relative; overflow: hidden;
   display: flex; flex-direction: column; justify-content: space-between;
   padding: 48px;
+  flex-shrink: 0;
 }
 .onboarding__right-glow {
-  position: absolute; top: -100px; right: -100px;
+  position: absolute; top: -100px; left: -60px;
   width: 500px; height: 500px; border-radius: 50%;
   background: radial-gradient(circle, rgba(124,111,205,0.5) 0%, rgba(74,158,219,0.3) 40%, transparent 70%);
   pointer-events: none;
 }
+.onboarding__right-top { position: relative; z-index: 1; }
+.onboarding__right-logo { height: 50px; width: auto; display: block; }
 .onboarding__right-content { position: relative; z-index: 1; }
 .onboarding__right-badge {
   display: inline-flex; align-items: center;
