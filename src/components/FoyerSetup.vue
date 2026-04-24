@@ -106,59 +106,26 @@
           <input ref="budgeImport" type="file" accept=".budge,.json" style="display:none" @change="onImportCsvOnboarding" />
         </div>
 
-        <!-- Étape 2 : Membres + copie de foyer -->
+        <!-- Étape 2 : Membres -->
         <div v-if="etape === 2" class="onboarding__fields">
-          <div>
-            <div v-for="(p, i) in personnes" :key="i" class="onboarding__membre" :class="{ 'onboarding__membre--gap': i > 0 }">
-              <div class="onboarding__membre-header">
-                <div class="onboarding__membre-avatar" :style="{ background: p.couleur }">
-                  {{ p.nom ? p.nom[0].toUpperCase() : (i === 0 ? 'A' : 'B') }}
-                </div>
-                <span class="onboarding__membre-label">Personne {{ i + 1 }}</span>
+          <div v-for="(p, i) in personnes" :key="i" class="onboarding__membre" :class="{ 'onboarding__membre--gap': i > 0 }">
+            <div class="onboarding__membre-header">
+              <div class="onboarding__membre-avatar" :style="{ background: p.couleur }">
+                {{ p.nom ? p.nom[0].toUpperCase() : (i === 0 ? 'A' : 'B') }}
               </div>
-              <div class="onboarding__membre-row">
-                <div class="onboarding__field">
-                  <label class="onboarding__label">Prénom</label>
-                  <input class="onboarding__input" v-model="p.nom" type="text" :placeholder="i === 0 ? 'Ex : Marie' : 'Ex : Thomas'" />
-                </div>
-                <div class="onboarding__field">
-                  <label class="onboarding__label">Salaire net mensuel</label>
-                  <div class="onboarding__input-wrap">
-                    <input class="onboarding__input" v-model.number="p.salaire" type="number" min="0" step="100" placeholder="0" />
-                    <span class="onboarding__suffix">€/mois</span>
-                  </div>
-                </div>
+              <span class="onboarding__membre-label">Personne {{ i + 1 }}</span>
+            </div>
+            <div class="onboarding__membre-row">
+              <div class="onboarding__field">
+                <label class="onboarding__label">Prénom</label>
+                <input class="onboarding__input" v-model="p.nom" type="text" :placeholder="i === 0 ? 'Ex : Marie' : 'Ex : Thomas'" />
               </div>
-            </div>
-          </div>
-
-          <!-- Copie depuis un foyer existant -->
-          <div v-if="foyersSource.length > 0" class="onboarding__field">
-            <label class="onboarding__label">Copier les dépenses d'un foyer existant</label>
-            <div class="onboarding__copy-list">
-              <button type="button" class="onboarding__copy-row" :class="{ 'onboarding__copy-row--active': copierDepensesDeId === null }" @click="copierDepensesDeId = null; keepPersonneIdx = null">
-                <span class="onboarding__copy-none-dot"></span>
-                <span class="onboarding__copy-name">Aucun — foyer vide</span>
-              </button>
-              <button v-for="f in foyersSource" :key="f.id" type="button" class="onboarding__copy-row" :class="{ 'onboarding__copy-row--active': copierDepensesDeId === f.id }" @click="copierDepensesDeId = f.id; keepPersonneIdx = null">
-                <span class="onboarding__copy-dot" :style="{ background: f.couleur }"></span>
-                <span class="onboarding__copy-name">{{ f.nom }}</span>
-                <span class="onboarding__copy-count">{{ f.depenses.length }} dépense{{ f.depenses.length !== 1 ? 's' : '' }}</span>
-              </button>
-            </div>
-            <!-- Sélection de profil si foyer source à 2 personnes et nouveau foyer solo -->
-            <div v-if="sourceFoyerPersonnes.length === 2 && membresFiltres.length === 1" class="onboarding__profil-pick">
-              <p class="onboarding__profil-title">Ce foyer a 2 membres — quel profil copier ?</p>
-              <div class="onboarding__profil-btns">
-                <button v-for="(p, i) in sourceFoyerPersonnes" :key="i" type="button"
-                  class="onboarding__profil-btn"
-                  :class="{ 'onboarding__profil-btn--active': keepPersonneIdx === i }"
-                  :style="keepPersonneIdx === i ? { borderColor: p.couleur, background: p.couleur + '15' } : {}"
-                  @click="keepPersonneIdx = i">
-                  <span class="onboarding__profil-dot" :style="{ background: p.couleur }"></span>
-                  <span class="onboarding__profil-nom">{{ p.nom }}</span>
-                  <span class="onboarding__profil-hint">Dépenses perso + sa part du commun</span>
-                </button>
+              <div class="onboarding__field">
+                <label class="onboarding__label">Salaire net mensuel</label>
+                <div class="onboarding__input-wrap">
+                  <input class="onboarding__input" v-model.number="p.salaire" type="number" min="0" step="100" placeholder="0" />
+                  <span class="onboarding__suffix">€/mois</span>
+                </div>
               </div>
             </div>
           </div>
