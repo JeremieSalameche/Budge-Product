@@ -32,15 +32,19 @@
       </nav>
 
       <div class="sidebar__footer">
-        <div class="sidebar__save-info">{{ lastSavedLabel }}</div>
-        <button class="sidebar__save-btn" @click="manualSave" type="button">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M11.5 12.5H2.5a1 1 0 01-1-1V2.5a1 1 0 011-1h7l2.5 2.5v8a1 1 0 01-1 1z" stroke="currentColor" stroke-width="1.3"/><path d="M9.5 12.5V8h-5v4.5M4.5 1.5V5h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-          Sauvegarder
-        </button>
-        <button class="sidebar__logout-btn" @click="authStore.logout()" type="button" title="Se déconnecter">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 12H2.5A1.5 1.5 0 011 10.5v-7A1.5 1.5 0 012.5 2H5M9.5 10l3-3-3-3M12.5 7H5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Déconnexion
-        </button>
+        <div class="sidebar__user">
+          <img v-if="authStore.user?.photoURL" :src="authStore.user.photoURL" class="sidebar__user-avatar" referrerpolicy="no-referrer" />
+          <div v-else class="sidebar__user-avatar sidebar__user-avatar--initials">
+            {{ authStore.user?.displayName?.[0]?.toUpperCase() ?? '?' }}
+          </div>
+          <div class="sidebar__user-info">
+            <span class="sidebar__user-name">{{ authStore.user?.displayName?.split(' ')[0] ?? 'Compte' }}</span>
+            <span class="sidebar__user-saved">{{ lastSavedLabel }}</span>
+          </div>
+          <button class="sidebar__logout-icon" @click="authStore.logout()" type="button" title="Se déconnecter">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M5.5 13H3a1.5 1.5 0 01-1.5-1.5v-8A1.5 1.5 0 013 2h2.5M10 10.5l3-3-3-3M13 7.5H5.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
       </div>
     </aside>
 
@@ -297,22 +301,41 @@ const pctCharges = computed(() => {
 .sidebar__nav-icon svg { width: 16px; height: 16px; }
 
 .sidebar__footer {
-  padding: 16px 24px 0;
+  padding: 12px 16px 0;
   border-top: 1px solid var(--sidebar-border);
   margin-top: auto;
 }
-.sidebar__save-info { font-size: 11px; color: var(--muted-foreground); margin-bottom: 8px; opacity: 0.6; }
-.sidebar__save-btn {
-  display: flex; align-items: center; gap: 8px;
-  width: 100%; padding: 7px 12px; border-radius: var(--radius-md);
-  font-size: 13px; font-weight: 500;
-  color: var(--secondary-foreground);
-  background: var(--secondary);
-  border: 1px solid var(--border);
-  cursor: pointer;
-  transition: background 150ms ease;
+.sidebar__user {
+  display: flex; align-items: center; gap: 10px;
 }
-.sidebar__save-btn:hover { background: var(--zinc-200); }
+.sidebar__user-avatar {
+  width: 30px; height: 30px; border-radius: 8px;
+  flex-shrink: 0; object-fit: cover;
+}
+.sidebar__user-avatar--initials {
+  background: #18181b; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700;
+}
+.sidebar__user-info {
+  flex: 1; min-width: 0;
+  display: flex; flex-direction: column; gap: 1px;
+}
+.sidebar__user-name {
+  font-size: 13px; font-weight: 500; color: var(--foreground);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.sidebar__user-saved {
+  font-size: 10px; color: var(--muted-foreground); opacity: 0.6;
+}
+.sidebar__logout-icon {
+  display: flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; border-radius: 6px;
+  border: none; background: transparent;
+  color: var(--muted-foreground); cursor: pointer; flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+}
+.sidebar__logout-icon:hover { background: rgba(239,68,68,0.08); color: #ef4444; }
 
 /* ── Main ─────────────────────────────────────────────────── */
 .main {
@@ -476,12 +499,4 @@ const pctCharges = computed(() => {
   animation: spin 0.7s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
-.sidebar__logout-btn {
-  display: flex; align-items: center; gap: 6px;
-  width: 100%; padding: 6px 8px; margin-top: 6px;
-  border: none; border-radius: 6px; background: transparent;
-  font-size: 12px; color: #71717a; cursor: pointer;
-  font-family: inherit; transition: background 0.15s;
-}
-.sidebar__logout-btn:hover { background: rgba(0,0,0,0.06); color: #ef4444; }
 </style>
