@@ -1,0 +1,204 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; min-width: 0; }
+
+:root {
+  /* ── PALETTE GREIGE ── */
+  --greige-50:  #F8F7F7;
+  --greige-100: #F0EDEB;
+  --greige-200: #E4E0DD;
+  --greige-300: #D5CFC9;
+  --greige-400: #B8AFA7;
+  --greige-500: #9A8F86;
+
+  /* ── PALETTE ZINC BRUTE ── */
+  --zinc-50:  #FAFAFA;
+  --zinc-100: #F4F4F5;
+  --zinc-200: #E4E4E7;
+  --zinc-300: #D4D4D8;
+  --zinc-400: #A1A1AA;
+  --zinc-500: #71717A;
+  --zinc-600: #52525B;
+  --zinc-700: #3F3F46;
+  --zinc-800: #27272A;
+  --zinc-900: #18181B;
+  --zinc-950: #09090B;
+
+  /* ── TOKENS SHADCN/UI ── */
+  --background:            #F4F4F5;
+  --foreground:            #09090B;
+  --card:                  #FFFFFF;
+  --card-foreground:       #09090B;
+  --popover:               #FFFFFF;
+  --popover-foreground:    #09090B;
+  --primary:               #18181B;
+  --primary-foreground:    #FAFAFA;
+  --secondary:             #F4F4F5;
+  --secondary-foreground:  #18181B;
+  --muted:                 #F4F4F5;
+  --muted-foreground:      #71717A;
+  --accent:                #F4F4F5;
+  --accent-foreground:     #18181B;
+  --destructive:           #EF4444;
+  --destructive-foreground: #FAFAFA;
+  --border:                #E4E4E7;
+  --input:                 #E4E4E7;
+  --ring:                  #18181B;
+
+  /* ── SIDEBAR ── */
+  --sidebar-background:         #FAFAFA;
+  --sidebar-foreground:         #09090B;
+  --sidebar-primary:            #18181B;
+  --sidebar-primary-foreground: #FAFAFA;
+  --sidebar-accent:             #F4F4F5;
+  --sidebar-accent-foreground:  #18181B;
+  --sidebar-border:             #E4E4E7;
+
+  /* ── SÉMANTIQUE ── */
+  --color-success:        #22C55E;
+  --color-success-subtle: #F0FDF4;
+  --color-success-text:   #166534;
+  --color-danger:         #EF4444;
+  --color-danger-subtle:  #FEF2F2;
+  --color-danger-text:    #991B1B;
+  --color-warning:        #F59E0B;
+  --color-warning-subtle: #FFFBEB;
+  --color-warning-text:   #92400E;
+
+  /* ── GRAPHIQUES ── */
+  --chart-1:      #E8643A;
+  --chart-2:      #2CA87F;
+  --chart-3:      #25566E;
+  --chart-4:      #D4A84B;
+  --chart-5:      #F08C46;
+  --chart-p1:     #7C6FCD;
+  --chart-p1-fill: rgba(124,111,205,0.12);
+  --chart-p2:     #4A9EDB;
+  --chart-p2-fill: rgba(74,158,219,0.12);
+  --chart-commun: #D4D4D8;
+
+  /* ── RADIUS ── */
+  --radius:      0.5rem;
+  --radius-sm:   0.375rem;
+  --radius-md:   0.5rem;
+  --radius-lg:   0.75rem;
+  --radius-xl:   1rem;
+  --radius-full: 9999px;
+
+  /* ── OMBRES ── */
+  --shadow-xs:    0 1px 2px rgba(0,0,0,0.05);
+  --shadow-sm:    0 1px 3px rgba(0,0,0,0.10), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-md:    0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.06);
+  --shadow-lg:    0 10px 15px rgba(0,0,0,0.10), 0 4px 6px rgba(0,0,0,0.05);
+  --shadow-xl:    0 20px 25px rgba(0,0,0,0.10), 0 8px 10px rgba(0,0,0,0.04);
+  --shadow-focus: 0 0 0 2px #FFFFFF, 0 0 0 4px #18181B;
+
+  /* ── TYPOGRAPHIE ── */
+  --font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  /* ── ESPACEMENTS ── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  /* aliases md/lg/xl pour compatibilité */
+  --space-xs:  4px;
+  --space-sm:  8px;
+  --space-md:  16px;
+  --space-lg:  24px;
+  --space-xl:  32px;
+  --space-2xl: 48px;
+
+  /* ── LEGACY (compatibilité) ── */
+  --color-bg-page:        var(--background);
+  --color-bg-card:        var(--card);
+  --color-bg-input:       var(--background);
+  --color-bg-subtle:      var(--muted);
+  --color-bg-sidebar:     var(--sidebar-background);
+  --color-text-primary:   var(--foreground);
+  --color-text-secondary: var(--muted-foreground);
+  --color-text-tertiary:  var(--muted-foreground);
+  --color-text-inverse:   var(--primary-foreground);
+  --color-border:         var(--border);
+  --color-border-hover:   var(--zinc-300);
+  --color-border-focus:   var(--ring);
+  --color-accent:         var(--primary);
+  --color-accent-hover:   var(--zinc-800);
+  --color-accent-light:   var(--accent);
+  --color-accent-text:    var(--accent-foreground);
+  --color-dark-primary:   var(--foreground);
+  --color-dark-secondary: var(--muted-foreground);
+  --color-dark-tertiary:  var(--muted-foreground);
+  --color-dark-muted:     var(--zinc-200);
+  --shadow-card:          var(--shadow-sm);
+  --shadow-modal:         var(--shadow-xl);
+
+  /* surface/text/border aliases (utilisés dans les composants) */
+  --surface-page:      var(--background);
+  --surface-default:   var(--card);
+  --surface-raised:    var(--card);
+  --surface-overlay:   var(--muted);
+  --surface-sidebar:   var(--sidebar-background);
+  --surface-sunken:    var(--muted);
+  --text-primary:      var(--foreground);
+  --text-secondary:    var(--muted-foreground);
+  --text-tertiary:     var(--muted-foreground);
+  --text-disabled:     var(--zinc-400);
+  --text-on-accent:    var(--primary-foreground);
+  --text-on-dark:      var(--primary-foreground);
+  --border-subtle:     var(--zinc-100);
+  --border-default:    var(--border);
+  --border-strong:     var(--zinc-300);
+  --border-focus:      var(--ring);
+  --accent-default:    var(--primary);
+  --accent-hover:      var(--zinc-800);
+  --accent-pressed:    var(--zinc-700);
+  --accent-subtle:     var(--accent);
+  --accent-subtle-text: var(--accent-foreground);
+
+  /* gradients simplifiés */
+  --gradient-page:    var(--background);
+  --gradient-card:    var(--card);
+  --gradient-sidebar: var(--sidebar-background);
+  --gradient-accent:  var(--primary);
+  --gradient-hero:    var(--muted);
+
+  --transition: 150ms ease;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--foreground);
+  background: var(--background);
+  -webkit-font-smoothing: antialiased;
+}
+
+button { cursor: pointer; border: none; background: none; font-family: inherit; }
+input, select, textarea { font-family: inherit; }
+
+/* ── Typographie de card ── */
+.card-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--foreground);
+  text-transform: none;
+  letter-spacing: normal;
+  margin: 0 0 4px;
+}
+.card-subtitle {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--muted-foreground);
+  text-transform: none;
+  letter-spacing: normal;
+  margin: 0 0 16px;
+}

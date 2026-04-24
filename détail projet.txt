@@ -1,0 +1,311 @@
+================================================================================
+  BUDGET SIMULATOR — BASE DE CONNAISSANCE PROJET
+  Dernière mise à jour : avril 2026
+================================================================================
+
+--------------------------------------------------------------------------------
+1. VISION PRODUIT
+--------------------------------------------------------------------------------
+
+Budget Simulator est un outil de gestion financière personnelle conçu pour les
+particuliers, seuls ou en couple. L'objectif est de donner une vision claire et
+actionnable de sa situation budgétaire sans complexity inutile.
+
+Principes fondamentaux :
+- Simplicité d'usage avant tout : pas de jargon financier, des interfaces épurées
+- Adaptatif : le produit détecte automatiquement si l'utilisateur est seul ou en
+  couple et adapte tous les modules en conséquence
+- Multi-foyer : un utilisateur peut gérer plusieurs foyers (ex : foyer principal
+  + investissement locatif) et basculer entre eux en un clic
+- Données privées : tout est stocké localement (localStorage + fichier JSON via API)
+  aucune donnée ne quitte l'appareil de l'utilisateur
+
+Cible :
+- Couple souhaitant visualiser et équilibrer leurs dépenses communes
+- Personne seule voulant suivre sa règle des 50/30/20
+- Toute personne voulant planifier un projet d'épargne
+
+
+--------------------------------------------------------------------------------
+2. ARCHITECTURE TECHNIQUE
+--------------------------------------------------------------------------------
+
+Stack :
+- Vue 3 (Composition API, <script setup>)
+- Pinia (store global)
+- ECharts via vue-echarts (graphiques)
+- Vite (bundler)
+- Express (serveur API minimal pour persistance fichier)
+
+Persistance des données :
+- Source de vérité principale : localStorage (clé "budget-simulator-v1")
+- Source secondaire : fichier /data/budget.json via API Express (/api/budget GET/POST)
+- Au chargement : localStorage prioritaire, fallback sur le fichier JSON
+- Sauvegarde automatique à chaque modification (debounce)
+
+Structure des données (par foyer) :
+  foyer {
+    id, nom, couleur,
+    config: { personnes: [{ id, nom, salaire, couleur }] },
+    categories: [{ id, nom, couleur }],
+    depenses: [{ id, nom, montantP1, montantP2, montantCommun, frequence,
+                  categorieId, enveloppeId, actif, note, createdAt }],
+    enveloppes: [{ id, nom, budget, appartientA }],
+    epargnes: [{ id, date, montantP1, montantP2, note }]
+  }
+
+Fréquences supportées : mensuel, hebdomadaire, trimestriel, annuel
+(toutes converties en mensuel pour les calculs)
+
+
+--------------------------------------------------------------------------------
+3. MODULES FONCTIONNELS
+--------------------------------------------------------------------------------
+
+3.1 MULTI-FOYER (FoyerSwitcher, FoyerSetup, FoyerEdit)
+--------------------------------------------------------
+L'utilisateur peut créer plusieurs foyers indépendants. Chaque foyer a :
+- Un nom et une couleur d'identification
+- Ses propres personnes, catégories, dépenses, enveloppes et épargnes
+- Un type détecté automatiquement : "seul" (1 personne) ou "couple" (2 personnes)
+
+Comportement au switch de foyer :
+- Retour automatique au Dashboard
+- Reset de tous les simulateurs (montant projet, objectif épargne)
+- Les projets sauvegardés sont isolés par foyer (clé localStorage distincte)
+
+Couleurs des personnes : P1 toujours #7C6FCD (violet), P2 toujours #4A9EDB (bleu)
+
+
+3.2 DASHBOARD (Dashboard.vue)
+------------------------------
+Page d'accueil. Adaptatif selon le mode (couple vs solo).
+
+Mode COUPLE — colonne droite :
+  - Répartition des charges (ChargesRepartition.vue) : camembert/donut
+  - Score d'équité (EquiteCouple.vue) : mesure si chacun paie proportionnellement
+    à ses revenus
+
+Mode SOLO — colonne droite :
+  - Règle des 50/30/20 (module intégré) : analyse la répartition des dépenses
+  - Simulateur d'épargne (module intégré) : calcule combien de mois pour atteindre
+    un objectif d'épargne
+
+Colonne gauche (commune) :
+  - KPI revenus/dépenses/reste à vivre par personne (+ total couple)
+  - Jauge de répartition par catégorie (GaugeCategories.vue) avec filtre P1/P2/Tous
+  - Alertes d'optimisation (lien vers OptimisationPanel)
+
+
+3.3 JAUGE PAR CATEGORIE (GaugeCategories.vue)
+----------------------------------------------
+Demi-cercle SVG custom (pas de librairie externe).
+- Segments calculés en degrés (0–180°) proportionnellement aux montants
+- Palette dégradée violet → bleu clair (cohérente avec le reste du design)
+- Gap de 1.5° entre chaque segment
+- L'arc utilise la somme exacte des catégories affichées (pas le total global)
+  pour garantir que le demi-cercle est toujours complet
+- Filtrable par personne (Tous / P1 / P2) en mode couple
+- Hover : met en surbrillance le segment et affiche un tooltip flottant
+
+
+3.4 REGLE DES 50/30/20 (Dashboard.vue — module solo)
+------------------------------------------------------
+Règle budgétaire classique appliquée aux revenus nets :
+  - 50% Besoins : Logement, Transport, Alimentation, Santé, Enfants,
+                  Assurance, Emprunt (plafond — dépenser moins est mieux)
+  - 30% Envies  : Loisirs, Abonnements (plafond)
+  - 20% Épargne : ce qui reste après toutes les dépenses (PLANCHER —
+                  épargner plus est toujours positif, jamais pénalisé)
+
+Scoring asymétrique :
+  - Pénalité si Besoins ou Envies dépassent leur plafond
+  - Pénalité si Épargne est sous le plancher de 20%
+  - Épargner 30% → score = 100 (pas de pénalité pour "trop épargner")
+  - Score 0–100, avec labels : Parfaitement équilibré / Bonne répartition /
+    Acceptable / À améliorer / Déséquilibré
+
+Visualisation barres :
+  - Pour Besoins/Envies : barre jusqu'à min(actual, target), hachures si dépassement
+  - Pour Épargne : barre jusqu'à actual (peut dépasser le trait de limite),
+    couleur verte si au-dessus de l'objectif
+  - Trait de limite toujours positionné à target%
+
+Panel d'optimisation : side-panel avec conseils par bucket
+Panel d'information : side-panel expliquant la règle des 50/30/20
+
+
+3.5 SCORE D'EQUITE COUPLE (EquiteCouple.vue)
+--------------------------------------------
+Mesure si la répartition des charges entre les deux personnes est proportionnelle
+à leurs revenus respectifs.
+
+Calcul :
+  - Part idéale P1 = salaire P1 / (salaire P1 + salaire P2)
+  - Part réelle P1 = dépenses P1 / total dépenses couple
+  - Écart = | part réelle - part idéale | en points de %
+  - Score = 100 - (écart × 4), minimum 0
+
+Affichage :
+  - Score sur 100 avec couleur contextuelle
+  - Détail par catégorie : montant P1 vs P2 avec indicateur d'équité
+  - Side-panel d'information expliquant le calcul
+  - Empty state si aucune dépense
+
+
+3.6 DEPENSES (DepensesTable.vue)
+---------------------------------
+Tableau principal de saisie des dépenses avec :
+- Ajout/suppression/modification en ligne
+- Colonnes : Nom, Catégorie (avec icône), P1, P2, Commun, Fréquence, Note, Date
+- Filtre par catégorie et recherche textuelle
+- Sélection multiple pour actions groupées
+- Icônes par catégorie (SVG inline dans CAT_ICONS)
+- Fréquences : mensuel, hebdomadaire, trimestriel, annuel
+
+Catégories disponibles :
+  Logement, Transport, Alimentation, Loisirs, Santé, Épargne,
+  Abonnements, Enfants, Assurance, Emprunt
+
+
+3.7 ENVELOPPES (Enveloppes.vue)
+--------------------------------
+Système de budgets par enveloppe (méthode des enveloppes).
+- Chaque enveloppe a un budget mensuel et appartient à : P1, P2, ou Tous
+- Les dépenses peuvent être rattachées à une enveloppe
+- Visualisation du consommé vs budget avec barre de progression
+- Alerte visuelle si dépassement
+
+
+3.8 EPARGNE (PageEpargne.vue, SuiviEpargne.vue, EpargneTable.vue)
+------------------------------------------------------------------
+Module de suivi de l'épargne accumulée.
+
+SuiviEpargne :
+  - Graphique cumulatif (ECharts LineChart) par personne
+  - Courbes lissées si >= 4 points de données
+  - Tooltip avec valeur cumulée + delta du mois
+  - Totaux par personne (+ total couple en mode couple)
+  - Modale "Nouveau mouvement" pour saisir une entrée/sortie d'épargne
+    → En mode solo : pas de sélecteur de personne
+    → En mode couple : sélecteur P1/P2
+
+EpargneTable (side-panel "Gérer") :
+  - 1 ligne par mouvement, avec date, personne (pill colorée statique), montant, note
+  - Édition inline
+  - Suppression via modale de confirmation (évite les débordements UI)
+  - Total en pied de tableau (colspan 5, flex layout)
+
+
+3.9 CALCULATEUR DE PROJET (CalculateurProjet.vue, PageProjets.vue)
+-------------------------------------------------------------------
+Calcule combien de temps il faut pour financer un projet donné.
+
+Entrée : montant du projet en €
+
+Calcul :
+  - Épargne mensuelle disponible = salaire - total dépenses mensuelles
+  - Épargne déjà accumulée (depuis le module Épargne) déduite du reste
+  - Durée = reste à épargner / épargne mensuelle disponible
+
+Affichage adaptatif :
+  - Mode solo : 1 ligne "Il reste X€ — durée — atteint en mois/année"
+  - Mode couple : 3 lignes (P1, P2, Ensemble)
+
+Projets sauvegardés (max 3 par foyer) :
+  - Stockés dans localStorage avec une clé par foyer
+  - Carte avec nom, montant, durées, date de sauvegarde
+  - Bouton "Charger" pour recharger le montant dans le calculateur
+  - Isolation totale entre foyers
+
+
+3.10 OPTIMISATION (OptimisationPanel.vue)
+-----------------------------------------
+Panel latéral accessible depuis le Dashboard.
+Analyse les dépenses par catégorie et génère des alertes si un poste dépasse
+les seuils recommandés :
+  - Abonnements > 5% des dépenses totales
+  - Transport    > 15%
+  - Alimentation > 20%
+  - Logement     > 40%
+  - Assurance    > 10%
+  - Emprunt      > 35%
+
+Affiche également les statistiques globales (nombre de dépenses, moyenne, etc.)
+Empty state si aucune dépense enregistrée.
+
+
+3.11 EXPORT (ExportPanel.vue)
+------------------------------
+Permet d'exporter les données du foyer actif en JSON.
+Import possible pour restaurer une sauvegarde.
+
+
+--------------------------------------------------------------------------------
+4. DESIGN SYSTEM
+--------------------------------------------------------------------------------
+
+Tokens CSS (src/assets/tokens.css) :
+  --primary      : #4A6DC4 (bleu CTA)
+  --foreground   : #09090B (texte principal)
+  --muted        : #F4F4F5 (fond secondaire)
+  --border       : #E4E4E7
+  --radius-md/lg : border-radius standards
+
+Couleurs personnes (constantes dans le code, ne pas changer) :
+  P1 : #7C6FCD (violet)
+  P2 : #4A9EDB (bleu)
+
+Palette graphiques (gradient violet → bleu clair) :
+  #9B6FD4 → #C49EE8 / #6B5FC8 → #9B8FE0 / #5B7FD4 → #8BAEE8
+  #7AAAE8 → #AAD0F5 / #9BC4F0 → #C4DDF8 / #B8D8F8 → #D8EEFB
+
+Composants UI réutilisables (src/components/ui/) :
+  MsButton, MsInput, MsNumberInput, MsProgress, MsSlider,
+  MsCheckbox, MsTabs, MsBadge, MsCard, MsAvatar, MsChip,
+  MsNotification
+
+
+--------------------------------------------------------------------------------
+5. COMPORTEMENTS GLOBAUX
+--------------------------------------------------------------------------------
+
+Mode solo vs couple :
+  - Détecté par store.personnes.length <= 1
+  - Affecte : Dashboard (modules droite), CalculateurProjet, SuiviEpargne,
+    EpargneTable, PageProjets, FoyerEdit
+
+Switch de foyer :
+  - Retour automatique au Dashboard (watch foyerActifId dans App.vue)
+  - Reset simulateur épargne (simObjectif)
+  - Reset calculateur projet (montantProjet)
+  - Projets sauvegardés isolés par foyer
+
+Migration des données :
+  - Lors du chargement, les catégories manquantes (Assurance, Emprunt) sont
+    automatiquement ajoutées aux foyers existants sans toucher aux dépenses
+  - Migration de l'ancien format plat vers le format multi-foyer
+
+Sauvegarde :
+  - Auto-save debounced à chaque modification du store
+  - Double persistance : localStorage (immédiat) + fichier JSON (API)
+  - Notification "Sauvegardé à l'instant" dans la sidebar
+
+
+--------------------------------------------------------------------------------
+6. ROADMAP / IDEES V2
+--------------------------------------------------------------------------------
+
+- Graphiques de tendance sur les dépenses (évolution mensuelle)
+- Import de relevés bancaires (CSV/OFX)
+- Notifications/alertes push (budget enveloppe dépassé)
+- Mode sombre complet
+- Partage de foyer entre deux appareils (sync cloud)
+- Catégories personnalisables par l'utilisateur
+- Rapport mensuel PDF
+- Connexion bancaire open banking (PSD2)
+
+
+================================================================================
+  FIN DU DOCUMENT
+================================================================================

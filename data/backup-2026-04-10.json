@@ -1,0 +1,264 @@
+{
+  "config": {
+    "personnes": [
+      {
+        "id": "p1",
+        "nom": "Jérémie",
+        "salaire": 2500,
+        "couleur": "#18181B"
+      },
+      {
+        "id": "p2",
+        "nom": "Melissa",
+        "salaire": 1600,
+        "couleur": "#71717A"
+      }
+    ]
+  },
+  "categories": [
+    {
+      "id": "cat1",
+      "nom": "Logement",
+      "couleur": "#E8643A"
+    },
+    {
+      "id": "cat2",
+      "nom": "Transport",
+      "couleur": "#F08C46"
+    },
+    {
+      "id": "cat3",
+      "nom": "Alimentation",
+      "couleur": "#2CA87F"
+    },
+    {
+      "id": "cat4",
+      "nom": "Loisirs",
+      "couleur": "#25566E"
+    },
+    {
+      "id": "cat5",
+      "nom": "Santé",
+      "couleur": "#D4A84B"
+    },
+    {
+      "id": "cat6",
+      "nom": "Épargne",
+      "couleur": "#22C55E"
+    },
+    {
+      "id": "cat7",
+      "nom": "Abonnements",
+      "couleur": "#71717A"
+    },
+    {
+      "id": "cat8",
+      "nom": "Enfants",
+      "couleur": "#E8643A"
+    }
+  ],
+  "enveloppes": [
+    {
+      "id": "env1775841366524",
+      "nom": "Dépense Fixe Jérémie",
+      "couleur": "#1991FF",
+      "budgetMax": 0,
+      "lignesIds": [
+        "dep3",
+        "dep7",
+        "dep10",
+        "dep12",
+        "dep1775841180052"
+      ],
+      "appartientA": "p1"
+    }
+  ],
+  "epargnes": [
+    {
+      "id": "ep1775841435102",
+      "date": "2026-03-30",
+      "montantP1": 300,
+      "montantP2": 0,
+      "note": ""
+    },
+    {
+      "id": "ep1775841444765",
+      "date": "2026-03-30",
+      "montantP1": 500,
+      "montantP2": 0,
+      "note": ""
+    },
+    {
+      "id": "ep1775841468374",
+      "date": "2026-03-31",
+      "montantP1": 0,
+      "montantP2": 400,
+      "note": ""
+    },
+    {
+      "id": "ep1775841479309",
+      "date": "2026-04-01",
+      "montantP1": 0,
+      "montantP2": 200,
+      "note": ""
+    }
+  ],
+  "depenses": [
+    {
+      "id": "dep1",
+      "nom": "Loyer",
+      "montantP1": 600,
+      "montantP2": 400,
+      "montantCommun": 0,
+      "frequence": "mensuel",
+      "categorieId": "cat1",
+      "enveloppeId": null,
+      "actif": true,
+      "note": ""
+    },
+    {
+      "id": "dep2",
+      "nom": "Loisir + essence",
+      "montantP1": 470,
+      "montantP2": 400,
+      "montantCommun": 0,
+      "frequence": "mensuel",
+      "categorieId": "cat4",
+      "enveloppeId": null,
+      "actif": true,
+      "note": ""
+    },
+    {
+      "id": "dep3",
+      "nom": "Forfait internet",
+      "montantP1": 25.47,
+      "montantP2": 15,
+      "montantCommun": 0,
+      "frequence": "mensuel",
+      "categorieId": "cat7",
+      "enveloppeId": "env1775841366524",
+      "actif": true,
+      "note": ""
+    },
+    {
+      "id": "dep4",
+      "nom": "Électricité",
+      "montantP1": 30,
+      "montantP2": 30,
+      "montantCommun": 0,
+      "frequence": "mensuel",
+      "categorieId": "cat1",
+      "enveloppeId": null,
+      "actif": true,
+      "note": ""
+    },
+    {
+      "id": "dep5",
+      "nom": "Mutuelle",
+      "montantP1": 0,
+      "montantP2": 30,
+      "montantCommun": 0,
+      "frequence": "mensuel",
+      "categorieId": "cat1",
+      "enveloppeId": null,
+      "actif": true,
+      "note": ""
+    },
+    {
+      "id": "dep6",
+      "nom": "Courses nous et toutou",
+      "montantP1": 400,
+      "montantP2": 200,
+      "montantCommun": 0,
+      "frequence": "mensuel",
+      "categorieId": "cat3",
+      "enveloppeId": null,
+      "actif": true,
+      "note": ""
+    },
+    {
+      "id": "dep7",
+      "nom": "Maif",
+      "montantP1": 125,
+      "montantP2": 0,
+      "montantCommun": 0,
+      "frequence": "mensuel",
+      "categorieId": "cat7",
+      "enveloppeId": "env1775841366524",
+      "actif": true,
+      "note": ""
+    },
+    {
+      "id": "dep8",
+      "nom": "Transport",
+      "montantP1": 0,
+      "montantP2": 20,
+      "montantCommun": 0,
+      "frequence": "mensuel",
+      "categorieId": "cat2",
+      "enveloppeId": null,
+      "actif": true,
+      "note": ""
+    },
+    {
+      "id": "dep10",
+      "nom": "Google One",
+      "montantP1": 5,
+      "montantP2": 0,
+      "montantCommun": 0,
+      "frequence": "mensuel",
+      "categorieId": "cat7",
+      "enveloppeId": "env1775841366524",
+      "actif": true,
+      "note": ""
+    },
+    {
+      "id": "dep12",
+      "nom": "Amazon Prime",
+      "montantP1": 15,
+      "montantP2": 0,
+      "montantCommun": 0,
+      "frequence": "mensuel",
+      "categorieId": "cat7",
+      "enveloppeId": "env1775841366524",
+      "actif": true,
+      "note": ""
+    },
+    {
+      "id": "dep13",
+      "nom": "Crèche Matthew",
+      "montantP1": 150,
+      "montantP2": 0,
+      "montantCommun": 0,
+      "frequence": "mensuel",
+      "categorieId": "cat8",
+      "enveloppeId": null,
+      "actif": true,
+      "note": ""
+    },
+    {
+      "id": "dep14",
+      "nom": "Couches Matthew",
+      "montantP1": 0,
+      "montantP2": 50,
+      "montantCommun": 0,
+      "frequence": "mensuel",
+      "categorieId": "cat8",
+      "enveloppeId": null,
+      "actif": true,
+      "note": ""
+    },
+    {
+      "id": "dep1775841180052",
+      "nom": "Ménage",
+      "montantP1": 80,
+      "montantP2": 0,
+      "montantCommun": 0,
+      "frequence": "mensuel",
+      "categorieId": "cat1",
+      "enveloppeId": "env1775841366524",
+      "actif": true,
+      "note": ""
+    }
+  ]
+}
