@@ -88,15 +88,15 @@
           <!-- Schéma de flux -->
           <div class="flo">
 
-            <div class="flo__label">Exemple · comment ça fonctionne</div>
+            <div class="flo__label">Exemple · Crédit Agricole comme compte principal, Sumeria pour les enveloppes</div>
 
             <div class="flo__grid">
 
               <!-- Compte principal (gauche) -->
               <div class="flo__source">
-                <div class="flo__source-ico">🏦</div>
+                <div class="flo__bank-logo flo__bank-logo--ca">CA</div>
                 <div class="flo__source-name">Compte principal</div>
-                <div class="flo__source-bank">Crédit Agricole · BNP · LCL…</div>
+                <div class="flo__source-bank">Crédit Agricole</div>
                 <div class="flo__source-hr"></div>
                 <div class="flo__source-income-lbl">Salaire mensuel</div>
                 <div class="flo__source-income">2 500 €</div>
@@ -121,7 +121,7 @@
                       </div>
                     </div>
                     <div class="flo__card-r">
-                      <div class="flo__env-label">Compte enveloppe dédié</div>
+                      <div class="flo__bank-logo flo__bank-logo--sumeria">Sumeria</div>
                       <div class="flo__tags">
                         <span class="flo__tag flo__tag--iban">IBAN</span>
                         <span class="flo__tag flo__tag--cb">CB propre</span>
@@ -142,7 +142,7 @@
                       </div>
                     </div>
                     <div class="flo__card-r">
-                      <div class="flo__env-label">Compte enveloppe dédié</div>
+                      <div class="flo__bank-logo flo__bank-logo--sumeria">Sumeria</div>
                       <div class="flo__tags">
                         <span class="flo__tag flo__tag--iban">IBAN</span>
                         <span class="flo__tag flo__tag--cb">CB propre</span>
@@ -163,7 +163,7 @@
                       </div>
                     </div>
                     <div class="flo__card-r">
-                      <div class="flo__env-label">Compte enveloppe dédié</div>
+                      <div class="flo__bank-logo flo__bank-logo--sumeria">Sumeria</div>
                       <div class="flo__tags">
                         <span class="flo__tag flo__tag--iban">IBAN</span>
                         <span class="flo__tag flo__tag--cb">CB propre</span>
@@ -762,7 +762,14 @@ function doDeleteEnv() {
   display: flex; flex-direction: column; gap: 8px;
   padding: 18px 16px; border-right: 2px solid #e4e4e7; background: #fafafa;
 }
-.flo__source-ico  { font-size: 26px; }
+.flo__bank-logo {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 3px 8px; border-radius: 6px;
+  font-size: 11px; font-weight: 800; letter-spacing: 0.3px;
+  white-space: nowrap; flex-shrink: 0;
+}
+.flo__bank-logo--ca { background: #1b7e3e; color: #fff; }
+.flo__bank-logo--sumeria { background: #6d28d9; color: #fff; }
 .flo__source-name { font-size: 13px; font-weight: 700; color: #18181b; }
 .flo__source-bank { font-size: 10px; color: #a1a1aa; line-height: 1.4; }
 .flo__source-hr   { height: 1px; background: #e4e4e7; margin: 2px 0; }
