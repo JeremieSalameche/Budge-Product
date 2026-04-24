@@ -8,15 +8,24 @@
         <p class="env__subtitle">Automatisez ce que vous envoyez sur chaque compte de paiement chaque mois</p>
       </div>
       <div class="env__header-actions">
-        <button class="sum__open-btn" type="button" @click="sumOpen = true">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a7 7 0 0 1 5.292 11.584C16.4 14.56 16 15.524 16 16.5V17a1 1 0 0 1-1 1h-6a1 1 0 0 1-1-1v-.5c0-.976-.4-1.94-1.292-2.916A7 7 0 0 1 12 2zm-2 17h4v1a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-1z"/></svg>
-          Mieux organiser
-        </button>
         <MsButton variant="primary" size="sm" @click="showAddModal = true">
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
           Nouveau compte
         </MsButton>
       </div>
+    </div>
+
+    <!-- Bandeau méthode enveloppes -->
+    <div class="env__banner" @click="sumOpen = true">
+      <div class="env__banner-icon">💡</div>
+      <div class="env__banner-text">
+        <span class="env__banner-title">La méthode des enveloppes numériques</span>
+        <span class="env__banner-sub">Ouvrez un compte dédié par poste de budget. Chaque compte a son IBAN et sa CB. Zéro surprise en fin de mois.</span>
+      </div>
+      <button class="env__banner-cta" type="button">
+        Découvrir la méthode
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 6h7M6.5 3l3 3-3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
     </div>
 
     <!-- Side panel (drawer) -->
@@ -599,16 +608,27 @@ function doDeleteEnv() {
 .env__title { font-size: 18px; font-weight: 700; margin: 0; }
 .env__subtitle { font-size: 13px; color: var(--muted-foreground); margin: 4px 0 0; }
 
-/* ── Bouton trigger ─────────────────────────────────────── */
-.sum__open-btn {
-  display: inline-flex; align-items: center; gap: 6px;
-  height: 32px; padding: 0 12px; border-radius: 8px;
-  font-size: 12px; font-weight: 600; font-family: inherit;
-  background: #fef9c3; color: #713f12; border: 1px solid #fde68a;
-  cursor: pointer; transition: background 0.12s, border-color 0.12s;
-  white-space: nowrap;
+/* ── Bandeau méthode enveloppes ─────────────────────────── */
+.env__banner {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 18px; border-radius: 12px;
+  background: #fefce8; border: 1px solid #fde68a;
+  cursor: pointer; transition: background 0.15s, border-color 0.15s;
 }
-.sum__open-btn:hover { background: #fef08a; border-color: #facc15; }
+.env__banner:hover { background: #fef9c3; border-color: #facc15; }
+.env__banner-icon { font-size: 20px; flex-shrink: 0; }
+.env__banner-text { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+.env__banner-title { font-size: 13px; font-weight: 700; color: #713f12; }
+.env__banner-sub { font-size: 12px; color: #92400e; line-height: 1.4; }
+.env__banner-cta {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 14px; border-radius: 8px; flex-shrink: 0;
+  font-size: 12px; font-weight: 600; font-family: inherit;
+  background: #713f12; color: #fff; border: none;
+  cursor: pointer; white-space: nowrap;
+  transition: background 0.12s;
+}
+.env__banner:hover .env__banner-cta { background: #92400e; }
 
 .sum__idea-badge {
   display: inline-flex; align-items: center; gap: 4px;
@@ -623,7 +643,7 @@ function doDeleteEnv() {
 }
 .sum__drawer {
   position: fixed; top: 0; right: 0; bottom: 0;
-  width: 520px; max-width: 95vw; z-index: 401;
+  width: 700px; max-width: 95vw; z-index: 401;
   background: #fff; border-left: 1px solid #e4e4e7;
   box-shadow: -16px 0 56px rgba(0,0,0,0.12);
   display: flex; flex-direction: column; overflow: hidden;
