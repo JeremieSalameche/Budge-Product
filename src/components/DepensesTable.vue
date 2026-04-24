@@ -619,7 +619,7 @@ function suggestSplit() {
   flex: 1; min-width: 0; word-break: break-word;
 }
 .dep__card-amount {
-  font-size: 13px; font-weight: 700; color: var(--foreground);
+  font-size: 12px; font-weight: 500; color: var(--muted-foreground);
   white-space: nowrap; flex-shrink: 0;
 }
 
