@@ -59,6 +59,96 @@
             <span>Une solution concrète</span>
           </div>
 
+          <!-- Schéma de flux -->
+          <div class="sum__schema">
+
+            <!-- Source -->
+            <div class="sum__schema-source">
+              <div class="sum__schema-source-left">
+                <div class="sum__schema-bank-icon">🏦</div>
+                <div>
+                  <div class="sum__schema-bank-name">Compte principal</div>
+                  <div class="sum__schema-bank-sub">Crédit Agricole · BNP · LCL…</div>
+                </div>
+              </div>
+              <div class="sum__schema-income">
+                <span class="sum__schema-income-label">Salaire</span>
+                <span class="sum__schema-income-val">+ 2 500 €</span>
+              </div>
+              <span class="sum__schema-badge">Exemple</span>
+            </div>
+
+            <!-- Connecteur -->
+            <div class="sum__schema-stem">
+              <div class="sum__schema-stem-line"></div>
+              <div class="sum__schema-stem-label">
+                <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1v8M2 7l3.5 3.5L9 7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Le 1er du mois — virements automatiques
+              </div>
+              <div class="sum__schema-stem-line"></div>
+            </div>
+
+            <!-- Destinations -->
+            <div class="sum__schema-dests">
+
+              <div class="sum__schema-dest sum__schema-dest--loyer">
+                <div class="sum__schema-dest-top">
+                  <span class="sum__schema-dest-ico">🏠</span>
+                  <span class="sum__schema-dest-name">Loyer</span>
+                </div>
+                <div class="sum__schema-dest-sub">Virement direct</div>
+                <div class="sum__schema-dest-amount">650 €</div>
+              </div>
+
+              <div class="sum__schema-dest sum__schema-dest--sumeria">
+                <div class="sum__schema-dest-top">
+                  <span class="sum__schema-dest-ico">💳</span>
+                  <span class="sum__schema-dest-name">Charges fixes</span>
+                </div>
+                <div class="sum__schema-dest-sub">Sumeria · prélèvements CB</div>
+                <div class="sum__schema-dest-items">Abo · Assurance · Forfait</div>
+                <div class="sum__schema-dest-amount">580 €</div>
+              </div>
+
+              <div class="sum__schema-dest sum__schema-dest--energie">
+                <div class="sum__schema-dest-top">
+                  <span class="sum__schema-dest-ico">⚡</span>
+                  <span class="sum__schema-dest-name">Énergie</span>
+                </div>
+                <div class="sum__schema-dest-sub">Lissé sur 12 mois</div>
+                <div class="sum__schema-dest-items">Facturé tous les 2 mois</div>
+                <div class="sum__schema-dest-amount">80 €</div>
+              </div>
+
+              <div class="sum__schema-dest sum__schema-dest--cash">
+                <div class="sum__schema-dest-top">
+                  <span class="sum__schema-dest-ico">🛒</span>
+                  <span class="sum__schema-dest-name">Alimentation</span>
+                </div>
+                <div class="sum__schema-dest-sub">Retrait en cash</div>
+                <div class="sum__schema-dest-items">Courses &amp; marché</div>
+                <div class="sum__schema-dest-amount">300 €</div>
+              </div>
+
+            </div>
+
+            <!-- Résultat -->
+            <div class="sum__schema-result">
+              <div class="sum__schema-result-check">
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 7l3.5 3.5L11 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <div class="sum__schema-result-body">
+                <div class="sum__schema-result-title">Zéro surprise sur votre compte</div>
+                <div class="sum__schema-result-sub">Aucun prélèvement imprévisible — votre solde est connu à l'avance</div>
+              </div>
+              <div class="sum__schema-result-right">
+                <div class="sum__schema-result-amount">890 €</div>
+                <div class="sum__schema-result-label">reste à vivre</div>
+              </div>
+            </div>
+
+          </div>
+
           <!-- Logo + tagline -->
           <div class="sum__header">
             <div class="sum__logo">
@@ -542,6 +632,102 @@ function doDeleteEnv() {
 .sum__feature-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
 .sum__feature-title { font-size: 13px; font-weight: 600; color: var(--foreground); }
 .sum__feature-sub   { font-size: 12px; color: var(--muted-foreground); line-height: 1.5; margin-top: 2px; }
+
+/* ── Schéma de flux ─────────────────────────────────────── */
+.sum__schema {
+  display: flex; flex-direction: column; gap: 0;
+  border: 1.5px solid #e4e4e7; border-radius: 14px; overflow: hidden;
+  background: #fff;
+}
+
+/* Source */
+.sum__schema-source {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 18px;
+  background: #fafafa; border-bottom: 1.5px solid #e4e4e7;
+  position: relative;
+}
+.sum__schema-source-left { display: flex; align-items: center; gap: 10px; flex: 1; }
+.sum__schema-bank-icon { font-size: 22px; line-height: 1; }
+.sum__schema-bank-name { font-size: 14px; font-weight: 700; color: #18181b; }
+.sum__schema-bank-sub  { font-size: 11px; color: #a1a1aa; margin-top: 1px; }
+
+.sum__schema-income { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; }
+.sum__schema-income-label { font-size: 10px; font-weight: 500; color: #a1a1aa; text-transform: uppercase; letter-spacing: 0.04em; }
+.sum__schema-income-val { font-size: 17px; font-weight: 800; color: #16a34a; letter-spacing: -0.5px; }
+
+.sum__schema-badge {
+  position: absolute; top: 10px; right: 14px;
+  font-size: 10px; font-weight: 600;
+  padding: 2px 7px; border-radius: 99px;
+  background: #f0f9ff; color: #0369a1; border: 1px solid #bae6fd;
+}
+
+/* Connecteur */
+.sum__schema-stem {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 18px;
+  background: #fafafa; border-bottom: 1.5px solid #e4e4e7;
+}
+.sum__schema-stem-line { flex: 1; height: 1px; background: #e4e4e7; }
+.sum__schema-stem-label {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 500; color: #71717a;
+  white-space: nowrap;
+}
+
+/* Destinations */
+.sum__schema-dests {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  border-bottom: 1.5px solid #e4e4e7;
+}
+.sum__schema-dest {
+  padding: 14px 14px 16px;
+  display: flex; flex-direction: column; gap: 4px;
+  border-right: 1px solid #e4e4e7;
+  position: relative;
+}
+.sum__schema-dest:last-child { border-right: none; }
+
+.sum__schema-dest-top {
+  display: flex; align-items: center; gap: 6px; margin-bottom: 2px;
+}
+.sum__schema-dest-ico  { font-size: 16px; line-height: 1; }
+.sum__schema-dest-name { font-size: 12px; font-weight: 700; color: #18181b; }
+.sum__schema-dest-sub  { font-size: 11px; color: #71717a; }
+.sum__schema-dest-items { font-size: 10px; color: #a1a1aa; line-height: 1.4; }
+.sum__schema-dest-amount {
+  font-size: 18px; font-weight: 800; color: #18181b;
+  letter-spacing: -0.5px; margin-top: 6px;
+}
+
+.sum__schema-dest--loyer   .sum__schema-dest-amount { color: #7c3aed; }
+.sum__schema-dest--sumeria .sum__schema-dest-amount { color: #1a1aff; }
+.sum__schema-dest--energie .sum__schema-dest-amount { color: #ea580c; }
+.sum__schema-dest--cash    .sum__schema-dest-amount { color: #16a34a; }
+
+/* Résultat */
+.sum__schema-result {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 18px; background: #f0fdf4;
+}
+.sum__schema-result-check {
+  width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: #16a34a; color: #fff;
+}
+.sum__schema-result-body { flex: 1; }
+.sum__schema-result-title { font-size: 13px; font-weight: 700; color: #14532d; }
+.sum__schema-result-sub   { font-size: 11px; color: #16a34a; margin-top: 1px; }
+.sum__schema-result-right { text-align: right; }
+.sum__schema-result-amount { font-size: 20px; font-weight: 800; color: #14532d; letter-spacing: -0.5px; }
+.sum__schema-result-label  { font-size: 10px; color: #16a34a; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; }
+
+@media (max-width: 600px) {
+  .sum__schema-dests { grid-template-columns: repeat(2, 1fr); }
+  .sum__schema-dest:nth-child(2) { border-right: 1px solid #e4e4e7; }
+  .sum__schema-dest:nth-child(3) { border-right: none; }
+}
 
 .sum__cta {
   display: inline-flex; align-items: center; gap: 7px;
