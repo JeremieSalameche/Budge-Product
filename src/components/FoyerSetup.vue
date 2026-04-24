@@ -108,23 +108,25 @@
 
         <!-- Étape 2 : Membres + copie de foyer -->
         <div v-if="etape === 2" class="onboarding__fields">
-          <div v-for="(p, i) in personnes" :key="i" class="onboarding__membre">
-            <div class="onboarding__membre-header">
-              <div class="onboarding__membre-avatar" :style="{ background: p.couleur }">
-                {{ p.nom ? p.nom[0].toUpperCase() : (i === 0 ? 'A' : 'B') }}
+          <div class="onboarding__membres-grid">
+            <div v-for="(p, i) in personnes" :key="i" class="onboarding__membre">
+              <div class="onboarding__membre-header">
+                <div class="onboarding__membre-avatar" :style="{ background: p.couleur }">
+                  {{ p.nom ? p.nom[0].toUpperCase() : (i === 0 ? 'A' : 'B') }}
+                </div>
+                <span class="onboarding__membre-label">Personne {{ i + 1 }}</span>
               </div>
-              <span class="onboarding__membre-label">Personne {{ i + 1 }}</span>
-            </div>
-            <div class="onboarding__membre-row">
-              <div class="onboarding__field">
-                <label class="onboarding__label">Prénom</label>
-                <input class="onboarding__input" v-model="p.nom" type="text" :placeholder="i === 0 ? 'Ex : Marie' : 'Ex : Thomas'" />
-              </div>
-              <div class="onboarding__field">
-                <label class="onboarding__label">Salaire net mensuel</label>
-                <div class="onboarding__input-wrap">
-                  <input class="onboarding__input" v-model.number="p.salaire" type="number" min="0" step="100" placeholder="0" />
-                  <span class="onboarding__suffix">€/mois</span>
+              <div class="onboarding__membre-row">
+                <div class="onboarding__field">
+                  <label class="onboarding__label">Prénom</label>
+                  <input class="onboarding__input" v-model="p.nom" type="text" :placeholder="i === 0 ? 'Ex : Marie' : 'Ex : Thomas'" />
+                </div>
+                <div class="onboarding__field">
+                  <label class="onboarding__label">Salaire net mensuel</label>
+                  <div class="onboarding__input-wrap">
+                    <input class="onboarding__input" v-model.number="p.salaire" type="number" min="0" step="100" placeholder="0" />
+                    <span class="onboarding__suffix">€/mois</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -237,21 +239,23 @@
 
         <div v-if="etape === 2" class="fsetup__body">
           <p class="fsetup__hint">Renseignez les informations des membres du foyer.</p>
-          <div v-for="(p, i) in personnes" :key="i" class="fsetup__membre">
-            <div class="fsetup__membre-header">
-              <div class="fsetup__membre-avatar" :style="{ background: p.couleur }">{{ p.nom ? p.nom[0].toUpperCase() : (i === 0 ? 'A' : 'B') }}</div>
-              <span class="fsetup__membre-label">Personne {{ i + 1 }}</span>
-            </div>
-            <div class="fsetup__membre-fields">
-              <div class="fsetup__field">
-                <label class="fsetup__label">Prénom</label>
-                <input class="fsetup__input" v-model="p.nom" type="text" :placeholder="i === 0 ? 'Ex : Marie' : 'Ex : Thomas'" />
+          <div class="fsetup__membres-grid">
+            <div v-for="(p, i) in personnes" :key="i" class="fsetup__membre">
+              <div class="fsetup__membre-header">
+                <div class="fsetup__membre-avatar" :style="{ background: p.couleur }">{{ p.nom ? p.nom[0].toUpperCase() : (i === 0 ? 'A' : 'B') }}</div>
+                <span class="fsetup__membre-label">Personne {{ i + 1 }}</span>
               </div>
-              <div class="fsetup__field">
-                <label class="fsetup__label">Salaire net mensuel</label>
-                <div class="fsetup__input-wrap">
-                  <input class="fsetup__input" v-model.number="p.salaire" type="number" min="0" step="100" placeholder="0" />
-                  <span class="fsetup__suffix">€/mois</span>
+              <div class="fsetup__membre-fields">
+                <div class="fsetup__field">
+                  <label class="fsetup__label">Prénom</label>
+                  <input class="fsetup__input" v-model="p.nom" type="text" :placeholder="i === 0 ? 'Ex : Marie' : 'Ex : Thomas'" />
+                </div>
+                <div class="fsetup__field">
+                  <label class="fsetup__label">Salaire net mensuel</label>
+                  <div class="fsetup__input-wrap">
+                    <input class="fsetup__input" v-model.number="p.salaire" type="number" min="0" step="100" placeholder="0" />
+                    <span class="fsetup__suffix">€/mois</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -535,6 +539,9 @@ async function onImportCsvOnboarding(e) {
 .onboarding__color-btn--active { border-color: #18181b; transform: scale(1.15); }
 
 /* Membres */
+.onboarding__membres-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+}
 .onboarding__membre {
   background: #f9f9f9; border-radius: 12px; padding: 16px;
   display: flex; flex-direction: column; gap: 12px;
@@ -735,6 +742,9 @@ async function onImportCsvOnboarding(e) {
 }
 .fsetup__color-btn:hover { transform: scale(1.1); }
 .fsetup__color-btn--active { border-color: var(--foreground); transform: scale(1.1); }
+.fsetup__membres-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+}
 .fsetup__membre {
   background: var(--muted); border-radius: var(--radius-md); padding: 16px;
   display: flex; flex-direction: column; gap: 12px;
