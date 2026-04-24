@@ -205,6 +205,10 @@
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                   {{ r.suggestion }}
                 </div>
+                <button class="eq-panel__apply" type="button" @click="applyReco(r)">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  Appliquer la répartition
+                </button>
               </div>
 
               <!-- Section loisirs -->
@@ -250,8 +254,10 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useBudgetStore, toMonthly } from '../stores/budget'
+import { useStorage } from '../composables/useStorage'
 
 const store     = useBudgetStore()
+const { scheduleAutoSave } = useStorage()
 const panelOpen = ref(false)
 const infoOpen  = ref(false)
 
@@ -331,6 +337,7 @@ const recos = computed(() => {
       return {
         id: d.id,
         nom: d.nom,
+        frequence: d.frequence,
         m1: Math.round(m1), m2: Math.round(m2),
         pctP1: Math.round(pctActP1 * 100), pctP2: Math.round((1 - pctActP1) * 100),
         idealP1: mIdealP1, idealP2: mIdealP2,
@@ -366,6 +373,24 @@ const leisureInsight = computed(() => {
 
 function fmtMontant(v) {
   return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(v)
+}
+
+function fromMonthly(monthlyAmount, freq) {
+  switch (freq) {
+    case 'hebdomadaire': return Math.round(monthlyAmount * 12 / 52)
+    case 'trimestriel':  return Math.round(monthlyAmount * 3)
+    case 'annuel':       return Math.round(monthlyAmount * 12)
+    default:             return Math.round(monthlyAmount)
+  }
+}
+
+function applyReco(r) {
+  store.updateDepense(r.id, {
+    montantP1: fromMonthly(r.idealP1, r.frequence),
+    montantP2: fromMonthly(r.idealP2, r.frequence),
+  })
+  scheduleAutoSave()
+  store.showNotification(`${r.nom} rééquilibrée`, 'success')
 }
 </script>
 
@@ -604,6 +629,16 @@ function fmtMontant(v) {
 .eq-panel__person-pct    { font-size: 11px; color: var(--muted-foreground); }
 .eq-panel__person-ideal  { font-size: 11px; color: var(--muted-foreground); font-style: italic; margin-left: auto; }
 .eq-panel__suggestion { font-size: 12px; color: var(--muted-foreground); font-style: italic; background: var(--card); border-radius: 6px; padding: 8px 10px; display: flex; align-items: flex-start; gap: 6px; }
+
+.eq-panel__apply {
+  display: inline-flex; align-items: center; gap: 6px;
+  align-self: flex-end;
+  padding: 7px 14px; border-radius: 8px;
+  font-size: 12px; font-weight: 600; font-family: inherit;
+  background: #18181b; color: #fff; border: none;
+  cursor: pointer; transition: background 0.15s;
+}
+.eq-panel__apply:hover { background: #27272a; }
 .eq__recos-empty { display: inline-flex; align-items: center; gap: 5px; color: #16A34A; font-size: 12px; font-weight: 500; }
 
 /* Section loisirs dans le panel */
