@@ -2,8 +2,8 @@
   <div class="login-form">
     <div class="login-form__inner">
       <div class="login-form__head">
-        <h1 class="login-form__title">Votre budget.<br>Sous contrôle.</h1>
-        <p class="login-form__sub">Connecte-toi pour accéder à ton espace budget.</p>
+        <h1 class="login-form__title">Se connecter</h1>
+        <p class="login-form__sub">Accédez à votre espace budget en un clic avec votre compte Google.</p>
       </div>
 
       <button class="login-google" @click="login" :disabled="loading" type="button">
