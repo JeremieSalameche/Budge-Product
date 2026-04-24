@@ -334,9 +334,9 @@ async function onImportCsvOnboarding(e) {
   font-family: system-ui, -apple-system, sans-serif;
 }
 
-/* ── Gauche ── */
+/* ── Formulaire (droite) ── */
 .onboarding__left {
-  width: 50%; min-width: 380px;
+  flex: 1; min-width: 380px;
   background: #fff;
   display: flex; align-items: center; justify-content: center;
   padding: 48px 40px;
