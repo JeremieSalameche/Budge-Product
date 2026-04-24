@@ -15,8 +15,21 @@
       </MsButton>
     </div>
 
+    <!-- ── Empty state (aucune dépense) ───────────────────── -->
+    <div v-if="store.depenses.length === 0" class="dep__empty-state">
+      <div class="dep__empty-state-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      </div>
+      <div class="dep__empty-state-title">Aucune dépense enregistrée</div>
+      <div class="dep__empty-state-sub">Ajoutez votre première dépense pour commencer à suivre votre budget mensuel.</div>
+      <MsButton variant="primary" size="sm" @click="openAdd">
+        <svg width="13" height="13" viewBox="0 0 14 14" fill="none" style="flex-shrink:0"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        Ajouter une dépense
+      </MsButton>
+    </div>
+
     <!-- ── Colonnes ────────────────────────────────────────── -->
-    <div :class="['dep__cols', { 'dep__cols--solo': isSolo }]">
+    <div v-else :class="['dep__cols', { 'dep__cols--solo': isSolo }]">
 
       <!-- Colonne P1 (masquée en solo) -->
       <div v-if="!isSolo" class="dep__col">
@@ -609,6 +622,23 @@ function suggestSplit() {
 .dep__empty {
   text-align: center; font-size: 13px; color: var(--muted-foreground);
   padding: 28px 12px; opacity: 0.6;
+}
+
+/* Empty state global (aucune dépense du tout) */
+.dep__empty-state {
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  padding: 64px 32px; text-align: center;
+}
+.dep__empty-state-icon {
+  width: 56px; height: 56px; border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  background: #f4f4f5; border: 1.5px solid #e4e4e7;
+  color: #a1a1aa;
+}
+.dep__empty-state-title { font-size: 16px; font-weight: 700; color: var(--foreground); }
+.dep__empty-state-sub {
+  font-size: 13px; color: var(--muted-foreground); max-width: 320px;
+  line-height: 1.6; margin-bottom: 4px;
 }
 
 /* ── Cards ─────────────────────────────────────────────── */

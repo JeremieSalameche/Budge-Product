@@ -95,9 +95,10 @@
                       </div>
                     </div>
                     <div class="flo__card-r">
+                      <div class="flo__env-label">Compte enveloppe dédié</div>
                       <div class="flo__tags">
-                        <span class="flo__tag flo__tag--iban">IBAN propre</span>
-                        <span class="flo__tag flo__tag--cb">CB dédiée</span>
+                        <span class="flo__tag flo__tag--iban">IBAN</span>
+                        <span class="flo__tag flo__tag--cb">CB propre</span>
                       </div>
                       <div class="flo__card-amt">650 €</div>
                     </div>
@@ -115,9 +116,10 @@
                       </div>
                     </div>
                     <div class="flo__card-r">
+                      <div class="flo__env-label">Compte enveloppe dédié</div>
                       <div class="flo__tags">
-                        <span class="flo__tag flo__tag--iban">IBAN propre</span>
-                        <span class="flo__tag flo__tag--cb">CB dédiée</span>
+                        <span class="flo__tag flo__tag--iban">IBAN</span>
+                        <span class="flo__tag flo__tag--cb">CB propre</span>
                       </div>
                       <div class="flo__card-amt">580 €</div>
                     </div>
@@ -135,9 +137,10 @@
                       </div>
                     </div>
                     <div class="flo__card-r">
+                      <div class="flo__env-label">Compte enveloppe dédié</div>
                       <div class="flo__tags">
-                        <span class="flo__tag flo__tag--iban">IBAN propre</span>
-                        <span class="flo__tag flo__tag--cb">CB dédiée</span>
+                        <span class="flo__tag flo__tag--iban">IBAN</span>
+                        <span class="flo__tag flo__tag--cb">CB propre</span>
                       </div>
                       <div class="flo__card-amt">80 €</div>
                     </div>
@@ -151,14 +154,11 @@
                       <span class="flo__card-ico">🛒</span>
                       <div>
                         <div class="flo__card-name">Alimentation &amp; loisirs</div>
-                        <div class="flo__card-detail">Retrait cash · courses · restaurant</div>
+                        <div class="flo__card-detail">Courses · restaurant · sorties</div>
                       </div>
                     </div>
                     <div class="flo__card-r">
-                      <div class="flo__tags">
-                        <span class="flo__tag flo__tag--iban">IBAN propre</span>
-                        <span class="flo__tag flo__tag--cb">CB dédiée</span>
-                      </div>
+                      <span class="flo__tag flo__tag--especes">💵 Retrait en espèces</span>
                       <div class="flo__card-amt">300 €</div>
                     </div>
                   </div>
@@ -183,58 +183,31 @@
 
           </div>
 
-          <!-- Logo + tagline -->
-          <div class="sum__header">
-            <div class="sum__logo">
-              <svg width="20" height="20" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#1A1AFF"/><path d="M8 20c0-2.5 2-4 5-4s5 1.5 5 3.5S15.5 23 13 23c-1.5 0-2.5-.5-3-1" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M14 12c0 2.5 2 4 5 4" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
-              <span class="sum__logo-text">sumeria</span>
-              <span class="sum__logo-by">by Lydia</span>
-            </div>
-            <span class="sum__gratuit">Gratuit</span>
-          </div>
+          <!-- Banques qui proposent ce service -->
+          <div class="sum__providers">
+            <div class="sum__providers-title">Ce service est proposé par ces banques digitales</div>
+            <div class="sum__providers-list">
 
-          <!-- Accroche -->
-          <p class="sum__pitch">
-            Ouvrez de vrais comptes bancaires dédiés — chacun avec son propre IBAN et sa CB. Le 1er du mois, vous virez exactement le bon montant sur chaque compte (Budge vous dit combien). Loyer, abonnements, énergie sont prélevés depuis le bon compte. Votre compte principal ne voit plus passer que des virements sortants — plus d'anxiété sur le solde.
-          </p>
+              <a class="sum__prov" href="https://sumeria.eu" target="_blank" rel="noopener noreferrer">
+                <div class="sum__prov-logo sum__prov-logo--sumeria">Sumeria</div>
+                <div class="sum__prov-info">
+                  <span class="sum__prov-name">by Lydia</span>
+                  <span class="sum__prov-desc">Comptes secondaires · IBAN + CB dédiée · gratuit</span>
+                </div>
+                <svg class="sum__prov-arrow" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5h9M7.5 3l3.5 3.5L7.5 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </a>
 
-          <!-- Points clés -->
-          <div class="sum__features">
-            <div class="sum__feature">
-              <span class="sum__feature-icon">🏦</span>
-              <div>
-                <div class="sum__feature-title">IBAN + CB dédiée par compte</div>
-                <div class="sum__feature-sub">Loyer par virement, abos par CB, énergie par prélèvement — chaque dépense sort du bon compte, jamais de votre compte principal</div>
-              </div>
-            </div>
-            <div class="sum__feature">
-              <span class="sum__feature-icon">🔄</span>
-              <div>
-                <div class="sum__feature-title">Virement mensuel automatique</div>
-                <div class="sum__feature-sub">Programmez un virement depuis votre banque classique — Budge calcule exactement combien mettre sur chaque compte</div>
-              </div>
-            </div>
-            <div class="sum__feature">
-              <span class="sum__feature-icon">🔒</span>
-              <div>
-                <div class="sum__feature-title">Votre compte principal devient une forteresse</div>
-                <div class="sum__feature-sub">Crédit Agricole, BNP, LCL… devient juste un point de collecte. Zéro prélèvement imprévisible, zéro anxiété de solde en fin de mois</div>
-              </div>
-            </div>
-            <div class="sum__feature">
-              <span class="sum__feature-icon">⚡</span>
-              <div>
-                <div class="sum__feature-title">Ouverture en 5 minutes, 0 frais</div>
-                <div class="sum__feature-sub">Pas de frais de tenue de compte, pas de frais de virement — uniquement des options premium optionnelles</div>
-              </div>
+              <a class="sum__prov" href="https://www.bunq.com/fr" target="_blank" rel="noopener noreferrer">
+                <div class="sum__prov-logo sum__prov-logo--bunq">bunq</div>
+                <div class="sum__prov-info">
+                  <span class="sum__prov-name">Banque néerlandaise</span>
+                  <span class="sum__prov-desc">Multi-IBAN · comptes colorés · à partir de 3,99€/mois</span>
+                </div>
+                <svg class="sum__prov-arrow" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5h9M7.5 3l3.5 3.5L7.5 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </a>
+
             </div>
           </div>
-
-          <!-- CTA -->
-          <a class="sum__cta" href="https://sumeria.eu" target="_blank" rel="noopener noreferrer">
-            Découvrir Sumeria
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
 
         </div>
       </Transition>
@@ -739,8 +712,10 @@ function doDeleteEnv() {
   font-size: 10px; font-weight: 700; padding: 2px 6px;
   border-radius: 4px; letter-spacing: 0.02em; white-space: nowrap;
 }
-.flo__tag--iban { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
-.flo__tag--cb   { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+.flo__env-label   { font-size: 9px; font-weight: 700; color: #a1a1aa; text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; }
+.flo__tag--iban   { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+.flo__tag--cb     { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+.flo__tag--especes { font-size: 11px; padding: 3px 8px; background: #fefce8; color: #713f12; border: 1px solid #fde68a; white-space: nowrap; }
 
 .flo__card-amt { font-size: 18px; font-weight: 800; color: #18181b; letter-spacing: -0.5px; }
 
@@ -760,16 +735,32 @@ function doDeleteEnv() {
 .flo__result-amt { font-size: 20px; font-weight: 800; color: #14532d; letter-spacing: -0.5px; }
 .flo__result-lbl { font-size: 10px; color: #16a34a; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
 
-.sum__cta {
-  display: inline-flex; align-items: center; gap: 7px;
-  align-self: flex-start;
-  padding: 9px 18px; border-radius: 9px;
-  background: #1a1aff; color: #fff;
-  font-size: 13px; font-weight: 600;
-  text-decoration: none;
-  transition: background 0.15s;
+/* ── Providers ──────────────────────────────────────────── */
+.sum__providers-title {
+  font-size: 11px; font-weight: 600; color: #a1a1aa;
+  text-transform: uppercase; letter-spacing: 0.06em;
 }
-.sum__cta:hover { background: #0000cc; }
+.sum__providers-list { display: flex; flex-direction: column; gap: 6px; }
+
+.sum__prov {
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 14px; border-radius: 11px;
+  border: 1.5px solid #e4e4e7; background: #fafafa;
+  text-decoration: none; transition: border-color 0.13s, background 0.13s;
+}
+.sum__prov:hover { border-color: #a1a1aa; background: #f4f4f5; }
+
+.sum__prov-logo {
+  flex-shrink: 0; font-weight: 900; font-size: 17px; letter-spacing: -0.5px;
+}
+.sum__prov-logo--sumeria { font-family: Georgia, 'Times New Roman', serif; color: #18181b; }
+.sum__prov-logo--bunq    { font-family: system-ui, sans-serif; color: #00c29a; font-weight: 800; font-size: 18px; }
+
+.sum__prov-info { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.sum__prov-name { font-size: 11px; color: #71717a; font-weight: 500; }
+.sum__prov-desc { font-size: 12px; color: #52525b; }
+
+.sum__prov-arrow { color: #d4d4d8; flex-shrink: 0; }
 
 /* Transition expand */
 .sum-expand-enter-active, .sum-expand-leave-active { transition: opacity 0.2s ease; }
