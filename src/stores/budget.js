@@ -268,6 +268,8 @@ export const useBudgetStore = defineStore('budget', () => {
         const f = foyerActif.value
         if (!f) { reject(new Error('Aucun foyer actif.')); return }
         try {
+          if (src.nom)                f.nom              = src.nom
+          if (src.couleur)            f.couleur          = src.couleur
           if (src.config?.personnes)  f.config.personnes = src.config.personnes
           if (src.categories?.length) f.categories       = src.categories
           if (src.depenses)   f.depenses   = src.depenses.map(migrateDepense)
