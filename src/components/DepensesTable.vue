@@ -41,8 +41,10 @@
                 <span class="dep__card-amount">{{ fmtMonthly(dep) }}</span>
               </div>
               <div class="dep__card-bot">
-                <span class="dep__card-cat" :style="catBadgeStyle(dep)">{{ catNom(dep) }}</span>
-                <span class="dep__card-freq">{{ freqLabel(dep.frequence) }}</span>
+                <span class="dep__card-meta">
+                  <span class="dep__card-meta-dot" :style="{ background: catColor(dep) }"></span>
+                  {{ catNom(dep) }}<template v-if="dep.frequence !== 'mensuel'"> · {{ freqLabel(dep.frequence) }}</template>
+                </span>
                 <div class="dep__card-acts">
                   <button class="dep__act" @click="openEdit(dep)" title="Modifier" type="button">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
@@ -84,8 +86,10 @@
                 <span class="dep__card-amount">{{ fmtMonthly(dep) }}</span>
               </div>
               <div class="dep__card-bot">
-                <span class="dep__card-cat" :style="catBadgeStyle(dep)">{{ catNom(dep) }}</span>
-                <span class="dep__card-freq">{{ freqLabel(dep.frequence) }}</span>
+                <span class="dep__card-meta">
+                  <span class="dep__card-meta-dot" :style="{ background: catColor(dep) }"></span>
+                  {{ catNom(dep) }}<template v-if="dep.frequence !== 'mensuel'"> · {{ freqLabel(dep.frequence) }}</template>
+                </span>
                 <div class="dep__card-acts">
                   <button class="dep__act" @click="openEdit(dep)" title="Modifier" type="button">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
@@ -142,8 +146,10 @@
                 </span>
               </div>
               <div class="dep__card-bot">
-                <span class="dep__card-cat" :style="catBadgeStyle(dep)">{{ catNom(dep) }}</span>
-                <span class="dep__card-freq">{{ freqLabel(dep.frequence) }}</span>
+                <span class="dep__card-meta">
+                  <span class="dep__card-meta-dot" :style="{ background: catColor(dep) }"></span>
+                  {{ catNom(dep) }}<template v-if="dep.frequence !== 'mensuel'"> · {{ freqLabel(dep.frequence) }}</template>
+                </span>
                 <div class="dep__card-acts">
                   <button class="dep__act" @click="openEdit(dep)" title="Modifier" type="button">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
@@ -420,10 +426,6 @@ function catNom(dep) {
 function catColor(dep) {
   return store.categories.find(c => c.id === dep.categorieId)?.couleur ?? '#a1a1aa'
 }
-function catBadgeStyle(dep) {
-  const c = catColor(dep)
-  return { background: c + '20', color: c }
-}
 
 // ── Actions ───────────────────────────────────────────────
 function toggleActif(dep) {
@@ -628,16 +630,15 @@ function suggestSplit() {
 }
 
 .dep__card-bot {
-  display: flex; align-items: center; gap: 5px; flex-wrap: wrap;
+  display: flex; align-items: center; gap: 6px;
 }
-.dep__card-cat {
-  font-size: 11px; font-weight: 500;
-  padding: 2px 8px; border-radius: 20px; white-space: nowrap;
+.dep__card-meta {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 11px; color: var(--muted-foreground);
+  flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-.dep__card-freq {
-  font-size: 11px; font-weight: 500;
-  padding: 2px 8px; border-radius: 20px;
-  background: var(--muted); color: var(--muted-foreground); white-space: nowrap;
+.dep__card-meta-dot {
+  width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
 }
 
 .dep__card-acts {
