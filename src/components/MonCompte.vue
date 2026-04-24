@@ -18,18 +18,39 @@
     <!-- Partage -->
     <section class="mc-section">
       <h2 class="mc-section-title">Partage du foyer</h2>
-      <p class="mc-section-desc">Exportez les données du foyer actif pour les partager ou les sauvegarder. Importez un fichier .budge pour remplacer les données actuelles.</p>
+      <p class="mc-section-desc">Exportez un foyer pour le partager ou le sauvegarder. Importez un fichier .budge pour remplacer les données du foyer actif.</p>
       <div class="mc-actions">
-        <button class="mc-action" type="button" @click="store.exportBudge()">
-          <div class="mc-action-icon">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1v9M5 7l3 3 3-3M2 11.5v1A1.5 1.5 0 003.5 14h9A1.5 1.5 0 0014 12.5v-1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+
+        <!-- Export avec picker de foyer -->
+        <div class="mc-action-wrap">
+          <button class="mc-action" type="button" @click="exportPickerOpen = !exportPickerOpen">
+            <div class="mc-action-icon">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1v9M5 7l3 3 3-3M2 11.5v1A1.5 1.5 0 003.5 14h9A1.5 1.5 0 0014 12.5v-1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="mc-action-body">
+              <div class="mc-action-title">Exporter un foyer</div>
+              <div class="mc-action-sub">Télécharge un fichier .budge avec toutes les données</div>
+            </div>
+            <svg class="mc-action-arrow" :class="{ 'mc-action-arrow--open': exportPickerOpen }" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+
+          <!-- Picker foyers -->
+          <div v-if="exportPickerOpen" class="mc-foyer-picker">
+            <button
+              v-for="f in store.foyers"
+              :key="f.id"
+              class="mc-foyer-row"
+              type="button"
+              @click="exportFoyer(f.id)"
+            >
+              <span class="mc-foyer-dot" :style="{ background: f.couleur }"></span>
+              <span class="mc-foyer-name">{{ f.nom }}</span>
+              <span class="mc-foyer-count">{{ f.depenses?.length ?? 0 }} dépense{{ (f.depenses?.length ?? 0) !== 1 ? 's' : '' }}</span>
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1v8M3 7l3.5 3.5L10 7M1.5 11.5h10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
           </div>
-          <div class="mc-action-body">
-            <div class="mc-action-title">Exporter le foyer actif</div>
-            <div class="mc-action-sub">Télécharge un fichier .budge avec toutes vos données</div>
-          </div>
-          <svg class="mc-action-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
+        </div>
+
         <button class="mc-action" type="button" @click="$refs.fileInput.click()">
           <div class="mc-action-icon">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 14V5M5 8l3-3 3 3M2 3.5v-1A1.5 1.5 0 013.5 1h9A1.5 1.5 0 0114 2.5v1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -82,6 +103,12 @@ import { useAuthStore }   from '../stores/auth'
 const store     = useBudgetStore()
 const authStore = useAuthStore()
 const deleting  = ref(false)
+const exportPickerOpen = ref(false)
+
+function exportFoyer(foyerId) {
+  store.exportBudge(foyerId)
+  exportPickerOpen.value = false
+}
 
 const user        = computed(() => authStore.user)
 const initial     = computed(() => user.value?.displayName?.[0]?.toUpperCase() ?? '?')
@@ -177,6 +204,34 @@ async function confirmDelete() {
 .mc-action-title { font-size: 14px; font-weight: 500; color: #18181b; }
 .mc-action-sub   { font-size: 12px; color: #71717a; margin-top: 1px; }
 .mc-action-arrow { color: #d4d4d8; flex-shrink: 0; }
+
+/* Export foyer picker */
+.mc-action-wrap { display: flex; flex-direction: column; }
+.mc-action-arrow { transition: transform 0.2s ease; }
+.mc-action-arrow--open { transform: rotate(90deg); }
+
+.mc-foyer-picker {
+  border: 1.5px solid #e4e4e7;
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  overflow: hidden;
+  background: #fff;
+}
+.mc-foyer-row {
+  display: flex; align-items: center; gap: 10px;
+  width: 100%; padding: 11px 16px;
+  background: #fafafa; border: none; border-top: 1px solid #f0f0f0;
+  cursor: pointer; font-family: inherit; text-align: left;
+  transition: background 0.12s;
+}
+.mc-foyer-row:first-child { border-top: none; }
+.mc-foyer-row:hover { background: #f4f4f5; }
+.mc-foyer-dot {
+  width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+}
+.mc-foyer-name { flex: 1; font-size: 13px; font-weight: 500; color: #18181b; }
+.mc-foyer-count { font-size: 12px; color: #a1a1aa; }
+.mc-foyer-row svg { color: #a1a1aa; flex-shrink: 0; }
 
 /* Danger button */
 .mc-btn-danger {

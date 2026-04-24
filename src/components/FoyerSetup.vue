@@ -202,6 +202,32 @@
               <button v-for="c in couleurs" :key="c" type="button" class="fsetup__color-btn" :class="{ 'fsetup__color-btn--active': couleur === c }" :style="{ background: c }" @click="couleur = c"></button>
             </div>
           </div>
+          <div v-if="foyersSource.length > 0" class="fsetup__field">
+            <label class="fsetup__label">Copier les dépenses d'un foyer existant</label>
+            <div class="fsetup__copy-list">
+              <button
+                type="button"
+                class="fsetup__copy-row"
+                :class="{ 'fsetup__copy-row--active': copierDepensesDeId === null }"
+                @click="copierDepensesDeId = null"
+              >
+                <span class="fsetup__copy-none-dot"></span>
+                <span class="fsetup__copy-name">Aucun — foyer vide</span>
+              </button>
+              <button
+                v-for="f in foyersSource"
+                :key="f.id"
+                type="button"
+                class="fsetup__copy-row"
+                :class="{ 'fsetup__copy-row--active': copierDepensesDeId === f.id }"
+                @click="copierDepensesDeId = f.id"
+              >
+                <span class="fsetup__copy-dot" :style="{ background: f.couleur }"></span>
+                <span class="fsetup__copy-name">{{ f.nom }}</span>
+                <span class="fsetup__copy-count">{{ f.depenses.length }} dépense{{ f.depenses.length !== 1 ? 's' : '' }}</span>
+              </button>
+            </div>
+          </div>
         </div>
 
         <div v-if="etape === 2" class="fsetup__body">
@@ -281,6 +307,9 @@ const etape   = ref(1)
 const nom     = ref('')
 const couleur = ref('#7C6FCD')
 const couleurs = ['#7C6FCD','#4A9EDB','#10B981','#F59E0B','#EF4444','#EC4899','#6366F1','#14B8A6']
+const copierDepensesDeId = ref(null)
+
+const foyersSource = computed(() => store.foyers)
 
 const personnes = ref([
   { nom: '', salaire: 0, couleur: '#7C6FCD' },
@@ -310,7 +339,7 @@ function suivant()   { if (etape.value < totalEtapes) etape.value++ }
 function precedent() { if (etape.value > 1) etape.value-- }
 
 function creer() {
-  store.creerFoyer({ nom: nom.value.trim(), couleur: couleur.value, personnes: personnes.value, remplacerDefaut: props.premierDemarrage })
+  store.creerFoyer({ nom: nom.value.trim(), couleur: couleur.value, personnes: personnes.value, remplacerDefaut: props.premierDemarrage, copierDepensesDeId: copierDepensesDeId.value })
   emit('fermer')
 }
 
@@ -681,6 +710,21 @@ async function onImportCsvOnboarding(e) {
 }
 .fsetup__recap-row-nom     { flex: 1; font-size: 13px; font-weight: 500; color: var(--foreground); }
 .fsetup__recap-row-salaire { font-size: 13px; font-weight: 600; color: var(--foreground); }
+.fsetup__copy-list { display: flex; flex-direction: column; gap: 6px; }
+.fsetup__copy-row {
+  display: flex; align-items: center; gap: 10px;
+  width: 100%; padding: 10px 12px; border-radius: var(--radius-md);
+  background: var(--muted); border: 1.5px solid transparent;
+  cursor: pointer; font-family: inherit; text-align: left;
+  transition: border-color 0.12s, background 0.12s;
+}
+.fsetup__copy-row:hover { border-color: var(--border); }
+.fsetup__copy-row--active { border-color: var(--foreground); background: var(--background); }
+.fsetup__copy-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.fsetup__copy-none-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; background: var(--border); }
+.fsetup__copy-name { flex: 1; font-size: 13px; font-weight: 500; color: var(--foreground); }
+.fsetup__copy-count { font-size: 12px; color: var(--muted-foreground); }
+
 .fsetup__footer {
   display: flex; align-items: center; gap: 10px;
   padding: 16px 24px; border-top: 1px solid var(--border);

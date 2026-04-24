@@ -19,8 +19,9 @@ const defaultData = {
     { id: 'cat6',  nom: 'Épargne',      couleur: '#22C55E' },
     { id: 'cat7',  nom: 'Abonnements',  couleur: '#71717A' },
     { id: 'cat8',  nom: 'Enfants',      couleur: '#E8643A' },
-    { id: 'cat9',  nom: 'Assurance',    couleur: '#60A5FA' },
-    { id: 'cat10', nom: 'Emprunt',      couleur: '#A78BFA' },
+    { id: 'cat9',  nom: 'Assurance',          couleur: '#60A5FA' },
+    { id: 'cat10', nom: 'Emprunt',            couleur: '#A78BFA' },
+    { id: 'cat11', nom: 'Charges & entretien', couleur: '#B45309' },
   ],
   depenses:   [],
   enveloppes: [],
@@ -81,8 +82,9 @@ function _creerFoyerParDefaut() {
 // ─── Migration catégories manquantes ─────────────────────────────────────────
 // Ajoute les catégories absentes à chaque foyer sans modifier les dépenses existantes
 const CATS_REQUIRED = [
-  { id: 'cat9',  nom: 'Assurance', couleur: '#60A5FA' },
-  { id: 'cat10', nom: 'Emprunt',   couleur: '#A78BFA' },
+  { id: 'cat9',  nom: 'Assurance',           couleur: '#60A5FA' },
+  { id: 'cat10', nom: 'Emprunt',             couleur: '#A78BFA' },
+  { id: 'cat11', nom: 'Charges & entretien', couleur: '#B45309' },
 ]
 function _migrateCategories(foyers) {
   foyers.forEach(foyer => {
@@ -220,8 +222,10 @@ export const useBudgetStore = defineStore('budget', () => {
     URL.revokeObjectURL(a.href)
   }
 
-  function exportBudge() {
-    const f = foyerActif.value
+  function exportBudge(foyerId) {
+    const f = foyerId
+      ? foyers.value.find(x => x.id === foyerId) ?? foyerActif.value
+      : foyerActif.value
     if (!f) return
     const payload = {
       _app:        'budge',
@@ -382,7 +386,7 @@ export const useBudgetStore = defineStore('budget', () => {
   function hideNotification() { notification.value.visible = false }
 
   // ─── Gestion des foyers ──────────────────────────────────────
-  function creerFoyer({ nom, couleur = '#7C6FCD', personnes = [], remplacerDefaut = false }) {
+  function creerFoyer({ nom, couleur = '#7C6FCD', personnes = [], remplacerDefaut = false, copierDepensesDeId = null }) {
     const d = deepClone(defaultData)
     const config = deepClone(d.config)
     if (personnes.length > 0) {
@@ -393,13 +397,17 @@ export const useBudgetStore = defineStore('budget', () => {
         couleur: p.couleur || (i === 0 ? '#7C6FCD' : '#4A9EDB'),
       }))
     }
+    const source = copierDepensesDeId ? foyers.value.find(f => f.id === copierDepensesDeId) : null
+    const depensesCopies = source
+      ? source.depenses.map(dep => ({ ...deepClone(dep), id: 'dep' + Date.now() + Math.random().toString(36).slice(2) }))
+      : []
     const foyer = {
       id:         crypto.randomUUID(),
       nom:        nom || 'Nouveau foyer',
       couleur,
       config,
       categories: deepClone(d.categories),
-      depenses:   [],
+      depenses:   depensesCopies,
       enveloppes: [],
       epargnes:   [],
     }
