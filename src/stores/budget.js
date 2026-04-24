@@ -220,6 +220,72 @@ export const useBudgetStore = defineStore('budget', () => {
     URL.revokeObjectURL(a.href)
   }
 
+  function exportBudge() {
+    const f = foyerActif.value
+    if (!f) return
+    const payload = {
+      _app:        'budge',
+      _version:    1,
+      _exportedAt: new Date().toISOString(),
+      foyer: {
+        nom:        f.nom,
+        couleur:    f.couleur,
+        config:     f.config,
+        categories: f.categories,
+        depenses:   f.depenses,
+        enveloppes: f.enveloppes,
+        epargnes:   f.epargnes,
+      },
+    }
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' })
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(blob)
+    a.download = `${(f.nom || 'foyer').replace(/\s+/g, '-').toLowerCase()}-${new Date().toISOString().slice(0, 10)}.budge`
+    a.click()
+    URL.revokeObjectURL(a.href)
+  }
+
+  function importBudge(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = async (e) => {
+        let data
+        try {
+          data = JSON.parse(e.target.result)
+        } catch {
+          reject(new Error('Fichier illisible — ce n\'est pas un fichier Budge valide.'))
+          return
+        }
+        if (data._app !== 'budge') {
+          reject(new Error('Ce fichier ne provient pas de Budge.'))
+          return
+        }
+        if (!data._version || !data.foyer) {
+          reject(new Error('Format non reconnu — essayez de re-exporter depuis Budge.'))
+          return
+        }
+        const src = data.foyer
+        const f = foyerActif.value
+        if (!f) { reject(new Error('Aucun foyer actif.')); return }
+        try {
+          if (src.config?.personnes)  f.config.personnes = src.config.personnes
+          if (src.categories?.length) f.categories       = src.categories
+          if (src.depenses)   f.depenses   = src.depenses.map(migrateDepense)
+          if (src.enveloppes) f.enveloppes = src.enveloppes.map(migrateEnveloppe)
+          if (src.epargnes)   f.epargnes   = src.epargnes
+          await saveToStorage()
+          const nd = src.depenses?.length ?? 0
+          showNotification(`Import réussi — ${nd} dépense${nd > 1 ? 's' : ''} chargée${nd > 1 ? 's' : ''}`, 'success')
+          resolve()
+        } catch {
+          reject(new Error('Données corrompues dans le fichier.'))
+        }
+      }
+      reader.onerror = () => reject(new Error('Impossible de lire le fichier.'))
+      reader.readAsText(file, 'UTF-8')
+    })
+  }
+
   function exportCSV() {
     const f = foyerActif.value
     if (!f) return
@@ -633,7 +699,7 @@ export const useBudgetStore = defineStore('budget', () => {
     totalEpargneParPersonne,
     toMonthly,
     // Actions
-    loadFromStorage, saveToStorage, resetData, exportJSON, importJSON, exportCSV, importCSV,
+    loadFromStorage, saveToStorage, resetData, exportJSON, importJSON, exportCSV, importCSV, exportBudge, importBudge,
     showNotification, hideNotification,
     creerFoyer, switcherFoyer, supprimerFoyer, renommerFoyer, updateFoyer,
     updateSalaire, updateNomPersonne,

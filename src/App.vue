@@ -47,23 +47,31 @@
         </button>
 
         <div v-if="dataMenuOpen" class="sidebar__data-card">
-          <button class="sidebar__data-action" type="button" @click="store.exportCSV()">
+          <button class="sidebar__data-action" type="button" @click="store.exportBudge(); dataMenuOpen = false">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v8M4 6l3 3 3-3M2 10.5v1A1.5 1.5 0 003.5 13h7A1.5 1.5 0 0012 11.5v-1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
             <div>
-              <div class="sidebar__data-action-title">Exporter en CSV</div>
-              <div class="sidebar__data-action-sub">Télécharger toutes vos dépenses</div>
+              <div class="sidebar__data-action-title">Exporter (.budge)</div>
+              <div class="sidebar__data-action-sub">Foyer complet — membres, dépenses, épargnes</div>
             </div>
           </button>
           <div class="sidebar__data-divider"></div>
-          <button class="sidebar__data-action" type="button" @click="$refs.csvInput.click()">
+          <button class="sidebar__data-action" type="button" @click="$refs.budgeInput.click(); dataMenuOpen = false">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 13V5M4 8l3-3 3 3M2 3.5v-1A1.5 1.5 0 013.5 1h7A1.5 1.5 0 0112 2.5v1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
             <div>
-              <div class="sidebar__data-action-title">Importer un CSV</div>
-              <div class="sidebar__data-action-sub">Remplace les dépenses actuelles</div>
+              <div class="sidebar__data-action-title">Importer (.budge)</div>
+              <div class="sidebar__data-action-sub">Remplace toutes les données actuelles</div>
+            </div>
+          </button>
+          <div class="sidebar__data-divider"></div>
+          <button class="sidebar__data-action sidebar__data-action--muted" type="button" @click="store.exportCSV(); dataMenuOpen = false">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="2" y="1" width="10" height="12" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M4 5h6M4 7.5h6M4 10h3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            <div>
+              <div class="sidebar__data-action-title">Export Excel (CSV)</div>
+              <div class="sidebar__data-action-sub">Dépenses uniquement, lecture seule</div>
             </div>
           </button>
         </div>
-        <input ref="csvInput" type="file" accept=".csv" style="display:none" @change="onImportCSV" />
+        <input ref="budgeInput" type="file" accept=".budge,.json" style="display:none" @change="onImportBudge" />
       </div>
 
       <div class="sidebar__footer">
@@ -247,14 +255,14 @@ watch(() => authStore.user, async (user) => {
   await initApp(user)
 })
 
-async function onImportCSV(e) {
+async function onImportBudge(e) {
   const file = e.target.files?.[0]
   if (!file) return
   e.target.value = ''
   try {
-    await store.importCSV(file)
-  } catch {
-    store.showNotification('Fichier CSV invalide', 'error')
+    await store.importBudge(file)
+  } catch (err) {
+    store.showNotification(err.message || 'Import échoué', 'error')
   }
 }
 
@@ -395,6 +403,8 @@ const pctCharges = computed(() => {
 .sidebar__data-action-title { font-size: 12px; font-weight: 500; color: var(--foreground); }
 .sidebar__data-action-sub { font-size: 11px; color: var(--muted-foreground); margin-top: 1px; }
 .sidebar__data-divider { height: 1px; background: var(--border); }
+.sidebar__data-action--muted .sidebar__data-action-title { color: var(--muted-foreground); font-weight: 400; }
+.sidebar__data-action--muted svg { opacity: 0.5; }
 
 .sidebar__logout-icon {
   display: flex; align-items: center; justify-content: center;

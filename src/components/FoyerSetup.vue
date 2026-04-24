@@ -109,14 +109,14 @@
           </div>
 
           <!-- Import CSV -->
-          <button class="onboarding__import-csv" type="button" @click="$refs.csvImport.click()">
+          <button class="onboarding__import-csv" type="button" @click="$refs.budgeImport.click()">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 14V6M5 9l3-3 3 3M2 4V3a1.5 1.5 0 011.5-1.5h9A1.5 1.5 0 0114 3v1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
             <div>
-              <div class="onboarding__import-csv-title">Vous avez déjà un export CSV ?</div>
-              <div class="onboarding__import-csv-sub">Importez vos dépenses directement</div>
+              <div class="onboarding__import-csv-title">Vous avez déjà un export Budge ?</div>
+              <div class="onboarding__import-csv-sub">Importez votre fichier .budge pour tout récupérer</div>
             </div>
           </button>
-          <input ref="csvImport" type="file" accept=".csv" style="display:none" @change="onImportCsvOnboarding" />
+          <input ref="budgeImport" type="file" accept=".budge,.json" style="display:none" @change="onImportCsvOnboarding" />
         </div>
 
         <!-- Footer nav -->
@@ -320,9 +320,9 @@ async function onImportCsvOnboarding(e) {
   e.target.value = ''
   creer()
   try {
-    await store.importCSV(file)
-  } catch {
-    store.showNotification('Fichier CSV invalide', 'error')
+    await store.importBudge(file)
+  } catch (err) {
+    store.showNotification(err.message || 'Import échoué', 'error')
   }
 }
 </script>
