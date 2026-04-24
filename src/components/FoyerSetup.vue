@@ -708,7 +708,7 @@ async function onImportCsvOnboarding(e) {
 .fsetup {
   background: var(--background); border: 1px solid var(--border);
   border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);
-  width: 100%; max-width: 560px;
+  width: 100%; max-width: 700px;
   display: flex; flex-direction: column; overflow: hidden;
   max-height: 90vh; overflow-y: auto;
 }
