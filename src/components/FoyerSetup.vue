@@ -300,7 +300,7 @@ function suivant()   { if (etape.value < totalEtapes) etape.value++ }
 function precedent() { if (etape.value > 1) etape.value-- }
 
 function creer() {
-  store.creerFoyer({ nom: nom.value.trim(), couleur: couleur.value, personnes: personnes.value })
+  store.creerFoyer({ nom: nom.value.trim(), couleur: couleur.value, personnes: personnes.value, remplacerDefaut: props.premierDemarrage })
   emit('fermer')
 }
 </script>

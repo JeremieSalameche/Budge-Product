@@ -246,7 +246,7 @@ export const useBudgetStore = defineStore('budget', () => {
   function hideNotification() { notification.value.visible = false }
 
   // ─── Gestion des foyers ──────────────────────────────────────
-  function creerFoyer({ nom, couleur = '#7C6FCD', personnes = [] }) {
+  function creerFoyer({ nom, couleur = '#7C6FCD', personnes = [], remplacerDefaut = false }) {
     const d = deepClone(defaultData)
     const config = deepClone(d.config)
     if (personnes.length > 0) {
@@ -267,7 +267,12 @@ export const useBudgetStore = defineStore('budget', () => {
       enveloppes: [],
       epargnes:   [],
     }
-    foyers.value.push(foyer)
+    const estDefautVide = foyers.value.length === 1 && foyers.value[0].depenses.length === 0
+    if (remplacerDefaut && estDefautVide) {
+      foyers.value = [foyer]
+    } else {
+      foyers.value.push(foyer)
+    }
     foyerActifId.value = foyer.id
     saveToStorage()
     return foyer.id
