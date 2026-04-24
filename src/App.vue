@@ -14,9 +14,8 @@
         <img src="/logo-budge-white.svg" class="preapp__logo" alt="Budge" />
       </div>
       <div class="preapp__left-content">
-        <div class="preapp__badge">✦ Nouveau</div>
-        <h2 class="preapp__title">Gérez votre budget, seul ou à deux, simplement.</h2>
-        <p class="preapp__sub">Visualisez vos dépenses, partagez les charges équitablement et atteignez vos objectifs ensemble.</p>
+        <h2 class="preapp__title">Connectez-vous à votre espace en un clic.</h2>
+        <p class="preapp__sub">Pas de mot de passe, pas de formulaire. Un compte Google suffit pour accéder à votre budget.</p>
       </div>
       <div class="preapp__features">
         <div class="preapp__feature">
