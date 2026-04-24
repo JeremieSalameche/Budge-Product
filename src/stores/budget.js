@@ -220,6 +220,73 @@ export const useBudgetStore = defineStore('budget', () => {
     URL.revokeObjectURL(a.href)
   }
 
+  function exportCSV() {
+    const f = foyerActif.value
+    if (!f) return
+    const header = ['nom', 'montantP1', 'montantP2', 'montantCommun', 'frequence', 'categorie', 'note']
+    const rows = f.depenses.map(d => {
+      const cat = f.categories.find(c => c.id === d.categorieId)?.nom ?? ''
+      return [
+        `"${(d.nom || '').replace(/"/g, '""')}"`,
+        d.montantP1 || 0,
+        d.montantP2 || 0,
+        d.montantCommun || 0,
+        d.frequence || 'mensuel',
+        `"${cat.replace(/"/g, '""')}"`,
+        `"${(d.note || '').replace(/"/g, '""')}"`,
+      ].join(',')
+    })
+    const csv = [header.join(','), ...rows].join('\n')
+    const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' })
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(blob)
+    a.download = `budge-depenses-${new Date().toISOString().slice(0, 10)}.csv`
+    a.click()
+    URL.revokeObjectURL(a.href)
+  }
+
+  function importCSV(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = async (e) => {
+        try {
+          const text = e.target.result.replace(/^﻿/, '')
+          const lines = text.split(/\r?\n/).filter(l => l.trim())
+          if (lines.length < 2) { reject(new Error('CSV vide')); return }
+          const f = foyerActif.value
+          if (!f) { reject(new Error('Aucun foyer')); return }
+          let imported = 0
+          for (let i = 1; i < lines.length; i++) {
+            const cols = lines[i].match(/("(?:[^"]|"")*"|[^,]*)/g)
+              ?.map(v => v.replace(/^"|"$/g, '').replace(/""/g, '"').trim()) ?? []
+            const [nom, mp1, mp2, mc, freq, catNom, note] = cols
+            if (!nom) continue
+            const catId = f.categories.find(c => c.nom.toLowerCase() === (catNom || '').toLowerCase())?.id ?? null
+            const freqs = ['mensuel', 'hebdomadaire', 'trimestriel', 'annuel']
+            f.depenses.push({
+              id:            'dep' + Date.now() + i,
+              createdAt:     Date.now(),
+              nom,
+              montantP1:     parseFloat(mp1) || 0,
+              montantP2:     parseFloat(mp2) || 0,
+              montantCommun: parseFloat(mc)  || 0,
+              frequence:     freqs.includes(freq) ? freq : 'mensuel',
+              categorieId:   catId,
+              enveloppeId:   null,
+              actif:         true,
+              note:          note || '',
+            })
+            imported++
+          }
+          await saveToStorage()
+          showNotification(`${imported} dépense${imported > 1 ? 's' : ''} importée${imported > 1 ? 's' : ''}`, 'success')
+          resolve(imported)
+        } catch (err) { reject(err) }
+      }
+      reader.readAsText(file, 'UTF-8')
+    })
+  }
+
   function importJSON(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader()
@@ -565,7 +632,7 @@ export const useBudgetStore = defineStore('budget', () => {
     totalEpargneParPersonne,
     toMonthly,
     // Actions
-    loadFromStorage, saveToStorage, resetData, exportJSON, importJSON,
+    loadFromStorage, saveToStorage, resetData, exportJSON, importJSON, exportCSV, importCSV,
     showNotification, hideNotification,
     creerFoyer, switcherFoyer, supprimerFoyer, renommerFoyer, updateFoyer,
     updateSalaire, updateNomPersonne,

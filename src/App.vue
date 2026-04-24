@@ -31,6 +31,19 @@
         </button>
       </nav>
 
+      <div class="sidebar__data">
+        <span class="sidebar__data-label">Données</span>
+        <button class="sidebar__data-btn" type="button" title="Exporter en CSV" @click="store.exportCSV()">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v8M4 6l3 3 3-3M2 10.5v1A1.5 1.5 0 003.5 13h7A1.5 1.5 0 0012 11.5v-1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Export CSV
+        </button>
+        <button class="sidebar__data-btn" type="button" title="Importer un CSV" @click="$refs.csvInput.click()">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 13V5M4 8l3-3 3 3M2 3.5v-1A1.5 1.5 0 013.5 1h7A1.5 1.5 0 0112 2.5v1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Import CSV
+        </button>
+        <input ref="csvInput" type="file" accept=".csv" style="display:none" @change="onImportCSV" />
+      </div>
+
       <div class="sidebar__footer">
         <div class="sidebar__user">
           <img v-if="authStore.user?.photoURL" :src="authStore.user.photoURL" class="sidebar__user-avatar" referrerpolicy="no-referrer" />
@@ -211,9 +224,15 @@ watch(() => authStore.user, async (user) => {
   await initApp(user)
 })
 
-function manualSave() {
-  store.saveToStorage()
-  store.showNotification('Données sauvegardées', 'success')
+async function onImportCSV(e) {
+  const file = e.target.files?.[0]
+  if (!file) return
+  e.target.value = ''
+  try {
+    await store.importCSV(file)
+  } catch {
+    store.showNotification('Fichier CSV invalide', 'error')
+  }
 }
 
 function fmt(n) {
@@ -328,6 +347,26 @@ const pctCharges = computed(() => {
 .sidebar__user-saved {
   font-size: 10px; color: var(--muted-foreground); opacity: 0.6;
 }
+.sidebar__data {
+  padding: 10px 16px 12px;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.sidebar__data-label {
+  font-size: 10px; font-weight: 600; color: var(--muted-foreground);
+  text-transform: uppercase; letter-spacing: 0.6px;
+  margin-bottom: 2px; opacity: 0.5;
+}
+.sidebar__data-btn {
+  display: flex; align-items: center; gap: 7px;
+  width: 100%; padding: 6px 8px; border-radius: 6px;
+  border: none; background: transparent;
+  font-size: 12px; font-weight: 400; color: var(--muted-foreground);
+  cursor: pointer; font-family: inherit;
+  transition: background 0.12s, color 0.12s;
+  text-align: left;
+}
+.sidebar__data-btn:hover { background: rgba(0,0,0,0.05); color: var(--foreground); }
+
 .sidebar__logout-icon {
   display: flex; align-items: center; justify-content: center;
   width: 28px; height: 28px; border-radius: 6px;
