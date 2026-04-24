@@ -117,7 +117,11 @@
             <span class="dep__col-name">Commun</span>
             <span class="dep__col-count">{{ depCommun.length }} dépense{{ depCommun.length !== 1 ? 's' : '' }}</span>
           </div>
-          <span class="dep__col-sum">{{ fmt(totalCommun) }}</span>
+          <div class="dep__col-sums-commun">
+            <span class="dep__col-sum-person" :style="{ color: p1.couleur }">{{ fmt(totalCommunP1) }}</span>
+            <span class="dep__col-sum-sep">/</span>
+            <span class="dep__col-sum-person" :style="{ color: p2.couleur }">{{ fmt(totalCommunP2) }}</span>
+          </div>
         </div>
         <div class="dep__col-body">
           <div v-if="depCommun.length === 0" class="dep__empty">Aucune dépense commune</div>
@@ -393,6 +397,14 @@ const totalCommun = computed(() =>
   depCommun.value.reduce((s, d) =>
     s + store.toMonthly((d.montantP1 || 0) + (d.montantP2 || 0) + (d.montantCommun || 0), d.frequence), 0)
 )
+const totalCommunP1 = computed(() =>
+  depCommun.value.reduce((s, d) =>
+    s + store.toMonthly((d.montantP1 || 0) + (d.montantCommun || 0) / 2, d.frequence), 0)
+)
+const totalCommunP2 = computed(() =>
+  depCommun.value.reduce((s, d) =>
+    s + store.toMonthly((d.montantP2 || 0) + (d.montantCommun || 0) / 2, d.frequence), 0)
+)
 
 // ── Helpers ───────────────────────────────────────────────
 function fmt(n) {
@@ -554,6 +566,10 @@ function suggestSplit() {
 }
 
 .dep__col-avas { display: flex; flex-shrink: 0; }
+
+.dep__col-sums-commun { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+.dep__col-sum-person { font-size: 12px; font-weight: 700; white-space: nowrap; }
+.dep__col-sum-sep { font-size: 11px; color: var(--muted-foreground); }
 .dep__col-ava {
   width: 34px; height: 34px; border-radius: 10px; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
