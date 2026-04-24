@@ -595,13 +595,11 @@ function suggestSplit() {
   display: flex;
   background: #fff;
   border: 1.5px solid var(--border);
-  border-left: 3.5px solid var(--acc, #d4d4d8);
-  border-radius: 10px;
+  border-radius: 8px;
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 .dep__card:hover {
   border-color: #b0b0b0;
-  border-left-color: var(--acc, #d4d4d8);
   box-shadow: 0 2px 8px rgba(0,0,0,0.07);
 }
 .dep__card--off { opacity: 0.4; }
