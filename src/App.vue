@@ -639,7 +639,6 @@ const pctCharges = computed(() => {
   font-family: system-ui, -apple-system, sans-serif;
 }
 .preapp__left {
-  order: 2;
   width: 50%; flex-shrink: 0;
   background: #18181b;
   position: relative; overflow: hidden;
@@ -695,7 +694,6 @@ const pctCharges = computed(() => {
 .preapp__feature-desc  { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.4; }
 
 .preapp__right {
-  order: 1;
   flex: 1; background: #fff;
   position: relative; overflow: hidden;
 }
