@@ -64,7 +64,7 @@
       </div>
 
       <!-- Colonne P2 -->
-      <div class="dep__col">
+      <div v-if="!isSolo" class="dep__col">
         <div class="dep__col-head">
           <div class="dep__col-ava" :style="{ background: p2.couleur }">{{ p2.nom[0]?.toUpperCase() }}</div>
           <div class="dep__col-headinfo">
@@ -111,19 +111,29 @@
       <!-- Colonne Commun -->
       <div class="dep__col dep__col--commun">
         <div class="dep__col-head">
-          <div class="dep__col-avas">
+          <template v-if="isSolo">
             <div class="dep__col-ava" :style="{ background: p1.couleur }">{{ p1.nom[0]?.toUpperCase() }}</div>
-            <div class="dep__col-ava dep__col-ava--overlap" :style="{ background: p2.couleur }">{{ p2.nom[0]?.toUpperCase() }}</div>
-          </div>
-          <div class="dep__col-headinfo">
-            <span class="dep__col-name">Commun</span>
-            <span class="dep__col-count">{{ depCommun.length }} dépense{{ depCommun.length !== 1 ? 's' : '' }}</span>
-          </div>
-          <div class="dep__col-sums-commun">
-            <span class="dep__col-sum-person" :style="{ color: p1.couleur }">{{ fmt(totalCommunP1) }}</span>
-            <span class="dep__col-sum-sep">/</span>
-            <span class="dep__col-sum-person" :style="{ color: p2.couleur }">{{ fmt(totalCommunP2) }}</span>
-          </div>
+            <div class="dep__col-headinfo">
+              <span class="dep__col-name">Mes dépenses</span>
+              <span class="dep__col-count">{{ depCommun.length }} dépense{{ depCommun.length !== 1 ? 's' : '' }}</span>
+            </div>
+            <span class="dep__col-sum">{{ fmt(totalCommun) }}</span>
+          </template>
+          <template v-else>
+            <div class="dep__col-avas">
+              <div class="dep__col-ava" :style="{ background: p1.couleur }">{{ p1.nom[0]?.toUpperCase() }}</div>
+              <div class="dep__col-ava dep__col-ava--overlap" :style="{ background: p2.couleur }">{{ p2.nom[0]?.toUpperCase() }}</div>
+            </div>
+            <div class="dep__col-headinfo">
+              <span class="dep__col-name">Commun</span>
+              <span class="dep__col-count">{{ depCommun.length }} dépense{{ depCommun.length !== 1 ? 's' : '' }}</span>
+            </div>
+            <div class="dep__col-sums-commun">
+              <span class="dep__col-sum-person" :style="{ color: p1.couleur }">{{ fmt(totalCommunP1) }}</span>
+              <span class="dep__col-sum-sep">/</span>
+              <span class="dep__col-sum-person" :style="{ color: p2.couleur }">{{ fmt(totalCommunP2) }}</span>
+            </div>
+          </template>
         </div>
         <div class="dep__col-body">
           <div v-if="depCommun.length === 0" class="dep__empty">Aucune dépense commune</div>
@@ -137,7 +147,7 @@
                 <span class="dep__card-nom">{{ dep.nom || '—' }}</span>
                 <span class="dep__card-amount">{{ fmtMonthly(dep) }}</span>
               </div>
-              <div class="dep__card-shares">
+              <div v-if="!isSolo" class="dep__card-shares">
                 <span class="dep__share" :style="{ background: p1.couleur + '22', color: p1.couleur }">
                   {{ p1.nom }} · {{ fmt(store.toMonthly(dep.montantP1 || 0, dep.frequence)) }}
                 </span>
@@ -363,8 +373,9 @@ const store = useBudgetStore()
 const { scheduleAutoSave } = useStorage()
 
 // ── Personnes ─────────────────────────────────────────────
-const p1 = computed(() => store.personnes[0])
-const p2 = computed(() => store.personnes[1])
+const isSolo = computed(() => store.personnes.length < 2)
+const p1 = computed(() => store.personnes[0] ?? { id: 'p1', nom: '?', couleur: '#7C6FCD', salaire: 0 })
+const p2 = computed(() => store.personnes[1] ?? { id: 'p2', nom: '?', couleur: '#4A9EDB', salaire: 0 })
 
 // ── Filtre ────────────────────────────────────────────────
 const filterCat = ref('')
