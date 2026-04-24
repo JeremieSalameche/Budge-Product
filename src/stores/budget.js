@@ -386,21 +386,36 @@ export const useBudgetStore = defineStore('budget', () => {
   function hideNotification() { notification.value.visible = false }
 
   // ─── Gestion des foyers ──────────────────────────────────────
-  function creerFoyer({ nom, couleur = '#7C6FCD', personnes = [], remplacerDefaut = false, copierDepensesDeId = null }) {
+  function creerFoyer({ nom, couleur = '#7C6FCD', personnes = [], remplacerDefaut = false, copierDepensesDeId = null, keepPersonneIdx = null }) {
     const d = deepClone(defaultData)
     const config = deepClone(d.config)
-    if (personnes.length > 0) {
-      config.personnes = personnes.map((p, i) => ({
+    // Filtrer les personnes sans nom pour éviter les profils fantômes
+    const membres = personnes.filter(p => p.nom?.trim())
+    if (membres.length > 0) {
+      config.personnes = membres.map((p, i) => ({
         id:      i === 0 ? 'p1' : 'p2',
-        nom:     p.nom || (i === 0 ? 'Personne 1' : 'Personne 2'),
+        nom:     p.nom.trim(),
         salaire: p.salaire || 0,
         couleur: p.couleur || (i === 0 ? '#7C6FCD' : '#4A9EDB'),
       }))
     }
     const source = copierDepensesDeId ? foyers.value.find(f => f.id === copierDepensesDeId) : null
-    const depensesCopies = source
+    let depensesCopies = source
       ? source.depenses.map(dep => ({ ...deepClone(dep), id: 'dep' + Date.now() + Math.random().toString(36).slice(2) }))
       : []
+    // Si on extrait un seul profil d'un foyer à 2 personnes, filtrer et normaliser
+    if (source && keepPersonneIdx !== null) {
+      depensesCopies = depensesCopies
+        .filter(dep => keepPersonneIdx === 0
+          ? (dep.montantP1 || 0) > 0 || (dep.montantCommun || 0) > 0
+          : (dep.montantP2 || 0) > 0 || (dep.montantCommun || 0) > 0
+        )
+        .map(dep => {
+          const personal = keepPersonneIdx === 0 ? (dep.montantP1 || 0) : (dep.montantP2 || 0)
+          const commun   = dep.montantCommun || 0
+          return { ...dep, montantP1: personal + commun / 2, montantP2: 0, montantCommun: 0 }
+        })
+    }
     const foyer = {
       id:         crypto.randomUUID(),
       nom:        nom || 'Nouveau foyer',

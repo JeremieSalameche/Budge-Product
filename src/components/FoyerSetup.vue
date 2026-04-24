@@ -106,7 +106,7 @@
           <input ref="budgeImport" type="file" accept=".budge,.json" style="display:none" @change="onImportCsvOnboarding" />
         </div>
 
-        <!-- Étape 2 : Membres -->
+        <!-- Étape 2 : Membres + copie de foyer -->
         <div v-if="etape === 2" class="onboarding__fields">
           <div v-for="(p, i) in personnes" :key="i" class="onboarding__membre">
             <div class="onboarding__membre-header">
@@ -126,6 +126,37 @@
                   <input class="onboarding__input" v-model.number="p.salaire" type="number" min="0" step="100" placeholder="0" />
                   <span class="onboarding__suffix">€/mois</span>
                 </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Copie depuis un foyer existant -->
+          <div v-if="foyersSource.length > 0" class="onboarding__field">
+            <label class="onboarding__label">Copier les dépenses d'un foyer existant</label>
+            <div class="onboarding__copy-list">
+              <button type="button" class="onboarding__copy-row" :class="{ 'onboarding__copy-row--active': copierDepensesDeId === null }" @click="copierDepensesDeId = null; keepPersonneIdx = null">
+                <span class="onboarding__copy-none-dot"></span>
+                <span class="onboarding__copy-name">Aucun — foyer vide</span>
+              </button>
+              <button v-for="f in foyersSource" :key="f.id" type="button" class="onboarding__copy-row" :class="{ 'onboarding__copy-row--active': copierDepensesDeId === f.id }" @click="copierDepensesDeId = f.id; keepPersonneIdx = null">
+                <span class="onboarding__copy-dot" :style="{ background: f.couleur }"></span>
+                <span class="onboarding__copy-name">{{ f.nom }}</span>
+                <span class="onboarding__copy-count">{{ f.depenses.length }} dépense{{ f.depenses.length !== 1 ? 's' : '' }}</span>
+              </button>
+            </div>
+            <!-- Sélection de profil si foyer source à 2 personnes et nouveau foyer solo -->
+            <div v-if="sourceFoyerPersonnes.length === 2 && membresFiltres.length === 1" class="onboarding__profil-pick">
+              <p class="onboarding__profil-title">Ce foyer a 2 membres — quel profil copier ?</p>
+              <div class="onboarding__profil-btns">
+                <button v-for="(p, i) in sourceFoyerPersonnes" :key="i" type="button"
+                  class="onboarding__profil-btn"
+                  :class="{ 'onboarding__profil-btn--active': keepPersonneIdx === i }"
+                  :style="keepPersonneIdx === i ? { borderColor: p.couleur, background: p.couleur + '15' } : {}"
+                  @click="keepPersonneIdx = i">
+                  <span class="onboarding__profil-dot" :style="{ background: p.couleur }"></span>
+                  <span class="onboarding__profil-nom">{{ p.nom }}</span>
+                  <span class="onboarding__profil-hint">Dépenses perso + sa part du commun</span>
+                </button>
               </div>
             </div>
           </div>
@@ -202,32 +233,6 @@
               <button v-for="c in couleurs" :key="c" type="button" class="fsetup__color-btn" :class="{ 'fsetup__color-btn--active': couleur === c }" :style="{ background: c }" @click="couleur = c"></button>
             </div>
           </div>
-          <div v-if="foyersSource.length > 0" class="fsetup__field">
-            <label class="fsetup__label">Copier les dépenses d'un foyer existant</label>
-            <div class="fsetup__copy-list">
-              <button
-                type="button"
-                class="fsetup__copy-row"
-                :class="{ 'fsetup__copy-row--active': copierDepensesDeId === null }"
-                @click="copierDepensesDeId = null"
-              >
-                <span class="fsetup__copy-none-dot"></span>
-                <span class="fsetup__copy-name">Aucun — foyer vide</span>
-              </button>
-              <button
-                v-for="f in foyersSource"
-                :key="f.id"
-                type="button"
-                class="fsetup__copy-row"
-                :class="{ 'fsetup__copy-row--active': copierDepensesDeId === f.id }"
-                @click="copierDepensesDeId = f.id"
-              >
-                <span class="fsetup__copy-dot" :style="{ background: f.couleur }"></span>
-                <span class="fsetup__copy-name">{{ f.nom }}</span>
-                <span class="fsetup__copy-count">{{ f.depenses.length }} dépense{{ f.depenses.length !== 1 ? 's' : '' }}</span>
-              </button>
-            </div>
-          </div>
         </div>
 
         <div v-if="etape === 2" class="fsetup__body">
@@ -248,6 +253,39 @@
                   <input class="fsetup__input" v-model.number="p.salaire" type="number" min="0" step="100" placeholder="0" />
                   <span class="fsetup__suffix">€/mois</span>
                 </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Copie depuis un foyer existant -->
+          <div v-if="foyersSource.length > 0" class="fsetup__field">
+            <label class="fsetup__label">Copier les dépenses d'un foyer existant</label>
+            <div class="fsetup__copy-list">
+              <button type="button" class="fsetup__copy-row" :class="{ 'fsetup__copy-row--active': copierDepensesDeId === null }" @click="copierDepensesDeId = null; keepPersonneIdx = null">
+                <span class="fsetup__copy-none-dot"></span>
+                <span class="fsetup__copy-name">Aucun — foyer vide</span>
+              </button>
+              <button v-for="f in foyersSource" :key="f.id" type="button" class="fsetup__copy-row" :class="{ 'fsetup__copy-row--active': copierDepensesDeId === f.id }" @click="copierDepensesDeId = f.id; keepPersonneIdx = null">
+                <span class="fsetup__copy-dot" :style="{ background: f.couleur }"></span>
+                <span class="fsetup__copy-name">{{ f.nom }}</span>
+                <span class="fsetup__copy-count">{{ f.depenses.length }} dépense{{ f.depenses.length !== 1 ? 's' : '' }}</span>
+              </button>
+            </div>
+            <!-- Sélection de profil si foyer source à 2 personnes et nouveau foyer solo -->
+            <div v-if="sourceFoyerPersonnes.length === 2 && membresFiltres.length === 1" class="fsetup__profil-pick">
+              <p class="fsetup__profil-title">Ce foyer a 2 membres — quel profil copier ?</p>
+              <div class="fsetup__profil-btns">
+                <button v-for="(p, i) in sourceFoyerPersonnes" :key="i" type="button"
+                  class="fsetup__profil-btn"
+                  :class="{ 'fsetup__profil-btn--active': keepPersonneIdx === i }"
+                  :style="keepPersonneIdx === i ? { borderColor: p.couleur, background: p.couleur + '15' } : {}"
+                  @click="keepPersonneIdx = i">
+                  <span class="fsetup__profil-dot" :style="{ background: p.couleur }"></span>
+                  <div>
+                    <div class="fsetup__profil-nom">{{ p.nom }}</div>
+                    <div class="fsetup__profil-hint">Dépenses perso + sa part du commun</div>
+                  </div>
+                </button>
               </div>
             </div>
           </div>
@@ -308,8 +346,15 @@ const nom     = ref('')
 const couleur = ref('#7C6FCD')
 const couleurs = ['#7C6FCD','#4A9EDB','#10B981','#F59E0B','#EF4444','#EC4899','#6366F1','#14B8A6']
 const copierDepensesDeId = ref(null)
+const keepPersonneIdx    = ref(null)
 
 const foyersSource = computed(() => store.foyers)
+
+const sourceFoyerPersonnes = computed(() => {
+  if (!copierDepensesDeId.value) return []
+  const f = store.foyers.find(f => f.id === copierDepensesDeId.value)
+  return f?.config?.personnes ?? []
+})
 
 const personnes = ref([
   { nom: '', salaire: 0, couleur: '#7C6FCD' },
@@ -318,9 +363,17 @@ const personnes = ref([
 
 const membresFiltres = computed(() => personnes.value.filter(p => p.nom.trim()))
 
+const needsProfilePick = computed(() =>
+  sourceFoyerPersonnes.value.length === 2 && membresFiltres.value.length === 1
+)
+
 const peutContinuer = computed(() => {
   if (etape.value === 1) return nom.value.trim().length > 0
-  if (etape.value === 2) return personnes.value.some(p => p.nom.trim().length > 0)
+  if (etape.value === 2) {
+    if (!personnes.value.some(p => p.nom.trim().length > 0)) return false
+    if (needsProfilePick.value && keepPersonneIdx.value === null) return false
+    return true
+  }
   return true
 })
 
@@ -339,7 +392,14 @@ function suivant()   { if (etape.value < totalEtapes) etape.value++ }
 function precedent() { if (etape.value > 1) etape.value-- }
 
 function creer() {
-  store.creerFoyer({ nom: nom.value.trim(), couleur: couleur.value, personnes: personnes.value, remplacerDefaut: props.premierDemarrage, copierDepensesDeId: copierDepensesDeId.value })
+  store.creerFoyer({
+    nom:               nom.value.trim(),
+    couleur:           couleur.value,
+    personnes:         personnes.value,
+    remplacerDefaut:   props.premierDemarrage,
+    copierDepensesDeId: copierDepensesDeId.value,
+    keepPersonneIdx:   keepPersonneIdx.value,
+  })
   emit('fermer')
 }
 
@@ -739,4 +799,53 @@ async function onImportCsvOnboarding(e) {
 .fsetup__btn--primary { background: var(--primary); color: var(--primary-foreground); }
 .fsetup__btn--primary:hover:not(:disabled) { background: var(--zinc-800); }
 .fsetup__btn--primary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Sélection de profil (modale) */
+.fsetup__profil-pick { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+.fsetup__profil-title { font-size: 12px; font-weight: 500; color: var(--muted-foreground); margin: 0; }
+.fsetup__profil-btns { display: flex; gap: 8px; }
+.fsetup__profil-btn {
+  flex: 1; display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: var(--radius-md);
+  background: var(--muted); border: 1.5px solid transparent;
+  cursor: pointer; font-family: inherit; text-align: left;
+  transition: border-color 0.15s, background 0.15s;
+}
+.fsetup__profil-btn:hover { border-color: var(--border); }
+.fsetup__profil-btn--active { border-color: currentColor; }
+.fsetup__profil-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.fsetup__profil-nom  { font-size: 13px; font-weight: 600; color: var(--foreground); }
+.fsetup__profil-hint { font-size: 11px; color: var(--muted-foreground); margin-top: 1px; }
+
+/* Sélection de profil (onboarding) */
+.onboarding__copy-list { display: flex; flex-direction: column; gap: 6px; }
+.onboarding__copy-row {
+  display: flex; align-items: center; gap: 10px;
+  width: 100%; padding: 10px 12px; border-radius: 10px;
+  background: #f9f9f9; border: 1.5px solid transparent;
+  cursor: pointer; font-family: inherit; text-align: left;
+  transition: border-color 0.12s, background 0.12s;
+}
+.onboarding__copy-row:hover { border-color: #d4d4d8; }
+.onboarding__copy-row--active { border-color: #18181b; background: #fff; }
+.onboarding__copy-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.onboarding__copy-none-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; background: #d4d4d8; }
+.onboarding__copy-name { flex: 1; font-size: 13px; font-weight: 500; color: #18181b; }
+.onboarding__copy-count { font-size: 12px; color: #71717a; }
+
+.onboarding__profil-pick { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+.onboarding__profil-title { font-size: 12px; font-weight: 500; color: #71717a; margin: 0; }
+.onboarding__profil-btns { display: flex; gap: 8px; }
+.onboarding__profil-btn {
+  flex: 1; display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: 10px;
+  background: #f9f9f9; border: 1.5px solid transparent;
+  cursor: pointer; font-family: inherit; text-align: left;
+  transition: border-color 0.15s, background 0.15s;
+}
+.onboarding__profil-btn:hover { border-color: #d4d4d8; }
+.onboarding__profil-btn--active { border-color: currentColor; }
+.onboarding__profil-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.onboarding__profil-nom  { font-size: 13px; font-weight: 600; color: #18181b; }
+.onboarding__profil-hint { font-size: 11px; color: #71717a; margin-top: 1px; }
 </style>
