@@ -186,48 +186,48 @@
           <!-- Banques qui proposent ce service -->
           <div class="sum__providers">
             <div class="sum__providers-title">Banques digitales qui proposent ce système</div>
-            <div class="sum__providers-list">
+            <div class="sum__providers-grid">
 
               <a class="sum__prov" href="https://sumeria.eu" target="_blank" rel="noopener noreferrer">
-                <div class="sum__prov-logo sum__prov-logo--sumeria">Sumeria</div>
-                <div class="sum__prov-info">
-                  <span class="sum__prov-name">by Lydia · Banque française</span>
-                  <span class="sum__prov-desc">Comptes secondaires avec IBAN + CB · à partir de 3,90€/mois</span>
+                <div class="sum__prov-top">
+                  <span class="sum__prov-logo sum__prov-logo--sumeria">Sumeria</span>
+                  <span class="sum__prov-price">3,90€<span>/mois</span></span>
                 </div>
-                <svg class="sum__prov-arrow" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5h9M7.5 3l3.5 3.5L7.5 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <div class="sum__prov-sub">by Lydia · Banque française</div>
+                <div class="sum__prov-desc">Comptes secondaires avec IBAN + CB dédiée</div>
               </a>
 
               <a class="sum__prov" href="https://www.bunq.com/fr" target="_blank" rel="noopener noreferrer">
-                <div class="sum__prov-logo sum__prov-logo--bunq">bunq</div>
-                <div class="sum__prov-info">
-                  <span class="sum__prov-name">Banque néerlandaise</span>
-                  <span class="sum__prov-desc">Jusqu'à 25 comptes avec IBAN propre · à partir de 3,99€/mois</span>
+                <div class="sum__prov-top">
+                  <span class="sum__prov-logo sum__prov-logo--bunq">bunq</span>
+                  <span class="sum__prov-price">3,99€<span>/mois</span></span>
                 </div>
-                <svg class="sum__prov-arrow" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5h9M7.5 3l3.5 3.5L7.5 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <div class="sum__prov-sub">Banque néerlandaise</div>
+                <div class="sum__prov-desc">Jusqu'à 25 comptes avec IBAN propre</div>
               </a>
 
               <a class="sum__prov" href="https://n26.com/fr-fr" target="_blank" rel="noopener noreferrer">
-                <div class="sum__prov-logo sum__prov-logo--n26">N26</div>
-                <div class="sum__prov-info">
-                  <span class="sum__prov-name">Banque allemande</span>
-                  <span class="sum__prov-desc">Spaces avec IBAN dédié · offre gratuite + premium</span>
+                <div class="sum__prov-top">
+                  <span class="sum__prov-logo sum__prov-logo--n26">N26</span>
+                  <span class="sum__prov-price sum__prov-price--free">Gratuit<span>+ premium</span></span>
                 </div>
-                <svg class="sum__prov-arrow" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5h9M7.5 3l3.5 3.5L7.5 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <div class="sum__prov-sub">Banque allemande</div>
+                <div class="sum__prov-desc">Spaces avec IBAN dédié par espace</div>
               </a>
 
               <a class="sum__prov" href="https://vivid.money/fr-fr" target="_blank" rel="noopener noreferrer">
-                <div class="sum__prov-logo sum__prov-logo--vivid">Vivid</div>
-                <div class="sum__prov-info">
-                  <span class="sum__prov-name">Banque européenne</span>
-                  <span class="sum__prov-desc">Pockets avec IBAN · à partir de 0€/mois</span>
+                <div class="sum__prov-top">
+                  <span class="sum__prov-logo sum__prov-logo--vivid">Vivid</span>
+                  <span class="sum__prov-price sum__prov-price--free">0€<span>/mois</span></span>
                 </div>
-                <svg class="sum__prov-arrow" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5h9M7.5 3l3.5 3.5L7.5 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <div class="sum__prov-sub">Banque européenne</div>
+                <div class="sum__prov-desc">Pockets avec IBAN · jusqu'à 15 comptes</div>
               </a>
 
             </div>
             <div class="sum__providers-note">
               <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="5.5" cy="5.5" r="4.5" stroke="currentColor" stroke-width="1.2"/><line x1="5.5" y1="4" x2="5.5" y2="6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><circle cx="5.5" cy="7.5" r="0.6" fill="currentColor"/></svg>
-              Revolut Pockets ne disposent pas d'IBAN propre — les prélèvements reviennent toujours sur le compte principal.
+              Revolut Pockets partagent un seul IBAN — les prélèvements reviennent sur le compte principal.
             </div>
           </div>
 
@@ -758,37 +758,47 @@ function doDeleteEnv() {
 .flo__result-lbl { font-size: 10px; color: #16a34a; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
 
 /* ── Providers ──────────────────────────────────────────── */
+.sum__providers { display: flex; flex-direction: column; gap: 10px; }
 .sum__providers-title {
   font-size: 11px; font-weight: 600; color: #a1a1aa;
   text-transform: uppercase; letter-spacing: 0.06em;
 }
-.sum__providers-list { display: flex; flex-direction: column; gap: 6px; }
+.sum__providers-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+}
 
 .sum__prov {
-  display: flex; align-items: center; gap: 14px;
-  padding: 12px 14px; border-radius: 11px;
+  display: flex; flex-direction: column; gap: 5px;
+  padding: 14px 14px 12px; border-radius: 12px;
   border: 1.5px solid #e4e4e7; background: #fafafa;
   text-decoration: none; transition: border-color 0.13s, background 0.13s;
 }
 .sum__prov:hover { border-color: #a1a1aa; background: #f4f4f5; }
 
+.sum__prov-top {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
+}
 .sum__prov-logo {
-  flex-shrink: 0; font-weight: 900; font-size: 17px; letter-spacing: -0.5px;
+  font-weight: 900; font-size: 17px; letter-spacing: -0.5px; line-height: 1;
 }
 .sum__prov-logo--sumeria { font-family: Georgia, 'Times New Roman', serif; color: #18181b; }
-.sum__prov-logo--bunq    { font-family: system-ui, sans-serif; color: #00c29a; font-weight: 800; font-size: 18px; }
-.sum__prov-logo--n26     { font-family: system-ui, sans-serif; color: #26AEB3; font-weight: 900; font-size: 17px; letter-spacing: -0.5px; }
-.sum__prov-logo--vivid   { font-family: system-ui, sans-serif; color: #FF6B35; font-weight: 800; font-size: 17px; }
+.sum__prov-logo--bunq    { color: #00c29a; font-size: 18px; }
+.sum__prov-logo--n26     { color: #26AEB3; font-size: 17px; }
+.sum__prov-logo--vivid   { color: #FF6B35; font-size: 17px; }
 
-.sum__prov-info { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.sum__prov-name { font-size: 11px; color: #71717a; font-weight: 500; }
-.sum__prov-desc { font-size: 12px; color: #52525b; }
+.sum__prov-price {
+  font-size: 15px; font-weight: 800; color: #18181b; white-space: nowrap; letter-spacing: -0.3px;
+}
+.sum__prov-price span { font-size: 11px; font-weight: 500; color: #a1a1aa; }
+.sum__prov-price--free { color: #16a34a; }
+.sum__prov-price--free span { color: #86efac; }
 
-.sum__prov-arrow { color: #d4d4d8; flex-shrink: 0; }
+.sum__prov-sub  { font-size: 10px; color: #a1a1aa; font-weight: 500; }
+.sum__prov-desc { font-size: 12px; color: #52525b; line-height: 1.4; }
 
 .sum__providers-note {
   display: flex; align-items: flex-start; gap: 6px;
-  font-size: 11px; color: #a1a1aa; line-height: 1.5; padding-top: 2px;
+  font-size: 11px; color: #a1a1aa; line-height: 1.5;
 }
 .sum__providers-note svg { flex-shrink: 0; margin-top: 1px; }
 
