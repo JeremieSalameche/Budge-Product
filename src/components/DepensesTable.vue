@@ -109,8 +109,9 @@
       <!-- Colonne Commun -->
       <div class="dep__col dep__col--commun">
         <div class="dep__col-head">
-          <div class="dep__col-ava dep__col-ava--commun">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <div class="dep__col-avas">
+            <div class="dep__col-ava" :style="{ background: p1.couleur }">{{ p1.nom[0]?.toUpperCase() }}</div>
+            <div class="dep__col-ava dep__col-ava--overlap" :style="{ background: p2.couleur }">{{ p2.nom[0]?.toUpperCase() }}</div>
           </div>
           <div class="dep__col-headinfo">
             <span class="dep__col-name">Commun</span>
@@ -390,7 +391,7 @@ const totalP2 = computed(() =>
 )
 const totalCommun = computed(() =>
   depCommun.value.reduce((s, d) =>
-    s + store.toMonthly((d.montantP1 || 0) + (d.montantP2 || 0), d.frequence), 0)
+    s + store.toMonthly((d.montantP1 || 0) + (d.montantP2 || 0) + (d.montantCommun || 0), d.frequence), 0)
 )
 
 // ── Helpers ───────────────────────────────────────────────
@@ -552,11 +553,13 @@ function suggestSplit() {
   border-bottom: 1.5px solid var(--border);
 }
 
+.dep__col-avas { display: flex; flex-shrink: 0; }
 .dep__col-ava {
   width: 34px; height: 34px; border-radius: 10px; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
   font-size: 14px; font-weight: 700; color: #fff;
 }
+.dep__col-ava--overlap { margin-left: -10px; box-shadow: -2px 0 0 #fff; }
 .dep__col-ava--commun { background: #18181b; }
 
 .dep__col-headinfo { flex: 1; display: flex; flex-direction: column; gap: 1px; min-width: 0; }

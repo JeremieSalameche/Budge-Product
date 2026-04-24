@@ -26,13 +26,13 @@
           <div class="dash__kpi-label">Épargne possible {{ store.personnes[0]?.nom }}</div>
           <div class="dash__kpi-value-row">
             <span class="dash__kpi-value dash__kpi-value--p1">
-              {{ fmt((store.personnes[0]?.salaire || 0) - store.totalMensuelP1) }}
+              {{ fmt(store.resteAvivreP1) }}
             </span>
             <span class="dash__kpi-sub">/ mois</span>
           </div>
           <MiniDonut
             class="dash__kpi-donut"
-            :valeur="(store.personnes[0]?.salaire || 0) - store.totalMensuelP1"
+            :valeur="store.resteAvivreP1"
             :total="store.personnes[0]?.salaire || 1"
             color="#7C6FCD"
           />
@@ -41,13 +41,13 @@
           <div class="dash__kpi-label">Épargne possible {{ store.personnes[1]?.nom }}</div>
           <div class="dash__kpi-value-row">
             <span class="dash__kpi-value dash__kpi-value--p2">
-              {{ fmt((store.personnes[1]?.salaire || 0) - store.totalMensuelP2) }}
+              {{ fmt(store.resteAvivreP2) }}
             </span>
             <span class="dash__kpi-sub">/ mois</span>
           </div>
           <MiniDonut
             class="dash__kpi-donut"
-            :valeur="(store.personnes[1]?.salaire || 0) - store.totalMensuelP2"
+            :valeur="store.resteAvivreP2"
             :total="store.personnes[1]?.salaire || 1"
             color="#4A9EDB"
           />
