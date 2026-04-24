@@ -83,9 +83,9 @@
             <span class="sidebar__user-name">{{ authStore.user?.displayName?.split(' ')[0] ?? 'Compte' }}</span>
             <span class="sidebar__user-saved">{{ lastSavedLabel }}</span>
           </div>
-          <svg class="sidebar__settings-icon" width="15" height="15" viewBox="0 0 15 15" fill="none">
-            <circle cx="7.5" cy="7.5" r="2" stroke="currentColor" stroke-width="1.4"/>
-            <path d="M7.5 1.5v1M7.5 12.5v1M1.5 7.5h1M12.5 7.5h1M3.1 3.1l.7.7M11.2 11.2l.7.7M11.2 3.1l-.7.7M3.8 11.2l-.7.7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          <svg class="sidebar__settings-icon" width="15" height="15" viewBox="0 0 16 16" fill="none">
+            <path d="M6.5 1.5h3l.5 1.5a5 5 0 011.2.7l1.5-.5 1.5 2.6-1.2 1.1c.03.2.05.4.05.6s-.02.4-.05.6l1.2 1.1-1.5 2.6-1.5-.5a5 5 0 01-1.2.7l-.5 1.5h-3l-.5-1.5A5 5 0 014.8 11l-1.5.5L1.8 8.9l1.2-1.1A5 5 0 013 7.4c0-.2.02-.4.05-.6L1.8 5.7l1.5-2.6 1.5.5A5 5 0 016 2.9l.5-1.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+            <circle cx="8" cy="7.5" r="2" stroke="currentColor" stroke-width="1.3"/>
           </svg>
         </div>
       </div>
