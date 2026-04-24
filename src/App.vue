@@ -122,6 +122,12 @@
             <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M5.5 13H3a1.5 1.5 0 01-1.5-1.5v-8A1.5 1.5 0 013 2h2.5M10 10.5l3-3-3-3M13 7.5H5.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
         </div>
+        <button
+          class="sidebar__delete-account"
+          type="button"
+          @click="confirmDeleteAccount"
+          :disabled="deletingAccount"
+        >{{ deletingAccount ? 'Suppression…' : 'Supprimer mon compte' }}</button>
       </div>
     </aside>
 
@@ -235,6 +241,7 @@ const { scheduleAutoSave, lastSavedLabel } = useStorage()
 const activeTab        = ref('dashboard')
 const selectedDepenses = ref([])
 const dataMenuOpen     = ref(false)
+const deletingAccount  = ref(false)
 
 // ── Popover salaires ───────────────────────────────────────
 const openPopover = ref(null)
@@ -289,6 +296,22 @@ onMounted(async () => {
 watch(() => authStore.user, async (user) => {
   await initApp(user)
 })
+
+async function confirmDeleteAccount() {
+  const ok = window.confirm(
+    'Supprimer définitivement votre compte ?\n\nToutes vos données seront effacées et cette action est irréversible.'
+  )
+  if (!ok) return
+  deletingAccount.value = true
+  try {
+    await authStore.deleteAccount()
+    localStorage.removeItem('budget-simulator-v1')
+  } catch {
+    store.showNotification('Échec de la suppression. Réessayez.', 'error')
+  } finally {
+    deletingAccount.value = false
+  }
+}
 
 async function onImportBudge(e) {
   const file = e.target.files?.[0]
@@ -446,6 +469,17 @@ const pctCharges = computed(() => {
   transition: background 0.15s, color 0.15s;
 }
 .sidebar__logout-icon:hover { background: rgba(239,68,68,0.08); color: #ef4444; }
+.sidebar__delete-account {
+  display: block; width: 100%;
+  background: none; border: none;
+  font-size: 11px; color: #a1a1aa;
+  text-align: center; cursor: pointer;
+  padding: 6px 0 2px;
+  font-family: inherit;
+  transition: color 0.15s;
+}
+.sidebar__delete-account:hover:not(:disabled) { color: #ef4444; }
+.sidebar__delete-account:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* ── Main ─────────────────────────────────────────────────── */
 .main {

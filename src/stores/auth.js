@@ -1,7 +1,9 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { signInWithPopup, signOut, onAuthStateChanged } from 'firebase/auth'
+import { signInWithPopup, signOut, onAuthStateChanged, deleteUser, reauthenticateWithPopup } from 'firebase/auth'
 import { auth, provider } from '../firebase'
+import { doc, deleteDoc } from 'firebase/firestore'
+import { db } from '../firebase'
 
 export const useAuthStore = defineStore('auth', () => {
   const user    = ref(null)
@@ -25,5 +27,22 @@ export const useAuthStore = defineStore('auth', () => {
     await signOut(auth)
   }
 
-  return { user, loading, init, loginWithGoogle, logout }
+  async function deleteAccount() {
+    const u = auth.currentUser
+    if (!u) return
+    try {
+      await deleteDoc(doc(db, 'users', u.uid))
+      await deleteUser(u)
+    } catch (err) {
+      if (err.code === 'auth/requires-recent-login') {
+        await reauthenticateWithPopup(u, provider)
+        await deleteDoc(doc(db, 'users', u.uid))
+        await deleteUser(u)
+      } else {
+        throw err
+      }
+    }
+  }
+
+  return { user, loading, init, loginWithGoogle, logout, deleteAccount }
 })
