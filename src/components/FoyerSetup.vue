@@ -108,8 +108,8 @@
 
         <!-- Étape 2 : Membres + copie de foyer -->
         <div v-if="etape === 2" class="onboarding__fields">
-          <div class="onboarding__membres-grid">
-            <div v-for="(p, i) in personnes" :key="i" class="onboarding__membre">
+          <div>
+            <div v-for="(p, i) in personnes" :key="i" class="onboarding__membre" :class="{ 'onboarding__membre--gap': i > 0 }">
               <div class="onboarding__membre-header">
                 <div class="onboarding__membre-avatar" :style="{ background: p.couleur }">
                   {{ p.nom ? p.nom[0].toUpperCase() : (i === 0 ? 'A' : 'B') }}
@@ -539,14 +539,12 @@ async function onImportCsvOnboarding(e) {
 .onboarding__color-btn--active { border-color: #18181b; transform: scale(1.15); }
 
 /* Membres */
-.onboarding__membres-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
-}
 .onboarding__membre {
   background: #f9f9f9; border-radius: 12px; padding: 16px;
   display: flex; flex-direction: column; gap: 12px;
   border: 1.5px solid #f4f4f5;
 }
+.onboarding__membre--gap { margin-top: 12px; }
 .onboarding__membre-header { display: flex; align-items: center; gap: 10px; }
 .onboarding__membre-avatar {
   width: 32px; height: 32px; border-radius: 8px;
