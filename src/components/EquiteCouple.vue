@@ -635,10 +635,11 @@ function applyReco(r) {
   align-self: flex-end;
   padding: 7px 14px; border-radius: 8px;
   font-size: 12px; font-weight: 600; font-family: inherit;
-  background: #18181b; color: #fff; border: none;
-  cursor: pointer; transition: background 0.15s;
+  background: transparent; color: var(--primary);
+  border: 1px solid var(--primary);
+  cursor: pointer; transition: background 0.15s, color 0.15s;
 }
-.eq-panel__apply:hover { background: #27272a; }
+.eq-panel__apply:hover { background: var(--primary); color: #fff; }
 .eq__recos-empty { display: inline-flex; align-items: center; gap: 5px; color: #16A34A; font-size: 12px; font-weight: 500; }
 
 /* Section loisirs dans le panel */
