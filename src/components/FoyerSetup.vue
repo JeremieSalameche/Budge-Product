@@ -124,7 +124,7 @@
       <div class="onboarding__right-glow"></div>
       <div class="onboarding__right-content">
         <div class="onboarding__right-badge">✦ Nouveau</div>
-        <h3 class="onboarding__right-title">Gérez votre budget en couple, simplement.</h3>
+        <h3 class="onboarding__right-title">Gérez votre budget, seul ou à deux, simplement.</h3>
         <p class="onboarding__right-sub">Visualisez vos dépenses, partagez les charges équitablement et atteignez vos objectifs ensemble.</p>
       </div>
       <div class="onboarding__right-features">
