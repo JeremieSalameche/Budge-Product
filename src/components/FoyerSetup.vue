@@ -217,7 +217,7 @@
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
             {{ modeSolo ? '✓ Je configure seul(e)' : 'Je configure seul(e)' }}
           </button>
-          <div class="fsetup__membres-grid">
+          <div :class="['fsetup__membres-grid', { 'fsetup__membres-grid--solo': modeSolo }]">
             <div v-for="(p, i) in personnes" :key="i" v-show="i === 0 || !modeSolo" class="fsetup__membre">
               <div class="fsetup__membre-header">
                 <div class="fsetup__membre-avatar" :style="{ background: p.couleur }">{{ p.nom ? p.nom[0].toUpperCase() : (i === 0 ? 'A' : 'B') }}</div>
@@ -757,6 +757,9 @@ async function onImportCsvOnboarding(e) {
 .fsetup__membres-grid {
   display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
 }
+.fsetup__membres-grid--solo { grid-template-columns: 1fr; }
+.fsetup__membres-grid--solo .fsetup__membre-fields { flex-direction: row; }
+.fsetup__membres-grid--solo .fsetup__field { flex: 1; min-width: 0; }
 .fsetup__membre {
   background: var(--muted); border-radius: var(--radius-md); padding: 16px;
   display: flex; flex-direction: column; gap: 12px;
