@@ -60,90 +60,124 @@
           </div>
 
           <!-- Schéma de flux -->
-          <div class="sum__schema">
+          <div class="flo">
 
-            <!-- Source -->
-            <div class="sum__schema-source">
-              <div class="sum__schema-source-left">
-                <div class="sum__schema-bank-icon">🏦</div>
-                <div>
-                  <div class="sum__schema-bank-name">Compte principal</div>
-                  <div class="sum__schema-bank-sub">Crédit Agricole · BNP · LCL…</div>
+            <div class="flo__label">Exemple — comment ça fonctionne</div>
+
+            <div class="flo__grid">
+
+              <!-- Compte principal (gauche) -->
+              <div class="flo__source">
+                <div class="flo__source-ico">🏦</div>
+                <div class="flo__source-name">Compte principal</div>
+                <div class="flo__source-bank">Crédit Agricole · BNP · LCL…</div>
+                <div class="flo__source-hr"></div>
+                <div class="flo__source-income-lbl">Salaire mensuel</div>
+                <div class="flo__source-income">2 500 €</div>
+                <div class="flo__source-hr"></div>
+                <div class="flo__source-shield">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  Jamais débité directement
                 </div>
               </div>
-              <div class="sum__schema-income">
-                <span class="sum__schema-income-label">Salaire</span>
-                <span class="sum__schema-income-val">+ 2 500 €</span>
-              </div>
-              <span class="sum__schema-badge">Exemple</span>
-            </div>
 
-            <!-- Connecteur -->
-            <div class="sum__schema-stem">
-              <div class="sum__schema-stem-line"></div>
-              <div class="sum__schema-stem-label">
-                <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1v8M2 7l3.5 3.5L9 7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                Le 1er du mois — virements automatiques
-              </div>
-              <div class="sum__schema-stem-line"></div>
-            </div>
+              <!-- Enveloppes (droite, avec lignes de connexion) -->
+              <div class="flo__envs">
 
-            <!-- Destinations -->
-            <div class="sum__schema-dests">
-
-              <div class="sum__schema-dest sum__schema-dest--loyer">
-                <div class="sum__schema-dest-top">
-                  <span class="sum__schema-dest-ico">🏠</span>
-                  <span class="sum__schema-dest-name">Loyer</span>
+                <div class="flo__row">
+                  <div class="flo__wire"></div>
+                  <div class="flo__card flo__card--loyer">
+                    <div class="flo__card-l">
+                      <span class="flo__card-ico">🏠</span>
+                      <div>
+                        <div class="flo__card-name">Loyer</div>
+                        <div class="flo__card-detail">Virement permanent propriétaire</div>
+                      </div>
+                    </div>
+                    <div class="flo__card-r">
+                      <div class="flo__tags">
+                        <span class="flo__tag flo__tag--iban">IBAN propre</span>
+                        <span class="flo__tag flo__tag--cb">CB dédiée</span>
+                      </div>
+                      <div class="flo__card-amt">650 €</div>
+                    </div>
+                  </div>
                 </div>
-                <div class="sum__schema-dest-sub">Virement direct</div>
-                <div class="sum__schema-dest-amount">650 €</div>
-              </div>
 
-              <div class="sum__schema-dest sum__schema-dest--sumeria">
-                <div class="sum__schema-dest-top">
-                  <span class="sum__schema-dest-ico">💳</span>
-                  <span class="sum__schema-dest-name">Charges fixes</span>
+                <div class="flo__row">
+                  <div class="flo__wire"></div>
+                  <div class="flo__card flo__card--charges">
+                    <div class="flo__card-l">
+                      <span class="flo__card-ico">💳</span>
+                      <div>
+                        <div class="flo__card-name">Charges fixes</div>
+                        <div class="flo__card-detail">Netflix · Assurance · Forfait · Crédit auto</div>
+                      </div>
+                    </div>
+                    <div class="flo__card-r">
+                      <div class="flo__tags">
+                        <span class="flo__tag flo__tag--iban">IBAN propre</span>
+                        <span class="flo__tag flo__tag--cb">CB dédiée</span>
+                      </div>
+                      <div class="flo__card-amt">580 €</div>
+                    </div>
+                  </div>
                 </div>
-                <div class="sum__schema-dest-sub">Sumeria · prélèvements CB</div>
-                <div class="sum__schema-dest-items">Abo · Assurance · Forfait</div>
-                <div class="sum__schema-dest-amount">580 €</div>
-              </div>
 
-              <div class="sum__schema-dest sum__schema-dest--energie">
-                <div class="sum__schema-dest-top">
-                  <span class="sum__schema-dest-ico">⚡</span>
-                  <span class="sum__schema-dest-name">Énergie</span>
+                <div class="flo__row">
+                  <div class="flo__wire"></div>
+                  <div class="flo__card flo__card--energie">
+                    <div class="flo__card-l">
+                      <span class="flo__card-ico">⚡</span>
+                      <div>
+                        <div class="flo__card-name">Énergie</div>
+                        <div class="flo__card-detail">Engie · lissé, facturé tous les 2 mois</div>
+                      </div>
+                    </div>
+                    <div class="flo__card-r">
+                      <div class="flo__tags">
+                        <span class="flo__tag flo__tag--iban">IBAN propre</span>
+                        <span class="flo__tag flo__tag--cb">CB dédiée</span>
+                      </div>
+                      <div class="flo__card-amt">80 €</div>
+                    </div>
+                  </div>
                 </div>
-                <div class="sum__schema-dest-sub">Lissé sur 12 mois</div>
-                <div class="sum__schema-dest-items">Facturé tous les 2 mois</div>
-                <div class="sum__schema-dest-amount">80 €</div>
-              </div>
 
-              <div class="sum__schema-dest sum__schema-dest--cash">
-                <div class="sum__schema-dest-top">
-                  <span class="sum__schema-dest-ico">🛒</span>
-                  <span class="sum__schema-dest-name">Alimentation</span>
+                <div class="flo__row">
+                  <div class="flo__wire"></div>
+                  <div class="flo__card flo__card--cash">
+                    <div class="flo__card-l">
+                      <span class="flo__card-ico">🛒</span>
+                      <div>
+                        <div class="flo__card-name">Alimentation &amp; loisirs</div>
+                        <div class="flo__card-detail">Retrait cash · courses · restaurant</div>
+                      </div>
+                    </div>
+                    <div class="flo__card-r">
+                      <div class="flo__tags">
+                        <span class="flo__tag flo__tag--iban">IBAN propre</span>
+                        <span class="flo__tag flo__tag--cb">CB dédiée</span>
+                      </div>
+                      <div class="flo__card-amt">300 €</div>
+                    </div>
+                  </div>
                 </div>
-                <div class="sum__schema-dest-sub">Retrait en cash</div>
-                <div class="sum__schema-dest-items">Courses &amp; marché</div>
-                <div class="sum__schema-dest-amount">300 €</div>
-              </div>
 
+              </div>
             </div>
 
             <!-- Résultat -->
-            <div class="sum__schema-result">
-              <div class="sum__schema-result-check">
-                <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 7l3.5 3.5L11 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div class="flo__result">
+              <div class="flo__result-check">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1.5 6.5L4.5 9.5L10.5 2.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </div>
-              <div class="sum__schema-result-body">
-                <div class="sum__schema-result-title">Zéro surprise sur votre compte</div>
-                <div class="sum__schema-result-sub">Aucun prélèvement imprévisible — votre solde est connu à l'avance</div>
+              <div class="flo__result-body">
+                <strong>Zéro prélèvement imprévisible</strong> sur votre compte principal — vous savez exactement ce qu'il vous reste chaque mois
               </div>
-              <div class="sum__schema-result-right">
-                <div class="sum__schema-result-amount">890 €</div>
-                <div class="sum__schema-result-label">reste à vivre</div>
+              <div class="flo__result-r">
+                <div class="flo__result-amt">890 €</div>
+                <div class="flo__result-lbl">reste à vivre</div>
               </div>
             </div>
 
@@ -634,100 +668,97 @@ function doDeleteEnv() {
 .sum__feature-sub   { font-size: 12px; color: var(--muted-foreground); line-height: 1.5; margin-top: 2px; }
 
 /* ── Schéma de flux ─────────────────────────────────────── */
-.sum__schema {
-  display: flex; flex-direction: column; gap: 0;
-  border: 1.5px solid #e4e4e7; border-radius: 14px; overflow: hidden;
-  background: #fff;
+.flo {
+  border: 1.5px solid #e4e4e7; border-radius: 14px; overflow: hidden; background: #fff;
 }
 
-/* Source */
-.sum__schema-source {
+.flo__label {
+  padding: 7px 16px; text-align: center;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  color: #0369a1; background: #f0f9ff; border-bottom: 1px solid #e0f2fe;
+}
+
+/* Layout 2 colonnes */
+.flo__grid {
+  display: grid; grid-template-columns: 154px 1fr;
+}
+
+/* Colonne gauche — Compte principal */
+.flo__source {
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 18px 16px; border-right: 2px solid #e4e4e7; background: #fafafa;
+}
+.flo__source-ico  { font-size: 26px; }
+.flo__source-name { font-size: 13px; font-weight: 700; color: #18181b; }
+.flo__source-bank { font-size: 10px; color: #a1a1aa; line-height: 1.4; }
+.flo__source-hr   { height: 1px; background: #e4e4e7; margin: 2px 0; }
+.flo__source-income-lbl { font-size: 10px; color: #71717a; font-weight: 500; }
+.flo__source-income { font-size: 22px; font-weight: 800; color: #18181b; letter-spacing: -0.5px; }
+.flo__source-shield {
+  display: flex; align-items: center; gap: 5px; margin-top: auto; padding-top: 4px;
+  font-size: 10px; color: #71717a; font-weight: 500;
+  background: #f4f4f5; border-radius: 6px; padding: 6px 8px;
+}
+
+/* Colonne droite — Enveloppes */
+.flo__envs { display: flex; flex-direction: column; }
+
+.flo__row {
+  display: flex; align-items: center; gap: 0;
+  padding: 9px 14px 9px 0;
+  border-bottom: 1px solid #f4f4f5;
+}
+.flo__row:last-child { border-bottom: none; }
+
+/* Fil de connexion (le "maillage") */
+.flo__wire {
+  flex-shrink: 0; width: 22px; height: 2px; background: #d4d4d8;
+  margin-right: 10px;
+}
+
+/* Carte enveloppe */
+.flo__card {
+  flex: 1; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 10px 14px; border-radius: 10px;
+  border: 1.5px solid #e4e4e7; background: #fff;
+}
+.flo__card--loyer   { border-color: #ddd6fe; }
+.flo__card--charges { border-color: #bfdbfe; }
+.flo__card--energie { border-color: #fed7aa; }
+.flo__card--cash    { border-color: #bbf7d0; }
+
+.flo__card-l { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+.flo__card-ico  { font-size: 18px; flex-shrink: 0; }
+.flo__card-name { font-size: 13px; font-weight: 700; color: #18181b; }
+.flo__card-detail { font-size: 10px; color: #71717a; margin-top: 1px; }
+
+.flo__card-r { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; flex-shrink: 0; }
+
+.flo__tags { display: flex; gap: 4px; }
+.flo__tag {
+  font-size: 10px; font-weight: 700; padding: 2px 6px;
+  border-radius: 4px; letter-spacing: 0.02em; white-space: nowrap;
+}
+.flo__tag--iban { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+.flo__tag--cb   { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+
+.flo__card-amt { font-size: 18px; font-weight: 800; color: #18181b; letter-spacing: -0.5px; }
+
+/* Bande résultat */
+.flo__result {
   display: flex; align-items: center; gap: 12px;
-  padding: 14px 18px;
-  background: #fafafa; border-bottom: 1.5px solid #e4e4e7;
-  position: relative;
+  padding: 13px 18px; background: #f0fdf4; border-top: 1.5px solid #bbf7d0;
 }
-.sum__schema-source-left { display: flex; align-items: center; gap: 10px; flex: 1; }
-.sum__schema-bank-icon { font-size: 22px; line-height: 1; }
-.sum__schema-bank-name { font-size: 14px; font-weight: 700; color: #18181b; }
-.sum__schema-bank-sub  { font-size: 11px; color: #a1a1aa; margin-top: 1px; }
-
-.sum__schema-income { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; }
-.sum__schema-income-label { font-size: 10px; font-weight: 500; color: #a1a1aa; text-transform: uppercase; letter-spacing: 0.04em; }
-.sum__schema-income-val { font-size: 17px; font-weight: 800; color: #16a34a; letter-spacing: -0.5px; }
-
-.sum__schema-badge {
-  position: absolute; top: 10px; right: 14px;
-  font-size: 10px; font-weight: 600;
-  padding: 2px 7px; border-radius: 99px;
-  background: #f0f9ff; color: #0369a1; border: 1px solid #bae6fd;
-}
-
-/* Connecteur */
-.sum__schema-stem {
-  display: flex; align-items: center; gap: 10px;
-  padding: 8px 18px;
-  background: #fafafa; border-bottom: 1.5px solid #e4e4e7;
-}
-.sum__schema-stem-line { flex: 1; height: 1px; background: #e4e4e7; }
-.sum__schema-stem-label {
-  display: flex; align-items: center; gap: 5px;
-  font-size: 11px; font-weight: 500; color: #71717a;
-  white-space: nowrap;
-}
-
-/* Destinations */
-.sum__schema-dests {
-  display: grid; grid-template-columns: repeat(4, 1fr);
-  border-bottom: 1.5px solid #e4e4e7;
-}
-.sum__schema-dest {
-  padding: 14px 14px 16px;
-  display: flex; flex-direction: column; gap: 4px;
-  border-right: 1px solid #e4e4e7;
-  position: relative;
-}
-.sum__schema-dest:last-child { border-right: none; }
-
-.sum__schema-dest-top {
-  display: flex; align-items: center; gap: 6px; margin-bottom: 2px;
-}
-.sum__schema-dest-ico  { font-size: 16px; line-height: 1; }
-.sum__schema-dest-name { font-size: 12px; font-weight: 700; color: #18181b; }
-.sum__schema-dest-sub  { font-size: 11px; color: #71717a; }
-.sum__schema-dest-items { font-size: 10px; color: #a1a1aa; line-height: 1.4; }
-.sum__schema-dest-amount {
-  font-size: 18px; font-weight: 800; color: #18181b;
-  letter-spacing: -0.5px; margin-top: 6px;
-}
-
-.sum__schema-dest--loyer   .sum__schema-dest-amount { color: #7c3aed; }
-.sum__schema-dest--sumeria .sum__schema-dest-amount { color: #1a1aff; }
-.sum__schema-dest--energie .sum__schema-dest-amount { color: #ea580c; }
-.sum__schema-dest--cash    .sum__schema-dest-amount { color: #16a34a; }
-
-/* Résultat */
-.sum__schema-result {
-  display: flex; align-items: center; gap: 12px;
-  padding: 14px 18px; background: #f0fdf4;
-}
-.sum__schema-result-check {
-  width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+.flo__result-check {
+  width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
   background: #16a34a; color: #fff;
 }
-.sum__schema-result-body { flex: 1; }
-.sum__schema-result-title { font-size: 13px; font-weight: 700; color: #14532d; }
-.sum__schema-result-sub   { font-size: 11px; color: #16a34a; margin-top: 1px; }
-.sum__schema-result-right { text-align: right; }
-.sum__schema-result-amount { font-size: 20px; font-weight: 800; color: #14532d; letter-spacing: -0.5px; }
-.sum__schema-result-label  { font-size: 10px; color: #16a34a; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; }
-
-@media (max-width: 600px) {
-  .sum__schema-dests { grid-template-columns: repeat(2, 1fr); }
-  .sum__schema-dest:nth-child(2) { border-right: 1px solid #e4e4e7; }
-  .sum__schema-dest:nth-child(3) { border-right: none; }
-}
+.flo__result-body { flex: 1; font-size: 12px; color: #14532d; line-height: 1.5; }
+.flo__result-body strong { font-weight: 700; }
+.flo__result-r { text-align: right; flex-shrink: 0; }
+.flo__result-amt { font-size: 20px; font-weight: 800; color: #14532d; letter-spacing: -0.5px; }
+.flo__result-lbl { font-size: 10px; color: #16a34a; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
 
 .sum__cta {
   display: inline-flex; align-items: center; gap: 7px;
