@@ -185,14 +185,14 @@
 
           <!-- Banques qui proposent ce service -->
           <div class="sum__providers">
-            <div class="sum__providers-title">Ce service est proposé par ces banques digitales</div>
+            <div class="sum__providers-title">Banques digitales qui proposent ce système</div>
             <div class="sum__providers-list">
 
               <a class="sum__prov" href="https://sumeria.eu" target="_blank" rel="noopener noreferrer">
                 <div class="sum__prov-logo sum__prov-logo--sumeria">Sumeria</div>
                 <div class="sum__prov-info">
-                  <span class="sum__prov-name">by Lydia</span>
-                  <span class="sum__prov-desc">Comptes secondaires · IBAN + CB dédiée · gratuit</span>
+                  <span class="sum__prov-name">by Lydia · Banque française</span>
+                  <span class="sum__prov-desc">Comptes secondaires avec IBAN + CB · à partir de 3,90€/mois</span>
                 </div>
                 <svg class="sum__prov-arrow" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5h9M7.5 3l3.5 3.5L7.5 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </a>
@@ -201,11 +201,33 @@
                 <div class="sum__prov-logo sum__prov-logo--bunq">bunq</div>
                 <div class="sum__prov-info">
                   <span class="sum__prov-name">Banque néerlandaise</span>
-                  <span class="sum__prov-desc">Multi-IBAN · comptes colorés · à partir de 3,99€/mois</span>
+                  <span class="sum__prov-desc">Jusqu'à 25 comptes avec IBAN propre · à partir de 3,99€/mois</span>
                 </div>
                 <svg class="sum__prov-arrow" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5h9M7.5 3l3.5 3.5L7.5 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </a>
 
+              <a class="sum__prov" href="https://n26.com/fr-fr" target="_blank" rel="noopener noreferrer">
+                <div class="sum__prov-logo sum__prov-logo--n26">N26</div>
+                <div class="sum__prov-info">
+                  <span class="sum__prov-name">Banque allemande</span>
+                  <span class="sum__prov-desc">Spaces avec IBAN dédié · offre gratuite + premium</span>
+                </div>
+                <svg class="sum__prov-arrow" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5h9M7.5 3l3.5 3.5L7.5 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </a>
+
+              <a class="sum__prov" href="https://vivid.money/fr-fr" target="_blank" rel="noopener noreferrer">
+                <div class="sum__prov-logo sum__prov-logo--vivid">Vivid</div>
+                <div class="sum__prov-info">
+                  <span class="sum__prov-name">Banque européenne</span>
+                  <span class="sum__prov-desc">Pockets avec IBAN · à partir de 0€/mois</span>
+                </div>
+                <svg class="sum__prov-arrow" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5h9M7.5 3l3.5 3.5L7.5 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </a>
+
+            </div>
+            <div class="sum__providers-note">
+              <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="5.5" cy="5.5" r="4.5" stroke="currentColor" stroke-width="1.2"/><line x1="5.5" y1="4" x2="5.5" y2="6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><circle cx="5.5" cy="7.5" r="0.6" fill="currentColor"/></svg>
+              Revolut Pockets ne disposent pas d'IBAN propre — les prélèvements reviennent toujours sur le compte principal.
             </div>
           </div>
 
@@ -755,12 +777,20 @@ function doDeleteEnv() {
 }
 .sum__prov-logo--sumeria { font-family: Georgia, 'Times New Roman', serif; color: #18181b; }
 .sum__prov-logo--bunq    { font-family: system-ui, sans-serif; color: #00c29a; font-weight: 800; font-size: 18px; }
+.sum__prov-logo--n26     { font-family: system-ui, sans-serif; color: #26AEB3; font-weight: 900; font-size: 17px; letter-spacing: -0.5px; }
+.sum__prov-logo--vivid   { font-family: system-ui, sans-serif; color: #FF6B35; font-weight: 800; font-size: 17px; }
 
 .sum__prov-info { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .sum__prov-name { font-size: 11px; color: #71717a; font-weight: 500; }
 .sum__prov-desc { font-size: 12px; color: #52525b; }
 
 .sum__prov-arrow { color: #d4d4d8; flex-shrink: 0; }
+
+.sum__providers-note {
+  display: flex; align-items: flex-start; gap: 6px;
+  font-size: 11px; color: #a1a1aa; line-height: 1.5; padding-top: 2px;
+}
+.sum__providers-note svg { flex-shrink: 0; margin-top: 1px; }
 
 /* Transition expand */
 .sum-expand-enter-active, .sum-expand-leave-active { transition: opacity 0.2s ease; }
