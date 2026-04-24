@@ -13,32 +13,80 @@
       </MsButton>
     </div>
 
-    <!-- Banner concept -->
-    <div class="env__concept">
-      <div class="env__concept-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-      </div>
-      <div class="env__concept-body">
-        <div class="env__concept-title">Votre compte principal ne devrait jamais être votre compte de dépenses</div>
-        <div class="env__concept-text">
-          Les enveloppes physiques ne règlent pas tout : loyer, abonnements, crédits, téléphone — tout se paie en digital. La vraie solution, c'est un compte avec son propre RIB et sa propre CB pour chaque usage.
-          <strong> Votre compte principal (Crédit Agricole, BNP…) devient un simple point de collecte et de sécurité.</strong>
+    <!-- Bloc Sumeria collapsible -->
+    <div class="sum__wrap">
+      <button class="sum__trigger" type="button" @click="sumOpen = !sumOpen">
+        <span class="sum__trigger-left">
+          <span class="sum__idea-badge">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a7 7 0 0 1 5.292 11.584C16.4 14.56 16 15.524 16 16.5V17a1 1 0 0 1-1 1h-6a1 1 0 0 1-1-1v-.5c0-.976-.4-1.94-1.292-2.916A7 7 0 0 1 12 2zm-2 17h4v1a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-1z"/></svg>
+            Idée
+          </span>
+          <span class="sum__trigger-title">Mieux organiser sa gestion de dépenses</span>
+        </span>
+        <span class="sum__trigger-cta">
+          {{ sumOpen ? 'Réduire' : 'Afficher plus' }}
+          <svg :style="{ transform: sumOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 4.5l4 4 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </button>
+
+      <Transition name="sum-expand">
+        <div v-if="sumOpen" class="sum__panel">
+
+          <!-- Logo + tagline -->
+          <div class="sum__header">
+            <div class="sum__logo">
+              <svg width="20" height="20" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#1A1AFF"/><path d="M8 20c0-2.5 2-4 5-4s5 1.5 5 3.5S15.5 23 13 23c-1.5 0-2.5-.5-3-1" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M14 12c0 2.5 2 4 5 4" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+              <span class="sum__logo-text">sumeria</span>
+              <span class="sum__logo-by">by Lydia</span>
+            </div>
+            <span class="sum__gratuit">Gratuit</span>
+          </div>
+
+          <!-- Accroche -->
+          <p class="sum__pitch">
+            Compartimentez vos finances avec de vrais comptes bancaires dédiés — chacun avec son propre IBAN et sa CB. Vos abonnements, votre loyer, vos crédits sont payés depuis le bon compte, sans jamais toucher à votre épargne ou à votre compte principal.
+          </p>
+
+          <!-- Points clés -->
+          <div class="sum__features">
+            <div class="sum__feature">
+              <span class="sum__feature-icon">🏦</span>
+              <div>
+                <div class="sum__feature-title">IBAN + CB dédiée par compte</div>
+                <div class="sum__feature-sub">Payez vos charges directement — loyer par virement, abos par CB, sans mélanger avec votre compte principal</div>
+              </div>
+            </div>
+            <div class="sum__feature">
+              <span class="sum__feature-icon">🔄</span>
+              <div>
+                <div class="sum__feature-title">Virements automatiques programmables</div>
+                <div class="sum__feature-sub">Depuis votre banque classique, programmez un virement mensuel vers chaque compte Sumeria — Budge vous dit exactement combien</div>
+              </div>
+            </div>
+            <div class="sum__feature">
+              <span class="sum__feature-icon">🔒</span>
+              <div>
+                <div class="sum__feature-title">Votre compte principal reste une forteresse</div>
+                <div class="sum__feature-sub">Crédit Agricole, BNP, LCL… devenez juste un point de collecte et de sécurité. Plus de prélèvements imprévisibles sur votre compte principal</div>
+              </div>
+            </div>
+            <div class="sum__feature">
+              <span class="sum__feature-icon">⚡</span>
+              <div>
+                <div class="sum__feature-title">Ouverture en 5 minutes, 0 frais</div>
+                <div class="sum__feature-sub">Pas de frais de tenue de compte, pas de frais de virement — uniquement des options premium optionnelles</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CTA -->
+          <a class="sum__cta" href="https://sumeria.eu" target="_blank" rel="noopener noreferrer">
+            Découvrir Sumeria
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+
         </div>
-        <div class="env__concept-steps">
-          <div class="env__concept-step">
-            <span class="env__concept-step-n">1</span>
-            <span>Ouvrez un compte Sumeria — IBAN + CB en 5 min, gratuit</span>
-          </div>
-          <div class="env__concept-step">
-            <span class="env__concept-step-n">2</span>
-            <span>Programmez un virement automatique le 1er du mois</span>
-          </div>
-          <div class="env__concept-step">
-            <span class="env__concept-step-n">3</span>
-            <span>Payez uniquement avec la CB de ce compte — zéro surprise sur le compte principal</span>
-          </div>
-        </div>
-      </div>
+      </Transition>
     </div>
 
     <!-- Résumé virements par personne -->
@@ -225,7 +273,8 @@ import { MsButton, MsInput } from './ui/index.js'
 const store = useBudgetStore()
 const { scheduleAutoSave } = useStorage()
 
-const isSolo = computed(() => store.personnes.length < 2)
+const isSolo  = computed(() => store.personnes.length < 2)
+const sumOpen = ref(false)
 
 const COLORS = ['#18181B', '#71717A', '#E8643A', '#EF4444', '#22C55E', '#F08C46', '#25566E', '#D4A84B']
 
@@ -343,36 +392,74 @@ function doDeleteEnv() {
 .env__title { font-size: 18px; font-weight: 700; margin: 0; }
 .env__subtitle { font-size: 13px; color: var(--muted-foreground); margin: 4px 0 0; }
 
-/* ── Banner concept ─────────────────────────────────────── */
-.env__concept {
-  display: flex; gap: 16px;
-  background: linear-gradient(135deg, #f0f4ff 0%, #e8f0fe 100%);
-  border: 1px solid #c7d7f8;
-  border-radius: 14px;
-  padding: 20px;
+/* ── Bloc Sumeria collapsible ───────────────────────────── */
+.sum__wrap {
+  border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden;
+  background: var(--card);
 }
-.env__concept-icon {
-  width: 40px; height: 40px; border-radius: 10px;
-  background: var(--primary); color: #fff;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
+
+.sum__trigger {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; padding: 14px 18px;
+  background: none; border: none; cursor: pointer; font-family: inherit;
+  gap: 12px;
 }
-.env__concept-body { display: flex; flex-direction: column; gap: 10px; }
-.env__concept-title { font-size: 14px; font-weight: 700; color: #1e3a8a; }
-.env__concept-text { font-size: 13px; color: #374151; line-height: 1.6; }
-.env__concept-text strong { color: #1e3a8a; }
-.env__concept-steps { display: flex; flex-direction: column; gap: 6px; }
-.env__concept-step {
-  display: flex; align-items: flex-start; gap: 10px;
-  font-size: 12px; color: #374151; line-height: 1.5;
+.sum__trigger:hover { background: var(--muted); }
+.sum__trigger-left  { display: flex; align-items: center; gap: 10px; }
+.sum__trigger-title { font-size: 13px; font-weight: 600; color: var(--foreground); text-align: left; }
+.sum__trigger-cta   { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--primary); font-weight: 500; white-space: nowrap; flex-shrink: 0; }
+
+.sum__idea-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 8px; border-radius: 99px;
+  background: #fef9c3; color: #92400e;
+  font-size: 11px; font-weight: 700; flex-shrink: 0;
 }
-.env__concept-step-n {
-  width: 20px; height: 20px; border-radius: 50%;
-  background: var(--primary); color: #fff;
-  font-size: 11px; font-weight: 700;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0; margin-top: 1px;
+
+/* Panel contenu */
+.sum__panel {
+  padding: 0 20px 20px;
+  border-top: 1px solid var(--border);
+  display: flex; flex-direction: column; gap: 16px;
 }
+
+.sum__header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-top: 18px;
+}
+.sum__logo { display: flex; align-items: center; gap: 8px; }
+.sum__logo-text { font-size: 18px; font-weight: 800; color: #1a1aff; letter-spacing: -0.5px; }
+.sum__logo-by   { font-size: 11px; color: var(--muted-foreground); margin-top: 2px; }
+.sum__gratuit {
+  font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 99px;
+  background: #dcfce7; color: #166534;
+}
+
+.sum__pitch {
+  font-size: 13px; color: var(--muted-foreground); line-height: 1.65; margin: 0;
+}
+
+.sum__features { display: flex; flex-direction: column; gap: 12px; }
+.sum__feature  { display: flex; align-items: flex-start; gap: 12px; }
+.sum__feature-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.sum__feature-title { font-size: 13px; font-weight: 600; color: var(--foreground); }
+.sum__feature-sub   { font-size: 12px; color: var(--muted-foreground); line-height: 1.5; margin-top: 2px; }
+
+.sum__cta {
+  display: inline-flex; align-items: center; gap: 7px;
+  align-self: flex-start;
+  padding: 9px 18px; border-radius: 9px;
+  background: #1a1aff; color: #fff;
+  font-size: 13px; font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.sum__cta:hover { background: #0000cc; }
+
+/* Transition expand */
+.sum-expand-enter-active, .sum-expand-leave-active { transition: opacity 0.2s ease; }
+.sum-expand-enter-from, .sum-expand-leave-to { opacity: 0; }
 
 /* ── Résumé virements ───────────────────────────────────── */
 .env__summary {
