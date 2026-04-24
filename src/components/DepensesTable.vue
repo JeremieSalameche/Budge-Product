@@ -62,6 +62,50 @@
         </div>
       </div>
 
+      <!-- Colonne P2 -->
+      <div class="dep__col">
+        <div class="dep__col-head">
+          <div class="dep__col-ava" :style="{ background: p2.couleur }">{{ p2.nom[0]?.toUpperCase() }}</div>
+          <div class="dep__col-headinfo">
+            <span class="dep__col-name">{{ p2.nom }}</span>
+            <span class="dep__col-count">{{ depP2.length }} dépense{{ depP2.length !== 1 ? 's' : '' }}</span>
+          </div>
+          <span class="dep__col-sum">{{ fmt(totalP2) }}</span>
+        </div>
+        <div class="dep__col-body">
+          <div v-if="depP2.length === 0" class="dep__empty">Aucune dépense individuelle</div>
+          <div
+            v-for="dep in depP2" :key="dep.id"
+            :class="['dep__card', { 'dep__card--off': !dep.actif }]"
+            :style="{ '--acc': catColor(dep) }"
+          >
+            <div class="dep__card-accent"></div>
+            <div class="dep__card-content">
+              <div class="dep__card-top">
+                <span class="dep__card-nom">{{ dep.nom || '—' }}</span>
+                <span class="dep__card-amount">{{ fmtMonthly(dep) }}</span>
+              </div>
+              <div class="dep__card-bot">
+                <span class="dep__card-cat" :style="catBadgeStyle(dep)">{{ catNom(dep) }}</span>
+                <span class="dep__card-freq">{{ freqLabel(dep.frequence) }}</span>
+                <div class="dep__card-acts">
+                  <button class="dep__act" @click="openEdit(dep)" title="Modifier" type="button">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  </button>
+                  <button class="dep__act" @click="toggleActif(dep)" :title="dep.actif ? 'Désactiver' : 'Activer'" type="button">
+                    <svg v-if="dep.actif" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <svg v-else width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                  </button>
+                  <button class="dep__act dep__act--del" @click="confirmDelete(dep)" title="Supprimer" type="button">
+                    <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M1.75 3.5H12.25M5.25 3.5V2.333a.583.583 0 01.583-.583h2.334a.583.583 0 01.583.583V3.5M10.5 3.5l-.583 8.167H4.083L3.5 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Colonne Commun -->
       <div class="dep__col dep__col--commun">
         <div class="dep__col-head">
@@ -94,50 +138,6 @@
                 <span class="dep__share" :style="{ background: p2.couleur + '22', color: p2.couleur }">
                   {{ p2.nom }} · {{ fmt(store.toMonthly(dep.montantP2 || 0, dep.frequence)) }}
                 </span>
-              </div>
-              <div class="dep__card-bot">
-                <span class="dep__card-cat" :style="catBadgeStyle(dep)">{{ catNom(dep) }}</span>
-                <span class="dep__card-freq">{{ freqLabel(dep.frequence) }}</span>
-                <div class="dep__card-acts">
-                  <button class="dep__act" @click="openEdit(dep)" title="Modifier" type="button">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                  </button>
-                  <button class="dep__act" @click="toggleActif(dep)" :title="dep.actif ? 'Désactiver' : 'Activer'" type="button">
-                    <svg v-if="dep.actif" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                    <svg v-else width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-                  </button>
-                  <button class="dep__act dep__act--del" @click="confirmDelete(dep)" title="Supprimer" type="button">
-                    <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M1.75 3.5H12.25M5.25 3.5V2.333a.583.583 0 01.583-.583h2.334a.583.583 0 01.583.583V3.5M10.5 3.5l-.583 8.167H4.083L3.5 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Colonne P2 -->
-      <div class="dep__col">
-        <div class="dep__col-head">
-          <div class="dep__col-ava" :style="{ background: p2.couleur }">{{ p2.nom[0]?.toUpperCase() }}</div>
-          <div class="dep__col-headinfo">
-            <span class="dep__col-name">{{ p2.nom }}</span>
-            <span class="dep__col-count">{{ depP2.length }} dépense{{ depP2.length !== 1 ? 's' : '' }}</span>
-          </div>
-          <span class="dep__col-sum">{{ fmt(totalP2) }}</span>
-        </div>
-        <div class="dep__col-body">
-          <div v-if="depP2.length === 0" class="dep__empty">Aucune dépense individuelle</div>
-          <div
-            v-for="dep in depP2" :key="dep.id"
-            :class="['dep__card', { 'dep__card--off': !dep.actif }]"
-            :style="{ '--acc': catColor(dep) }"
-          >
-            <div class="dep__card-accent"></div>
-            <div class="dep__card-content">
-              <div class="dep__card-top">
-                <span class="dep__card-nom">{{ dep.nom || '—' }}</span>
-                <span class="dep__card-amount">{{ fmtMonthly(dep) }}</span>
               </div>
               <div class="dep__card-bot">
                 <span class="dep__card-cat" :style="catBadgeStyle(dep)">{{ catNom(dep) }}</span>
