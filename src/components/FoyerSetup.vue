@@ -107,6 +107,16 @@
               <span class="onboarding__recap-row-salaire">{{ fmt(p.salaire) }}/mois</span>
             </div>
           </div>
+
+          <!-- Import CSV -->
+          <button class="onboarding__import-csv" type="button" @click="$refs.csvImport.click()">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 14V6M5 9l3-3 3 3M2 4V3a1.5 1.5 0 011.5-1.5h9A1.5 1.5 0 0114 3v1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div>
+              <div class="onboarding__import-csv-title">Vous avez déjà un export CSV ?</div>
+              <div class="onboarding__import-csv-sub">Importez vos dépenses directement</div>
+            </div>
+          </button>
+          <input ref="csvImport" type="file" accept=".csv" style="display:none" @change="onImportCsvOnboarding" />
         </div>
 
         <!-- Footer nav -->
@@ -303,6 +313,18 @@ function creer() {
   store.creerFoyer({ nom: nom.value.trim(), couleur: couleur.value, personnes: personnes.value, remplacerDefaut: props.premierDemarrage })
   emit('fermer')
 }
+
+async function onImportCsvOnboarding(e) {
+  const file = e.target.files?.[0]
+  if (!file) return
+  e.target.value = ''
+  creer()
+  try {
+    await store.importCSV(file)
+  } catch {
+    store.showNotification('Fichier CSV invalide', 'error')
+  }
+}
 </script>
 
 <style scoped>
@@ -487,6 +509,20 @@ function creer() {
   border: none;
 }
 .onboarding__btn--ghost:hover { color: #18181b; }
+
+/* Import CSV onboarding */
+.onboarding__import-csv {
+  display: flex; align-items: center; gap: 12px;
+  width: 100%; padding: 12px 14px;
+  background: #f9f9f9; border: 1.5px dashed #d4d4d8;
+  border-radius: 10px; cursor: pointer; font-family: inherit;
+  text-align: left; transition: border-color 0.15s, background 0.15s;
+  color: #52525b;
+}
+.onboarding__import-csv:hover { border-color: #18181b; background: #f4f4f5; }
+.onboarding__import-csv svg { flex-shrink: 0; color: #71717a; }
+.onboarding__import-csv-title { font-size: 13px; font-weight: 500; color: #18181b; }
+.onboarding__import-csv-sub   { font-size: 12px; color: #71717a; margin-top: 1px; }
 
 /* ── Droite ── */
 .onboarding__right {

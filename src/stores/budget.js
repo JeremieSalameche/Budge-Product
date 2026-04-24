@@ -255,15 +255,15 @@ export const useBudgetStore = defineStore('budget', () => {
           if (lines.length < 2) { reject(new Error('CSV vide')); return }
           const f = foyerActif.value
           if (!f) { reject(new Error('Aucun foyer')); return }
-          let imported = 0
+          const freqs = ['mensuel', 'hebdomadaire', 'trimestriel', 'annuel']
+          const newDepenses = []
           for (let i = 1; i < lines.length; i++) {
             const cols = lines[i].match(/("(?:[^"]|"")*"|[^,]*)/g)
               ?.map(v => v.replace(/^"|"$/g, '').replace(/""/g, '"').trim()) ?? []
             const [nom, mp1, mp2, mc, freq, catNom, note] = cols
             if (!nom) continue
             const catId = f.categories.find(c => c.nom.toLowerCase() === (catNom || '').toLowerCase())?.id ?? null
-            const freqs = ['mensuel', 'hebdomadaire', 'trimestriel', 'annuel']
-            f.depenses.push({
+            newDepenses.push({
               id:            'dep' + Date.now() + i,
               createdAt:     Date.now(),
               nom,
@@ -276,8 +276,9 @@ export const useBudgetStore = defineStore('budget', () => {
               actif:         true,
               note:          note || '',
             })
-            imported++
           }
+          f.depenses = newDepenses
+          const imported = newDepenses.length
           await saveToStorage()
           showNotification(`${imported} dépense${imported > 1 ? 's' : ''} importée${imported > 1 ? 's' : ''}`, 'success')
           resolve(imported)
