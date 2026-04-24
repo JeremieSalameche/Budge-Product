@@ -1,7 +1,11 @@
 <template>
   <LoginPage v-if="!authStore.user && !authStore.loading" />
-  <div v-else-if="authStore.loading" class="app-loading">Chargement…</div>
-  <div v-else id="app">
+  <div v-else-if="authStore.loading || appLoading" class="app-loading">
+    <div class="app-loading__spinner"></div>
+  </div>
+  <template v-else>
+    <FoyerSetup v-if="needsOnboarding" :premierDemarrage="true" @fermer="needsOnboarding = false" />
+    <div v-else id="app">
     <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar__logo">
@@ -120,6 +124,7 @@
       />
     </div>
   </div>
+  </template>
 </template>
 
 <script setup>
@@ -133,12 +138,15 @@ import Enveloppes from './components/Enveloppes.vue'
 import PageEpargne from './components/PageEpargne.vue'
 import PageProjets from './components/PageProjets.vue'
 import CalculateurSelection from './components/CalculateurSelection.vue'
-import LoginPage from './components/LoginPage.vue'
+import LoginPage   from './components/LoginPage.vue'
+import FoyerSetup  from './components/FoyerSetup.vue'
 import { MsNotification } from './components/ui/index.js'
 import FoyerSwitcher from './components/FoyerSwitcher.vue'
 
-const store     = useBudgetStore()
-const authStore = useAuthStore()
+const store          = useBudgetStore()
+const authStore      = useAuthStore()
+const needsOnboarding = ref(false)
+const appLoading      = ref(false)
 const PERSON_COLORS = ['#7C6FCD', '#4A9EDB']
 const { scheduleAutoSave, lastSavedLabel } = useStorage()
 
@@ -176,15 +184,27 @@ watch(() => store.foyers, () => scheduleAutoSave(), { deep: true })
 // Retour au dashboard à chaque changement de foyer
 watch(() => store.foyerActifId, () => { activeTab.value = 'dashboard' })
 
-// Init auth puis charger les données
+async function initApp(user) {
+  if (!user) return
+  appLoading.value = true
+  await store.loadFromStorage()
+  appLoading.value = false
+  // Onboarding si aucune dépense et aucun revenu saisi
+  const f = store.foyerActif
+  const hasData = f && (
+    (f.depenses?.length > 0) ||
+    (f.config?.personnes?.some(p => p.salaire > 0))
+  )
+  needsOnboarding.value = !hasData
+}
+
 onMounted(async () => {
   await authStore.init()
-  if (authStore.user) await store.loadFromStorage()
+  await initApp(authStore.user)
 })
 
-// Recharger les données quand l'utilisateur se connecte
 watch(() => authStore.user, async (user) => {
-  if (user) await store.loadFromStorage()
+  await initApp(user)
 })
 
 function manualSave() {
@@ -447,9 +467,15 @@ const pctCharges = computed(() => {
 
 /* ── Auth ──────────────────────────────────────────────────── */
 .app-loading {
-  min-height: 100vh; display: flex; align-items: center;
-  justify-content: center; font-size: 15px; color: #71717a;
+  position: fixed; inset: 0; display: flex; align-items: center;
+  justify-content: center; background: #f4f4f5;
 }
+.app-loading__spinner {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 3px solid #e4e4e7; border-top-color: #18181b;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 .sidebar__logout-btn {
   display: flex; align-items: center; gap: 6px;
   width: 100%; padding: 6px 8px; margin-top: 6px;

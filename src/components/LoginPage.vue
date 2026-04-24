@@ -36,40 +36,44 @@ async function login() {
 
 <style scoped>
 .login-wrapper {
-  min-height: 100vh;
+  position: fixed;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f8f8f8;
+  background: #f4f4f5;
+  font-family: system-ui, -apple-system, sans-serif;
 }
 .login-card {
   background: white;
-  border-radius: 16px;
+  border-radius: 20px;
   padding: 48px 40px;
   text-align: center;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-  max-width: 380px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.10);
   width: 100%;
+  max-width: 380px;
+  margin: 16px;
 }
-.login-logo { font-size: 48px; margin-bottom: 16px; }
-h1 { font-size: 24px; font-weight: 700; margin: 0 0 8px; color: #18181b; }
-p  { color: #71717a; margin: 0 0 32px; font-size: 15px; }
+.login-logo { font-size: 44px; margin-bottom: 20px; display: block; }
+h1 { font-size: 22px; font-weight: 700; margin: 0 0 8px; color: #18181b; letter-spacing: -0.3px; }
+p  { color: #71717a; margin: 0 0 32px; font-size: 14px; line-height: 1.5; }
 .btn-google {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 10px;
   width: 100%;
-  padding: 12px 24px;
+  padding: 13px 24px;
   border: 1.5px solid #e4e4e7;
-  border-radius: 10px;
+  border-radius: 12px;
   background: white;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: background 0.15s, border-color 0.15s;
   color: #18181b;
+  font-family: inherit;
 }
-.btn-google:hover:not(:disabled) { background: #f4f4f5; }
+.btn-google:hover:not(:disabled) { background: #f9f9f9; border-color: #d4d4d8; }
 .btn-google:disabled { opacity: 0.6; cursor: not-allowed; }
 </style>
