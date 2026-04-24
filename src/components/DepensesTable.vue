@@ -35,7 +35,6 @@
             :class="['dep__card', { 'dep__card--off': !dep.actif }]"
             :style="{ '--acc': catColor(dep) }"
           >
-            <div class="dep__card-accent"></div>
             <div class="dep__card-content">
               <div class="dep__card-top">
                 <span class="dep__card-nom">{{ dep.nom || '—' }}</span>
@@ -79,7 +78,6 @@
             :class="['dep__card', { 'dep__card--off': !dep.actif }]"
             :style="{ '--acc': catColor(dep) }"
           >
-            <div class="dep__card-accent"></div>
             <div class="dep__card-content">
               <div class="dep__card-top">
                 <span class="dep__card-nom">{{ dep.nom || '—' }}</span>
@@ -130,7 +128,6 @@
             :class="['dep__card', { 'dep__card--off': !dep.actif }]"
             :style="{ '--acc': catColor(dep) }"
           >
-            <div class="dep__card-accent"></div>
             <div class="dep__card-content">
               <div class="dep__card-top">
                 <span class="dep__card-nom">{{ dep.nom || '—' }}</span>
@@ -598,16 +595,16 @@ function suggestSplit() {
   display: flex;
   background: #fff;
   border: 1.5px solid var(--border);
-  border-radius: 10px; overflow: hidden;
+  border-left: 3.5px solid var(--acc, #d4d4d8);
+  border-radius: 10px;
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 .dep__card:hover {
   border-color: #b0b0b0;
+  border-left-color: var(--acc, #d4d4d8);
   box-shadow: 0 2px 8px rgba(0,0,0,0.07);
 }
 .dep__card--off { opacity: 0.4; }
-
-.dep__card-accent { width: 4px; flex-shrink: 0; background: var(--acc, #a1a1aa); }
 
 .dep__card-content {
   flex: 1; min-width: 0; padding: 10px 12px;
