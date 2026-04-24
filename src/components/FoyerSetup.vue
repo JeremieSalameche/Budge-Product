@@ -228,14 +228,15 @@
             </div>
           </div>
 
-          <!-- Copie depuis un foyer existant -->
-          <div v-if="foyersSource.length > 0" class="fsetup__field">
-            <label class="fsetup__label">Copier les dépenses d'un foyer existant</label>
-            <div class="fsetup__copy-list">
-              <button type="button" class="fsetup__copy-row" :class="{ 'fsetup__copy-row--active': copierDepensesDeId === null }" @click="copierDepensesDeId = null; keepPersonneIdx = null">
-                <span class="fsetup__copy-none-dot"></span>
-                <span class="fsetup__copy-name">Aucun — foyer vide</span>
-              </button>
+          <!-- Copie depuis un foyer existant (toggle) -->
+          <div v-if="foyersSource.length > 0" class="fsetup__copy-toggle-wrap">
+            <button type="button" class="fsetup__copy-toggle" @click="toggleCopie">
+              <span class="fsetup__copy-toggle-label">Copier les dépenses d'un foyer existant</span>
+              <span class="fsetup__toggle-track" :class="{ 'fsetup__toggle-track--on': copieActive }">
+                <span class="fsetup__toggle-thumb"></span>
+              </span>
+            </button>
+            <div v-if="copieActive" class="fsetup__copy-list">
               <button v-for="f in foyersSource" :key="f.id" type="button" class="fsetup__copy-row" :class="{ 'fsetup__copy-row--active': copierDepensesDeId === f.id }" @click="copierDepensesDeId = f.id; keepPersonneIdx = null">
                 <span class="fsetup__copy-dot" :style="{ background: f.couleur }"></span>
                 <span class="fsetup__copy-name">{{ f.nom }}</span>
@@ -243,7 +244,7 @@
               </button>
             </div>
             <!-- Sélection de profil si foyer source à 2 personnes et nouveau foyer solo -->
-            <div v-if="sourceFoyerPersonnes.length === 2 && membresFiltres.length === 1" class="fsetup__profil-pick">
+            <div v-if="copieActive && sourceFoyerPersonnes.length === 2 && membresFiltres.length === 1" class="fsetup__profil-pick">
               <p class="fsetup__profil-title">Ce foyer a 2 membres — quel profil copier ?</p>
               <div class="fsetup__profil-btns">
                 <button v-for="(p, i) in sourceFoyerPersonnes" :key="i" type="button"
@@ -318,6 +319,17 @@ const couleur = ref('#7C6FCD')
 const couleurs = ['#7C6FCD','#4A9EDB','#10B981','#F59E0B','#EF4444','#EC4899','#6366F1','#14B8A6']
 const copierDepensesDeId = ref(null)
 const keepPersonneIdx    = ref(null)
+const copieActive        = ref(false)
+
+function toggleCopie() {
+  copieActive.value = !copieActive.value
+  if (!copieActive.value) {
+    copierDepensesDeId.value = null
+    keepPersonneIdx.value    = null
+  } else if (foyersSource.value.length === 1) {
+    copierDepensesDeId.value = foyersSource.value[0].id
+  }
+}
 
 const foyersSource = computed(() => store.foyers)
 
@@ -342,7 +354,8 @@ const peutContinuer = computed(() => {
   if (etape.value === 1) return nom.value.trim().length > 0
   if (etape.value === 2) {
     if (!personnes.value.some(p => p.nom.trim().length > 0)) return false
-    if (needsProfilePick.value && keepPersonneIdx.value === null) return false
+    if (copieActive.value && !copierDepensesDeId.value) return false
+    if (copieActive.value && needsProfilePick.value && keepPersonneIdx.value === null) return false
     return true
   }
   return true
@@ -746,6 +759,28 @@ async function onImportCsvOnboarding(e) {
 }
 .fsetup__recap-row-nom     { flex: 1; font-size: 13px; font-weight: 500; color: var(--foreground); }
 .fsetup__recap-row-salaire { font-size: 13px; font-weight: 600; color: var(--foreground); }
+/* Toggle copie */
+.fsetup__copy-toggle-wrap { display: flex; flex-direction: column; gap: 10px; }
+.fsetup__copy-toggle {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; background: none; border: none; cursor: pointer;
+  font-family: inherit; padding: 0;
+}
+.fsetup__copy-toggle-label { font-size: 13px; font-weight: 500; color: var(--foreground); }
+.fsetup__toggle-track {
+  width: 36px; height: 20px; border-radius: 99px;
+  background: var(--border); position: relative;
+  transition: background 0.2s; flex-shrink: 0;
+}
+.fsetup__toggle-track--on { background: var(--primary); }
+.fsetup__toggle-thumb {
+  position: absolute; top: 3px; left: 3px;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: white; transition: transform 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.fsetup__toggle-track--on .fsetup__toggle-thumb { transform: translateX(16px); }
+
 .fsetup__copy-list { display: flex; flex-direction: column; gap: 6px; }
 .fsetup__copy-row {
   display: flex; align-items: center; gap: 10px;
