@@ -15,11 +15,11 @@
       </MsButton>
     </div>
 
-    <!-- ── 3 colonnes ────────────────────────────────────────── -->
-    <div class="dep__cols">
+    <!-- ── Colonnes ────────────────────────────────────────── -->
+    <div :class="['dep__cols', { 'dep__cols--solo': isSolo }]">
 
-      <!-- Colonne P1 -->
-      <div class="dep__col">
+      <!-- Colonne P1 (masquée en solo) -->
+      <div v-if="!isSolo" class="dep__col">
         <div class="dep__col-head">
           <div class="dep__col-ava" :style="{ background: p1.couleur }">{{ p1.nom[0]?.toUpperCase() }}</div>
           <div class="dep__col-headinfo">
@@ -114,10 +114,10 @@
           <template v-if="isSolo">
             <div class="dep__col-ava" :style="{ background: p1.couleur }">{{ p1.nom[0]?.toUpperCase() }}</div>
             <div class="dep__col-headinfo">
-              <span class="dep__col-name">Mes dépenses</span>
-              <span class="dep__col-count">{{ depCommun.length }} dépense{{ depCommun.length !== 1 ? 's' : '' }}</span>
+              <span class="dep__col-name">{{ p1.nom }}</span>
+              <span class="dep__col-count">{{ filtered.length }} dépense{{ filtered.length !== 1 ? 's' : '' }}</span>
             </div>
-            <span class="dep__col-sum">{{ fmt(totalCommun) }}</span>
+            <span class="dep__col-sum">{{ fmt(totalSolo) }}</span>
           </template>
           <template v-else>
             <div class="dep__col-avas">
@@ -136,9 +136,9 @@
           </template>
         </div>
         <div class="dep__col-body">
-          <div v-if="depCommun.length === 0" class="dep__empty">Aucune dépense commune</div>
+          <div v-if="(isSolo ? filtered : depCommun).length === 0" class="dep__empty">Aucune dépense{{ isSolo ? '' : ' commune' }}</div>
           <div
-            v-for="dep in depCommun" :key="dep.id"
+            v-for="dep in (isSolo ? filtered : depCommun)" :key="dep.id"
             :class="['dep__card', { 'dep__card--off': !dep.actif }]"
             :style="{ '--acc': catColor(dep) }"
           >
@@ -220,8 +220,8 @@
               </div>
             </div>
 
-            <!-- Qui paie -->
-            <div class="dep__mfield">
+            <!-- Qui paie (masqué en solo) -->
+            <div v-if="!isSolo" class="dep__mfield">
               <label class="dep__mlabel">Qui paie ?</label>
               <div class="dep__qui">
                 <button
@@ -255,7 +255,7 @@
             </div>
 
             <!-- Montant P1 seul -->
-            <div v-if="form.qui === 'p1'" class="dep__mfield">
+            <div v-if="isSolo || form.qui === 'p1'" class="dep__mfield">
               <label class="dep__mlabel">Montant</label>
               <div class="dep__minput-wrap">
                 <input class="dep__minput dep__minput--num" v-model.number="form.montantP1" type="number" min="0" step="1" placeholder="0" />
@@ -419,6 +419,10 @@ const totalCommunP2 = computed(() =>
   depCommun.value.reduce((s, d) =>
     s + store.toMonthly((d.montantP2 || 0) + (d.montantCommun || 0) / 2, d.frequence), 0)
 )
+const totalSolo = computed(() =>
+  filtered.value.reduce((s, d) =>
+    s + store.toMonthly((d.montantP1 || 0) + (d.montantP2 || 0) + (d.montantCommun || 0), d.frequence), 0)
+)
 
 // ── Helpers ───────────────────────────────────────────────
 function fmt(n) {
@@ -458,7 +462,7 @@ const form      = ref({ nom: '', categorieId: null, frequence: 'mensuel', qui: '
 
 function openAdd() {
   editId.value  = null
-  form.value    = { nom: '', categorieId: null, frequence: 'mensuel', qui: 'commun', montantP1: 0, montantP2: 0 }
+  form.value    = { nom: '', categorieId: null, frequence: 'mensuel', qui: isSolo.value ? 'p1' : 'commun', montantP1: 0, montantP2: 0 }
   modalOpen.value = true
 }
 
@@ -560,6 +564,10 @@ function suggestSplit() {
   grid-template-columns: 1fr 1fr 1fr;
   gap: 12px;
   align-items: start;
+}
+.dep__cols--solo {
+  grid-template-columns: 1fr;
+  max-width: 540px;
 }
 
 .dep__col {
