@@ -69,7 +69,7 @@
             </div>
             <p class="sum__reality-text">
               En 2026, presque toutes vos charges sont <strong>numériques</strong> : loyer par virement, Netflix/Spotify/salle de sport par prélèvement CB, Engie ou EDF par prélèvement automatique, achats en ligne…
-              Les enveloppes en papier avec du cash que les influenceurs budget vantent ne s'appliquent pas à cette réalité.
+              Les enveloppes en papier avec du cash ne s'appliquent pas à cette réalité.
             </p>
             <p class="sum__reality-text">
               Et l'épargne (Livret A, PEL, ou matelas à la maison) c'est votre affaire. Budge ne la juge pas.
