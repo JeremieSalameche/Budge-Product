@@ -1,6 +1,6 @@
 <template>
   <!-- Mode onboarding : split-screen pleine page -->
-  <div v-if="premierDemarrage" class="onboarding">
+  <div v-if="premierDemarrage" :class="['onboarding', { 'onboarding--solo': soloForm }]">
 
     <!-- Gauche : panel marketing (masqué si soloForm) -->
     <div v-if="!soloForm" class="onboarding__right">
@@ -333,6 +333,12 @@ async function onImportCsvOnboarding(e) {
   position: fixed; inset: 0;
   display: flex;
   font-family: system-ui, -apple-system, sans-serif;
+}
+.onboarding--solo {
+  position: absolute; inset: 0;
+}
+.onboarding--solo .onboarding__left {
+  width: 100%;
 }
 
 /* ── Formulaire (droite) ── */
