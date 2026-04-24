@@ -32,6 +32,12 @@
       <Transition name="sum-expand">
         <div v-if="sumOpen" class="sum__panel">
 
+          <!-- Titre accroche -->
+          <div class="sum__hero">
+            <h3 class="sum__hero-title">La méthode des enveloppes numériques</h3>
+            <p class="sum__hero-sub">Chaque poste de budget a son propre compte, son IBAN et sa CB — plus aucune surprise en fin de mois.</p>
+          </div>
+
           <!-- Réalité numérique -->
           <div class="sum__reality">
             <div class="sum__reality-chips">
@@ -610,8 +616,18 @@ function doDeleteEnv() {
   display: flex; flex-direction: column; gap: 16px;
 }
 
+/* Titre accroche */
+.sum__hero { display: flex; flex-direction: column; gap: 6px; padding-top: 18px; }
+.sum__hero-title {
+  font-size: 17px; font-weight: 800; color: #18181b;
+  letter-spacing: -0.4px; margin: 0; line-height: 1.25;
+}
+.sum__hero-sub {
+  font-size: 13px; color: #71717a; margin: 0; line-height: 1.55;
+}
+
 /* Réalité numérique */
-.sum__reality { display: flex; flex-direction: column; gap: 10px; padding-top: 18px; }
+.sum__reality { display: flex; flex-direction: column; gap: 10px; }
 .sum__reality-chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .sum__chip {
   display: inline-flex; align-items: center; gap: 4px;
