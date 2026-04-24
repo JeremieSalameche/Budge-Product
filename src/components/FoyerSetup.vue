@@ -289,6 +289,22 @@
               <span class="fsetup__recap-row-salaire">{{ fmt(p.salaire) }}/mois</span>
             </div>
           </div>
+
+          <!-- Recap copie de foyer -->
+          <div v-if="copieActive && copierDepensesDeId" class="fsetup__recap-copy">
+            <div class="fsetup__recap-copy-main">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <span class="fsetup__recap-copy-text">
+                <strong>{{ depensesCopieesCount }} dépense{{ depensesCopieesCount > 1 ? 's' : '' }}</strong>
+                copiée{{ depensesCopieesCount > 1 ? 's' : '' }} depuis
+                <strong>{{ sourceFoyerNom }}</strong>
+                <template v-if="keepPersonneIdx !== null"> · profil <strong>{{ sourceFoyerPersonnes[keepPersonneIdx]?.nom }}</strong></template>
+              </span>
+            </div>
+            <button type="button" class="fsetup__recap-copy-change" @click="etape = 2">
+              Changer →
+            </button>
+          </div>
         </div>
 
         <div class="fsetup__footer">
@@ -357,6 +373,23 @@ const sourceFoyerPersonnes = computed(() => {
   if (!copierDepensesDeId.value) return []
   const f = store.foyers.find(f => f.id === copierDepensesDeId.value)
   return f?.config?.personnes ?? []
+})
+
+const sourceFoyerNom = computed(() => {
+  if (!copierDepensesDeId.value) return ''
+  return store.foyers.find(f => f.id === copierDepensesDeId.value)?.nom ?? ''
+})
+
+const depensesCopieesCount = computed(() => {
+  if (!copierDepensesDeId.value) return 0
+  const src = store.foyers.find(f => f.id === copierDepensesDeId.value)
+  if (!src) return 0
+  if (keepPersonneIdx.value === null) return src.depenses.length
+  return src.depenses.filter(d =>
+    keepPersonneIdx.value === 0
+      ? (d.montantP1 || 0) > 0 || (d.montantCommun || 0) > 0
+      : (d.montantP2 || 0) > 0 || (d.montantCommun || 0) > 0
+  ).length
 })
 
 const personnes = ref([
@@ -796,6 +829,24 @@ async function onImportCsvOnboarding(e) {
 }
 .fsetup__recap-row-nom     { flex: 1; font-size: 13px; font-weight: 500; color: var(--foreground); }
 .fsetup__recap-row-salaire { font-size: 13px; font-weight: 600; color: var(--foreground); }
+/* Recap copie foyer */
+.fsetup__recap-copy {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 12px 14px; border-radius: var(--radius-md);
+  background: var(--muted); border: 1px solid var(--border);
+}
+.fsetup__recap-copy-main {
+  display: flex; align-items: flex-start; gap: 8px;
+  font-size: 13px; color: var(--muted-foreground); line-height: 1.5;
+}
+.fsetup__recap-copy-main strong { color: var(--foreground); font-weight: 600; }
+.fsetup__recap-copy-change {
+  font-size: 12px; font-weight: 500; color: var(--primary);
+  background: none; border: none; cursor: pointer; white-space: nowrap;
+  padding: 0; font-family: inherit;
+}
+.fsetup__recap-copy-change:hover { text-decoration: underline; }
+
 /* Bouton solo modale */
 .fsetup__solo-btn {
   display: inline-flex; align-items: center; gap: 7px;
