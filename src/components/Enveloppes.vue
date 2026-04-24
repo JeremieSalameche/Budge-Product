@@ -7,35 +7,46 @@
         <h2 class="env__title">Comptes & virements</h2>
         <p class="env__subtitle">Automatisez ce que vous envoyez sur chaque compte de paiement chaque mois</p>
       </div>
-      <MsButton variant="primary" size="sm" @click="showAddModal = true">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-        Nouveau compte
-      </MsButton>
+      <div class="env__header-actions">
+        <button class="sum__open-btn" type="button" @click="sumOpen = true">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a7 7 0 0 1 5.292 11.584C16.4 14.56 16 15.524 16 16.5V17a1 1 0 0 1-1 1h-6a1 1 0 0 1-1-1v-.5c0-.976-.4-1.94-1.292-2.916A7 7 0 0 1 12 2zm-2 17h4v1a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-1z"/></svg>
+          Mieux organiser
+        </button>
+        <MsButton variant="primary" size="sm" @click="showAddModal = true">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          Nouveau compte
+        </MsButton>
+      </div>
     </div>
 
-    <!-- Bloc Sumeria collapsible -->
-    <div class="sum__wrap">
-      <button class="sum__trigger" type="button" @click="sumOpen = !sumOpen">
-        <span class="sum__trigger-left">
-          <span class="sum__idea-badge">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a7 7 0 0 1 5.292 11.584C16.4 14.56 16 15.524 16 16.5V17a1 1 0 0 1-1 1h-6a1 1 0 0 1-1-1v-.5c0-.976-.4-1.94-1.292-2.916A7 7 0 0 1 12 2zm-2 17h4v1a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-1z"/></svg>
-            Idée
-          </span>
-          <span class="sum__trigger-title">Mieux organiser sa gestion de dépenses</span>
-        </span>
-        <span class="sum__trigger-cta">
-          {{ sumOpen ? 'Réduire' : 'Afficher plus' }}
-          <svg :style="{ transform: sumOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 4.5l4 4 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </span>
-      </button>
+    <!-- Side panel (drawer) -->
+    <Teleport to="body">
+      <Transition name="sum-backdrop">
+        <div v-if="sumOpen" class="sum__backdrop" @click="sumOpen = false" />
+      </Transition>
+      <Transition name="sum-drawer">
+        <div v-if="sumOpen" class="sum__drawer">
 
-      <Transition name="sum-expand">
-        <div v-if="sumOpen" class="sum__panel">
+          <!-- Drawer header -->
+          <div class="sum__drawer-head">
+            <span class="sum__idea-badge">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a7 7 0 0 1 5.292 11.584C16.4 14.56 16 15.524 16 16.5V17a1 1 0 0 1-1 1h-6a1 1 0 0 1-1-1v-.5c0-.976-.4-1.94-1.292-2.916A7 7 0 0 1 12 2zm-2 17h4v1a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-1z"/></svg>
+              Idée
+            </span>
+            <span class="sum__drawer-title">Mieux organiser ses dépenses</span>
+            <button class="sum__drawer-close" type="button" @click="sumOpen = false">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+
+          <!-- Drawer content -->
+          <div class="sum__drawer-body">
+            <div class="sum__panel">
 
           <!-- Titre accroche -->
           <div class="sum__hero">
             <h3 class="sum__hero-title">La méthode des enveloppes numériques</h3>
-            <p class="sum__hero-sub">Chaque poste de budget a son propre compte, son IBAN et sa CB — plus aucune surprise en fin de mois.</p>
+            <p class="sum__hero-sub">Chaque poste de budget a son propre compte, son IBAN et sa CB. Plus aucune surprise en fin de mois.</p>
           </div>
 
           <!-- Réalité numérique -->
@@ -48,11 +59,11 @@
               <span class="sum__chip">🏥 Mutuelle</span>
             </div>
             <p class="sum__reality-text">
-              En 2026, presque toutes vos charges sont <strong>numériques</strong> — loyer par virement, Netflix/Spotify/salle de sport par prélèvement CB, Engie ou EDF par prélèvement automatique, achats en ligne…
+              En 2026, presque toutes vos charges sont <strong>numériques</strong> : loyer par virement, Netflix/Spotify/salle de sport par prélèvement CB, Engie ou EDF par prélèvement automatique, achats en ligne…
               Les enveloppes en papier avec du cash que les influenceurs budget vantent ne s'appliquent pas à cette réalité.
             </p>
             <p class="sum__reality-text">
-              Et l'épargne — Livret A, PEL, ou matelas à la maison — c'est votre affaire. Budge ne la juge pas.
+              Et l'épargne (Livret A, PEL, ou matelas à la maison) c'est votre affaire. Budge ne la juge pas.
             </p>
             <div class="sum__anxiety-box">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
@@ -68,7 +79,7 @@
           <!-- Schéma de flux -->
           <div class="flo">
 
-            <div class="flo__label">Exemple — comment ça fonctionne</div>
+            <div class="flo__label">Exemple · comment ça fonctionne</div>
 
             <div class="flo__grid">
 
@@ -179,7 +190,7 @@
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1.5 6.5L4.5 9.5L10.5 2.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </div>
               <div class="flo__result-body">
-                <strong>Zéro prélèvement imprévisible</strong> sur votre compte principal — vous savez exactement ce qu'il vous reste chaque mois
+                <strong>Zéro prélèvement imprévisible</strong> sur votre compte principal. Vous savez exactement ce qu'il vous reste chaque mois.
               </div>
               <div class="flo__result-r">
                 <div class="flo__result-amt">890 €</div>
@@ -233,13 +244,16 @@
             </div>
             <div class="sum__providers-note">
               <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="5.5" cy="5.5" r="4.5" stroke="currentColor" stroke-width="1.2"/><line x1="5.5" y1="4" x2="5.5" y2="6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><circle cx="5.5" cy="7.5" r="0.6" fill="currentColor"/></svg>
-              Revolut Pockets partagent un seul IBAN — les prélèvements reviennent sur le compte principal.
+              Revolut Pockets partagent un seul IBAN. Les prélèvements reviennent sur le compte principal.
+            </div>
+          </div>
+
             </div>
           </div>
 
         </div>
       </Transition>
-    </div>
+    </Teleport>
 
     <!-- Résumé virements par personne -->
     <div v-if="store.enveloppes.length && !isSolo" class="env__summary">
@@ -581,40 +595,69 @@ function doDeleteEnv() {
 .env { display: flex; flex-direction: column; gap: 24px; width: 100%; box-sizing: border-box; }
 
 .env__header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.env__header-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 .env__title { font-size: 18px; font-weight: 700; margin: 0; }
 .env__subtitle { font-size: 13px; color: var(--muted-foreground); margin: 4px 0 0; }
 
-/* ── Bloc Sumeria collapsible ───────────────────────────── */
-.sum__wrap {
-  border: 1px solid var(--border);
-  border-radius: 12px; overflow: hidden;
-  background: var(--card);
+/* ── Bouton trigger ─────────────────────────────────────── */
+.sum__open-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 32px; padding: 0 12px; border-radius: 8px;
+  font-size: 12px; font-weight: 600; font-family: inherit;
+  background: #fef9c3; color: #713f12; border: 1px solid #fde68a;
+  cursor: pointer; transition: background 0.12s, border-color 0.12s;
+  white-space: nowrap;
 }
-
-.sum__trigger {
-  display: flex; align-items: center; justify-content: space-between;
-  width: 100%; padding: 14px 18px;
-  background: none; border: none; cursor: pointer; font-family: inherit;
-  gap: 12px;
-}
-.sum__trigger:hover { background: var(--muted); }
-.sum__trigger-left  { display: flex; align-items: center; gap: 10px; }
-.sum__trigger-title { font-size: 13px; font-weight: 600; color: var(--foreground); text-align: left; }
-.sum__trigger-cta   { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--primary); font-weight: 500; white-space: nowrap; flex-shrink: 0; }
+.sum__open-btn:hover { background: #fef08a; border-color: #facc15; }
 
 .sum__idea-badge {
   display: inline-flex; align-items: center; gap: 4px;
-  padding: 2px 8px; border-radius: 99px;
+  padding: 3px 8px; border-radius: 99px;
   background: #fef9c3; color: #92400e;
   font-size: 11px; font-weight: 700; flex-shrink: 0;
 }
 
+/* ── Side panel (drawer) ────────────────────────────────── */
+.sum__backdrop {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.38); z-index: 400;
+}
+.sum__drawer {
+  position: fixed; top: 0; right: 0; bottom: 0;
+  width: 520px; max-width: 95vw; z-index: 401;
+  background: #fff; border-left: 1px solid #e4e4e7;
+  box-shadow: -16px 0 56px rgba(0,0,0,0.12);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+
+.sum__drawer-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 16px 20px; border-bottom: 1px solid #e4e4e7; flex-shrink: 0;
+}
+.sum__drawer-title {
+  flex: 1; font-size: 14px; font-weight: 600; color: #18181b;
+}
+.sum__drawer-close {
+  width: 28px; height: 28px; border-radius: 7px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: none; border: none; color: #a1a1aa;
+  cursor: pointer; transition: background 0.12s, color 0.12s;
+}
+.sum__drawer-close:hover { background: #f4f4f5; color: #18181b; }
+
+.sum__drawer-body {
+  flex: 1; overflow-y: auto; padding: 20px;
+}
+
 /* Panel contenu */
 .sum__panel {
-  padding: 0 20px 20px;
-  border-top: 1px solid var(--border);
-  display: flex; flex-direction: column; gap: 16px;
+  display: flex; flex-direction: column; gap: 20px;
 }
+
+/* Transitions drawer */
+.sum-backdrop-enter-active, .sum-backdrop-leave-active { transition: opacity 0.22s; }
+.sum-backdrop-enter-from,   .sum-backdrop-leave-to    { opacity: 0; }
+.sum-drawer-enter-active, .sum-drawer-leave-active { transition: transform 0.28s cubic-bezier(0.4,0,0.2,1); }
+.sum-drawer-enter-from,   .sum-drawer-leave-to    { transform: translateX(100%); }
 
 /* Titre accroche */
 .sum__hero { display: flex; flex-direction: column; gap: 6px; padding-top: 18px; }
@@ -627,7 +670,7 @@ function doDeleteEnv() {
 }
 
 /* Réalité numérique */
-.sum__reality { display: flex; flex-direction: column; gap: 10px; }
+.sum__reality { display: flex; flex-direction: column; gap: 12px; }
 .sum__reality-chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .sum__chip {
   display: inline-flex; align-items: center; gap: 4px;
@@ -818,9 +861,6 @@ function doDeleteEnv() {
 }
 .sum__providers-note svg { flex-shrink: 0; margin-top: 1px; }
 
-/* Transition expand */
-.sum-expand-enter-active, .sum-expand-leave-active { transition: opacity 0.2s ease; }
-.sum-expand-enter-from, .sum-expand-leave-to { opacity: 0; }
 
 /* ── Résumé virements ───────────────────────────────────── */
 .env__summary {
