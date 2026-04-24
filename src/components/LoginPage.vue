@@ -6,13 +6,16 @@
     <div class="login-glow login-glow--2"></div>
     <div class="login-glow login-glow--3"></div>
 
+    <!-- Logo au-dessus -->
+    <div class="login-above">
+      <img src="/logo-budge-white.svg" class="login-above__logo" alt="Budge" />
+    </div>
+
     <!-- Card centrée -->
     <div class="login-card">
 
-      <img src="/logobudge.svg" class="login-card__logo" alt="Budge" />
-
       <div class="login-card__body">
-        <h1 class="login-card__title">Bienvenue</h1>
+        <h1 class="login-card__title">Votre budget.<br>Sous contrôle.</h1>
         <p class="login-card__sub">Connecte-toi pour accéder à ton espace budget.</p>
       </div>
 
@@ -55,11 +58,15 @@ async function login() {
 
 .login-page {
   position: fixed; inset: 0;
-  display: flex; align-items: center; justify-content: center;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
   background: #0d0d0f;
   font-family: system-ui, -apple-system, sans-serif;
   padding: 24px;
+  gap: 24px;
 }
+
+.login-above { width: 100%; max-width: 400px; }
+.login-above__logo { height: 28px; width: auto; display: block; }
 
 /* Glows */
 .login-glow {
@@ -98,14 +105,10 @@ async function login() {
   box-shadow: 0 32px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06);
 }
 
-.login-card__logo {
-  height: 24px; width: auto;
-}
-
 .login-card__body { display: flex; flex-direction: column; gap: 8px; }
 .login-card__title {
   font-size: 22px; font-weight: 700; color: #18181b;
-  margin: 0; letter-spacing: -0.4px;
+  margin: 0; letter-spacing: -0.5px; line-height: 1.2;
 }
 .login-card__sub {
   font-size: 14px; color: #71717a;
