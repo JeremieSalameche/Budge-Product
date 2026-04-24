@@ -85,14 +85,65 @@
     <!-- Zone dangereuse -->
     <section class="mc-section mc-section--danger">
       <h2 class="mc-section-title mc-section-title--danger">Zone dangereuse</h2>
-      <p class="mc-section-desc">La suppression est définitive et irréversible. Toutes vos données Budge seront effacées.</p>
-      <button class="mc-btn-danger" type="button" @click="confirmDelete" :disabled="deleting">
+      <p class="mc-section-desc">La suppression est définitive et irréversible. Toutes vos données Budge seront effacées et ne pourront pas être récupérées.</p>
+      <button class="mc-btn-danger" type="button" @click="deleteModalOpen = true" :disabled="deleting">
         <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 3.5h9M5.5 3.5V2h4v1.5M6 6v5M9 6v5M2.5 3.5l.5 9a1 1 0 001 1h7a1 1 0 001-1l.5-9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        {{ deleting ? 'Suppression…' : 'Supprimer mon compte' }}
+        Supprimer mon compte
       </button>
     </section>
 
   </div>
+
+  <!-- Modale suppression compte -->
+  <Teleport to="body">
+    <div v-if="deleteModalOpen" class="mcd__overlay" @click.self="deleteModalOpen = false">
+      <div class="mcd__modal">
+
+        <!-- Header -->
+        <div class="mcd__head">
+          <div class="mcd__head-icon">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M8.485 8.485L10 10m0 0l1.515 1.515M10 10l1.515-1.515M10 10L8.485 11.515M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </div>
+          <div>
+            <h3 class="mcd__title">Supprimer votre compte ?</h3>
+            <p class="mcd__subtitle">Cette action ne peut pas être annulée</p>
+          </div>
+          <button class="mcd__close" type="button" @click="deleteModalOpen = false">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+
+        <!-- Warning -->
+        <div class="mcd__warning">
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none" style="flex-shrink:0;margin-top:1px"><path d="M7.5 1.5L13.5 12.5H1.5L7.5 1.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><line x1="7.5" y1="6" x2="7.5" y2="9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="7.5" cy="11" r="0.7" fill="currentColor"/></svg>
+          <p>Toutes vos données seront <strong>définitivement supprimées</strong> — foyers, dépenses, comptes, projets. Il n'existe aucun moyen de les récupérer après coup.</p>
+        </div>
+
+        <!-- Export avant suppression -->
+        <div class="mcd__export">
+          <div class="mcd__export-text">
+            <div class="mcd__export-title">Conserver une copie de vos données ?</div>
+            <div class="mcd__export-sub">Exportez votre foyer au format .budge avant de continuer — vous pourrez le réimporter plus tard si besoin.</div>
+          </div>
+          <button class="mcd__export-btn" type="button" @click="exportBeforeDelete">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 1v9M5 7l3 3 3-3M2 11.5v1A1.5 1.5 0 003.5 14h9A1.5 1.5 0 0014 12.5v-1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Exporter mes données
+          </button>
+        </div>
+
+        <!-- Actions -->
+        <div class="mcd__foot">
+          <button class="mcd__btn mcd__btn--cancel" type="button" @click="deleteModalOpen = false">Annuler</button>
+          <button class="mcd__btn mcd__btn--confirm" type="button" @click="doDeleteAccount" :disabled="deleting">
+            <svg width="13" height="13" viewBox="0 0 15 15" fill="none"><path d="M3 3.5h9M5.5 3.5V2h4v1.5M6 6v5M9 6v5M2.5 3.5l.5 9a1 1 0 001 1h7a1 1 0 001-1l.5-9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            {{ deleting ? 'Suppression en cours…' : 'Supprimer définitivement' }}
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </Teleport>
+
 </template>
 
 <script setup>
@@ -104,10 +155,16 @@ const store     = useBudgetStore()
 const authStore = useAuthStore()
 const deleting  = ref(false)
 const exportPickerOpen = ref(false)
+const deleteModalOpen  = ref(false)
 
 function exportFoyer(foyerId) {
   store.exportBudge(foyerId)
   exportPickerOpen.value = false
+}
+
+function exportBeforeDelete() {
+  const foyerId = store.foyerActifId
+  if (foyerId) store.exportBudge(foyerId)
 }
 
 const user        = computed(() => authStore.user)
@@ -130,19 +187,15 @@ async function onImport(e) {
   }
 }
 
-async function confirmDelete() {
-  const ok = window.confirm(
-    'Supprimer définitivement votre compte ?\n\nToutes vos données seront effacées et cette action est irréversible.'
-  )
-  if (!ok) return
+async function doDeleteAccount() {
   deleting.value = true
   try {
     await authStore.deleteAccount()
-    localStorage.removeItem('budget-simulator-v1')
+    // localStorage déjà vidé dans deleteAccount() côté auth store
   } catch {
     store.showNotification('Échec de la suppression. Réessayez.', 'error')
-  } finally {
     deleting.value = false
+    deleteModalOpen.value = false
   }
 }
 </script>
@@ -232,6 +285,91 @@ async function confirmDelete() {
 .mc-foyer-name { flex: 1; font-size: 13px; font-weight: 500; color: #18181b; }
 .mc-foyer-count { font-size: 12px; color: #a1a1aa; }
 .mc-foyer-row svg { color: #a1a1aa; flex-shrink: 0; }
+
+/* ── Modale suppression compte ───────────────────────────── */
+.mcd__overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 2000; padding: 24px;
+}
+.mcd__modal {
+  background: #fff; border-radius: 18px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+  width: 100%; max-width: 460px;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+
+/* Header */
+.mcd__head {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 22px 22px 18px;
+  border-bottom: 1.5px solid #fee2e2;
+  background: #fff5f5;
+}
+.mcd__head-icon {
+  width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
+  background: #fee2e2; border: 1.5px solid #fecaca; color: #ef4444;
+  display: flex; align-items: center; justify-content: center;
+}
+.mcd__title   { font-size: 16px; font-weight: 700; color: #18181b; margin: 0 0 2px; }
+.mcd__subtitle { font-size: 12px; color: #ef4444; margin: 0; font-weight: 500; }
+.mcd__close {
+  margin-left: auto; flex-shrink: 0;
+  width: 28px; height: 28px; border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  background: none; border: none; color: #a1a1aa;
+  cursor: pointer; transition: background 0.12s, color 0.12s;
+}
+.mcd__close:hover { background: #f4f4f5; color: #18181b; }
+
+/* Warning */
+.mcd__warning {
+  display: flex; align-items: flex-start; gap: 10px;
+  margin: 18px 22px 0;
+  padding: 14px 16px; border-radius: 10px;
+  background: #fff7ed; border: 1.5px solid #fed7aa; color: #7c2d12;
+  font-size: 13px; line-height: 1.55;
+}
+.mcd__warning strong { font-weight: 700; }
+.mcd__warning svg { color: #ea580c; }
+
+/* Export */
+.mcd__export {
+  display: flex; align-items: center; gap: 14px;
+  margin: 12px 22px 0;
+  padding: 14px 16px; border-radius: 10px;
+  background: #fafafa; border: 1.5px solid #e4e4e7;
+}
+.mcd__export-text { flex: 1; }
+.mcd__export-title { font-size: 13px; font-weight: 600; color: #18181b; }
+.mcd__export-sub   { font-size: 11px; color: #71717a; margin-top: 2px; line-height: 1.4; }
+.mcd__export-btn {
+  display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0;
+  height: 34px; padding: 0 14px; border-radius: 8px;
+  font-size: 12px; font-weight: 600; font-family: inherit;
+  background: #fff; border: 1.5px solid #e4e4e7; color: #18181b;
+  cursor: pointer; transition: border-color 0.12s, background 0.12s;
+  white-space: nowrap;
+}
+.mcd__export-btn:hover { border-color: #a1a1aa; background: #f4f4f5; }
+
+/* Pied */
+.mcd__foot {
+  display: flex; gap: 8px; justify-content: flex-end;
+  padding: 18px 22px 22px;
+}
+.mcd__btn {
+  height: 40px; padding: 0 20px; border-radius: 10px;
+  font-size: 13px; font-weight: 600; font-family: inherit;
+  cursor: pointer; border: none; transition: background 0.12s, opacity 0.12s;
+  display: inline-flex; align-items: center; gap: 7px;
+}
+.mcd__btn--cancel  { background: #f4f4f5; color: #18181b; }
+.mcd__btn--cancel:hover { background: #e4e4e7; }
+.mcd__btn--confirm { background: #ef4444; color: #fff; }
+.mcd__btn--confirm:hover:not(:disabled) { background: #dc2626; }
+.mcd__btn--confirm:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* Danger button */
 .mc-btn-danger {

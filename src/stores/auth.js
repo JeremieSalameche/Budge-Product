@@ -30,13 +30,16 @@ export const useAuthStore = defineStore('auth', () => {
   async function deleteAccount() {
     const u = auth.currentUser
     if (!u) return
+    // Vider le cache local AVANT que deleteUser() déclenche onAuthStateChanged
+    // (sinon le composant peut se démonter avant que l'appelant ait le temps de le faire)
+    localStorage.removeItem('budget-simulator-v1')
     try {
       await deleteDoc(doc(db, 'users', u.uid))
       await deleteUser(u)
     } catch (err) {
       if (err.code === 'auth/requires-recent-login') {
         await reauthenticateWithPopup(u, provider)
-        await deleteDoc(doc(db, 'users', u.uid))
+        try { await deleteDoc(doc(db, 'users', u.uid)) } catch {}
         await deleteUser(u)
       } else {
         throw err
