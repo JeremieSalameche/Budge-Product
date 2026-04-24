@@ -336,7 +336,7 @@ async function onImportCsvOnboarding(e) {
 
 /* ── Formulaire (droite) ── */
 .onboarding__left {
-  flex: 1; min-width: 380px;
+  width: 50%; flex-shrink: 0;
   background: #fff;
   display: flex; align-items: center; justify-content: center;
   padding: 48px 40px;
@@ -517,7 +517,7 @@ async function onImportCsvOnboarding(e) {
 
 /* ── Panel dark (gauche) ── */
 .onboarding__right {
-  width: 45%;
+  width: 50%;
   background: #18181b;
   position: relative; overflow: hidden;
   display: flex; flex-direction: column; justify-content: space-between;
