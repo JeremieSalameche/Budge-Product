@@ -6,9 +6,9 @@
     <div class="login-glow login-glow--2"></div>
     <div class="login-glow login-glow--3"></div>
 
-    <!-- Logo au-dessus -->
-    <div class="login-above">
-      <img src="/logo-budge-white.svg" class="login-above__logo" alt="Budge" />
+    <!-- Logo top center -->
+    <div class="login-top-logo">
+      <img src="/logo-budge-white.svg" class="login-top-logo__img" alt="Budge" />
     </div>
 
     <!-- Card centrée -->
@@ -61,12 +61,16 @@ async function login() {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   background: #0d0d0f;
   font-family: system-ui, -apple-system, sans-serif;
-  padding: 24px;
-  gap: 24px;
+  padding: 40px 24px 24px;
 }
 
-.login-above { width: 100%; max-width: 400px; }
-.login-above__logo { height: 28px; width: auto; display: block; }
+.login-top-logo {
+  position: absolute;
+  top: 40px; left: 0; right: 0;
+  display: flex; justify-content: center;
+  z-index: 1;
+}
+.login-top-logo__img { height: 50px; width: auto; }
 
 /* Glows */
 .login-glow {
