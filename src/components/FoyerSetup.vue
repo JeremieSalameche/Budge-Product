@@ -120,7 +120,7 @@
               <div class="onboarding__membre-avatar" :style="{ background: p.couleur }">
                 {{ p.nom ? p.nom[0].toUpperCase() : (i === 0 ? 'A' : 'B') }}
               </div>
-              <span class="onboarding__membre-label">{{ i === 0 ? 'Vous' : 'Votre partenaire' }}</span>
+              <span class="onboarding__membre-label">{{ p.nom.trim() || (i === 0 ? 'Vous' : 'Votre partenaire') }}</span>
             </div>
             <div class="onboarding__membre-row">
               <div class="onboarding__field">
@@ -221,7 +221,7 @@
             <div v-for="(p, i) in personnes" :key="i" v-show="i === 0 || !modeSolo" class="fsetup__membre">
               <div class="fsetup__membre-header">
                 <div class="fsetup__membre-avatar" :style="{ background: p.couleur }">{{ p.nom ? p.nom[0].toUpperCase() : (i === 0 ? 'A' : 'B') }}</div>
-                <span class="fsetup__membre-label">{{ i === 0 ? 'Vous' : 'Votre partenaire' }}</span>
+                <span class="fsetup__membre-label">{{ p.nom.trim() || (i === 0 ? 'Vous' : 'Votre partenaire') }}</span>
               </div>
               <div class="fsetup__membre-fields">
                 <div class="fsetup__field">
