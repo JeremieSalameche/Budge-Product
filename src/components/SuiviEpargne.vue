@@ -443,6 +443,33 @@ function enregistrerMouvement() {
   /* Gérer : taille fixe, Nouveau mouvement : prend le reste */
   .epargne-actions :deep(.ms-btn:first-child) { flex: 0 0 auto; }
   .epargne-actions :deep(.ms-btn:last-child)  { flex: 1; justify-content: center; }
+
+  /* Totaux : liste plate avec filets, sans cards colorées */
+  .se__totals {
+    flex-direction: column;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .se__total {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    background: transparent !important;
+    border-radius: 0;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    flex: none;
+    min-width: 0;
+  }
+  .se__total:last-child { border-bottom: none; }
+  .se__total-label { display: none; }
+  .se__total-name  { font-size: 12px; }
+  .se__total-val   { font-size: 14px; }
+
+  /* Graphique légèrement plus haut */
+  .se__chart-wrap, .epargne-chart { height: 240px; }
 }
 
 .se__chart-wrap { height: 200px; position: relative; }
