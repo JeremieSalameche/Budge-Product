@@ -47,12 +47,12 @@
           <span class="dep__mobile-tab-dot" :style="{ background: p1.couleur }"></span>
           {{ p1.nom }}
         </button>
-        <button :class="['dep__mobile-tab', { 'dep__mobile-tab--active': mobileCol === 'commun' }]" @click="mobileCol = 'commun'">
-          Commun
-        </button>
         <button :class="['dep__mobile-tab', { 'dep__mobile-tab--active': mobileCol === 'p2' }]" @click="mobileCol = 'p2'">
           <span class="dep__mobile-tab-dot" :style="{ background: p2.couleur }"></span>
           {{ p2.nom }}
+        </button>
+        <button :class="['dep__mobile-tab', { 'dep__mobile-tab--active': mobileCol === 'commun' }]" @click="mobileCol = 'commun'">
+          Commun
         </button>
       </div>
 
@@ -920,8 +920,8 @@ function suggestSplit() {
   .dep__cols .dep__col:nth-child(2) { display: none; }
   .dep__cols .dep__col:nth-child(3) { display: none; }
   .dep__cols[data-mobile-col="p1"] .dep__col:nth-child(1) { display: flex; }
-  .dep__cols[data-mobile-col="commun"] .dep__col:nth-child(2) { display: flex; }
-  .dep__cols[data-mobile-col="p2"] .dep__col:nth-child(3) { display: flex; }
+  .dep__cols[data-mobile-col="p2"] .dep__col:nth-child(2) { display: flex; }
+  .dep__cols[data-mobile-col="commun"] .dep__col:nth-child(3) { display: flex; }
 
   .dep__cols--solo .dep__col { display: flex !important; }
 
