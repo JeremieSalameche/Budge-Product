@@ -150,12 +150,10 @@
           <!-- Line break mobile : force membres + reste à vivre sur la 2e ligne -->
           <div v-if="activeTab !== 'moncompte'" class="header-row-break" aria-hidden="true"></div>
 
-          <!-- Bouton membres mobile -->
+          <!-- Bouton foyer+membres mobile -->
           <button v-if="activeTab !== 'moncompte'" class="mobile-members-btn" type="button" @click.stop="membersSheetOpen = !membersSheetOpen">
-            <span class="mobile-members-avatars">
-              <span v-for="(p, pi) in store.personnes" :key="p.id" class="mobile-members-dot" :style="{ background: PERSON_COLORS[pi] }"></span>
-            </span>
-            <span class="mobile-members-label">{{ store.personnes.map(p => p.nom).join(' · ') }}</span>
+            <span class="mobile-foyer-bullet" :style="{ background: store.foyerActif?.couleur || '#7C6FCD' }"></span>
+            <span class="mobile-members-label">{{ store.foyerActif?.nom || 'Mon foyer' }}</span>
             <svg width="12" height="12" viewBox="0 0 10 10" fill="none"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
 
@@ -167,7 +165,31 @@
             <div v-if="membersSheetOpen" class="members-sheet-overlay" @click.self="membersSheetOpen = false">
               <div class="members-sheet">
                 <div class="members-sheet__handle"></div>
-                <div class="members-sheet__title">Membres du foyer</div>
+
+                <!-- Section foyers -->
+                <div class="members-sheet__section-label">Foyer</div>
+                <div class="members-sheet__foyers">
+                  <button
+                    v-for="f in store.foyers" :key="f.id"
+                    :class="['members-sheet__foyer-item', { 'members-sheet__foyer-item--active': f.id === store.foyerActifId }]"
+                    type="button" @click="mobileSelectFoyer(f.id)"
+                  >
+                    <svg class="members-sheet__foyer-check" :style="{ opacity: f.id === store.foyerActifId ? 1 : 0 }"
+                      width="14" height="14" viewBox="0 0 14 14" fill="none">
+                      <path d="M2 7.5l3.5 3.5 6.5-7" stroke="#22C55E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="members-sheet__foyer-bullet" :style="{ background: f.couleur || '#7C6FCD' }"></span>
+                    <span class="members-sheet__foyer-nom">{{ f.nom }}</span>
+                  </button>
+                  <button class="members-sheet__new-foyer" type="button" @click="membersSheetOpen = false; mobileFoyerSetupOpen = true">
+                    Nouveau foyer +
+                  </button>
+                </div>
+
+                <div class="members-sheet__sep"></div>
+
+                <!-- Section membres -->
+                <div class="members-sheet__section-label">Membres</div>
                 <div class="members-sheet__list">
                   <div v-for="(p, pi) in store.personnes" :key="p.id" class="members-sheet__row">
                     <div class="members-sheet__avatar" :style="{ background: PERSON_COLORS[pi] }">{{ p.nom[0]?.toUpperCase() }}</div>
@@ -181,6 +203,7 @@
                     </div>
                   </div>
                 </div>
+
                 <button class="members-sheet__close" @click="membersSheetOpen = false">Fermer</button>
               </div>
             </div>
@@ -228,6 +251,9 @@
       </button>
     </nav>
 
+    <!-- FoyerSetup depuis mobile sheet -->
+    <FoyerSetup v-if="mobileFoyerSetupOpen" @fermer="mobileFoyerSetupOpen = false" />
+
     <!-- Notification globale -->
     <div class="notif-zone">
       <MsNotification
@@ -266,9 +292,14 @@ const appLoading      = ref(false)
 const PERSON_COLORS = ['#7C6FCD', '#4A9EDB']
 const { scheduleAutoSave, lastSavedLabel } = useStorage()
 
-const activeTab        = ref('dashboard')
-const selectedDepenses = ref([])
-const membersSheetOpen = ref(false)
+const activeTab             = ref('dashboard')
+const selectedDepenses      = ref([])
+const membersSheetOpen      = ref(false)
+const mobileFoyerSetupOpen  = ref(false)
+
+function mobileSelectFoyer(id) {
+  store.switcherFoyer(id)
+}
 
 // ── Popover salaires ───────────────────────────────────────
 const openPopover = ref(null)
@@ -890,21 +921,11 @@ const pctCharges = computed(() => {
     font-family: inherit;
     flex-shrink: 0;
   }
-  .mobile-members-avatars {
-    display: inline-flex;
-    gap: -3px;
-  }
-  .mobile-members-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    border: 1.5px solid #fff;
-    flex-shrink: 0;
-    margin-right: -3px;
+  .mobile-foyer-bullet {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
   }
   .mobile-members-label {
     flex: 1;
-    max-width: 120px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -912,6 +933,43 @@ const pctCharges = computed(() => {
 }
 
 /* ── Members bottom sheet ─────────────────────────────────── */
+/* ── Sheet sections label ── */
+.members-sheet__section-label {
+  font-size: 11px; font-weight: 600; color: #71717a;
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+
+/* ── Foyers list in sheet ── */
+.members-sheet__foyers {
+  display: flex; flex-direction: column; gap: 2px;
+}
+.members-sheet__foyer-item {
+  display: flex; align-items: center; gap: 10px;
+  width: 100%; padding: 10px 8px; border-radius: 8px;
+  background: none; border: none; cursor: pointer;
+  font-family: inherit; text-align: left;
+  transition: background 120ms;
+}
+.members-sheet__foyer-item:hover,
+.members-sheet__foyer-item--active { background: #f4f4f5; }
+.members-sheet__foyer-check { flex-shrink: 0; }
+.members-sheet__foyer-bullet {
+  width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+}
+.members-sheet__foyer-nom {
+  flex: 1; font-size: 14px; font-weight: 500; color: #18181b;
+}
+.members-sheet__new-foyer {
+  margin-top: 4px; width: 100%; padding: 9px 8px;
+  background: none; border: 1px solid #e4e4e7; border-radius: 8px;
+  font-size: 13px; font-weight: 500; color: #18181b; font-family: inherit;
+  cursor: pointer; text-align: center; transition: background 120ms;
+}
+.members-sheet__new-foyer:hover { background: #f4f4f5; }
+
+/* ── Separator ── */
+.members-sheet__sep { height: 1px; background: #e4e4e7; }
+
 .members-sheet-overlay {
   position: fixed;
   inset: 0;
