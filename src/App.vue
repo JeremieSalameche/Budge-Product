@@ -903,6 +903,7 @@ const pctCharges = computed(() => {
     margin-right: -3px;
   }
   .mobile-members-label {
+    flex: 1;
     max-width: 120px;
     overflow: hidden;
     text-overflow: ellipsis;
