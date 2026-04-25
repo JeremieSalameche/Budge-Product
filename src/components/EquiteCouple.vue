@@ -686,6 +686,7 @@ function applyReco(r) {
   margin-left: auto; font-size: 10px; font-weight: 700;
   background: #FEF9C3; color: #CA8A04; border-radius: 99px;
   padding: 2px 8px; text-transform: none; letter-spacing: 0;
+  white-space: nowrap; flex-shrink: 0;
 }
 .eq-panel__leisure-row { display: flex; flex-direction: column; gap: 8px; }
 .eq-panel__leisure-person { display: flex; align-items: flex-start; gap: 8px; }
