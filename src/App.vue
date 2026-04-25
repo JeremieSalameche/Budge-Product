@@ -682,6 +682,10 @@ const pctCharges = computed(() => {
 /* FoyerSwitcher dans header : caché sur desktop */
 .mobile-foyer-switch { display: none; }
 
+/* Mobile-only elements: hidden on desktop, shown inside @media below */
+.mobile-logo { display: none; }
+.mobile-members-btn { display: none; }
+
 @media (max-width: 768px) {
   /* Layout global */
   #app {
@@ -694,10 +698,10 @@ const pctCharges = computed(() => {
   .sidebar { display: none; }
 
   .main {
-    flex: 1;
+    flex: 1 1 0;
     padding: 0;
     min-width: 0;
-    height: 0; /* force flex:1 to compute correctly */
+    min-height: 0;
     overflow: hidden;
   }
 
@@ -705,9 +709,14 @@ const pctCharges = computed(() => {
     border-radius: 0;
     border: none;
     box-shadow: none;
-    flex: 1;
+    flex: 1 1 0;
+    min-height: 0;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+  }
+
+  .main__content {
+    flex: none;
   }
 
   /* FoyerSwitcher dans header mobile */
@@ -893,12 +902,6 @@ const pctCharges = computed(() => {
     white-space: nowrap;
   }
 }
-
-/* Mobile logo hidden on desktop */
-.mobile-logo { display: none; }
-
-/* Members button hidden on desktop */
-.mobile-members-btn { display: none; }
 
 /* ── Members bottom sheet ─────────────────────────────────── */
 .members-sheet-overlay {
