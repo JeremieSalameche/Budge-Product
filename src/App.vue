@@ -1012,21 +1012,22 @@ const pctCharges = computed(() => {
 
 .members-sheet__row {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
 }
 
 .members-sheet__avatar {
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   border-radius: 10px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
   color: #fff;
+  margin-top: 2px;
 }
 
 .members-sheet__info {
@@ -1034,48 +1035,48 @@ const pctCharges = computed(() => {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
 }
 
-.members-sheet__name-input {
+.members-sheet__name-input,
+.members-sheet__salary-input {
   width: 100%;
-  font-size: 14px;
-  font-weight: 500;
-  color: #18181b;
-  background: #f4f4f5;
-  border: 1px solid #e4e4e7;
-  border-radius: 8px;
-  padding: 6px 10px;
   font-family: inherit;
   outline: none;
   box-sizing: border-box;
+  background: #f4f4f5;
+  border: 1px solid #e4e4e7;
+  border-radius: 8px;
+  color: #18181b;
+}
+.members-sheet__name-input {
+  font-size: 15px;
+  font-weight: 600;
+  padding: 11px 12px;
 }
 .members-sheet__name-input:focus { border-color: #18181b; }
 
 .members-sheet__salary-wrap {
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  position: relative;
 }
 
 .members-sheet__salary-input {
-  width: 80px;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 500;
-  color: #18181b;
-  background: #f4f4f5;
-  border: 1px solid #e4e4e7;
-  border-radius: 8px;
-  padding: 5px 8px;
-  font-family: inherit;
-  outline: none;
-  text-align: right;
+  padding: 11px 56px 11px 12px;
+  text-align: left;
 }
 .members-sheet__salary-input:focus { border-color: #18181b; }
 
 .members-sheet__suffix {
-  font-size: 12px;
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 13px;
   color: #71717a;
+  pointer-events: none;
+  white-space: nowrap;
 }
 
 .members-sheet__close {
