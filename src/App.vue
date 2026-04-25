@@ -149,6 +149,9 @@
             </div>
           </div>
 
+          <!-- Line break mobile : force membres + reste à vivre sur la 2e ligne -->
+          <div v-if="activeTab !== 'moncompte'" class="header-row-break" aria-hidden="true"></div>
+
           <!-- Bouton membres mobile -->
           <button v-if="activeTab !== 'moncompte'" class="mobile-members-btn" type="button" @click.stop="membersSheetOpen = !membersSheetOpen">
             <span class="mobile-members-avatars">
@@ -761,7 +764,10 @@ const pctCharges = computed(() => {
 
   .header-spacer { display: none; }
 
-  .header-reste { margin-left: auto; }
+  /* Row 2: membres + reste à vivre on same line */
+  .header-row-break { width: 100%; height: 0; order: 3; }
+  .mobile-members-btn { order: 4; flex: 1; margin-left: 0; }
+  .header-reste { order: 5; margin-left: 0; }
 
   .main__content {
     padding: 14px 14px;

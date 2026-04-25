@@ -680,5 +680,15 @@ function applyReco(r) {
 
 @media (max-width: 768px) {
   .eq-panel, .eq-info-panel { width: 100vw; }
+
+  .eq__shared-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .eq__cta {
+    width: 100%;
+    justify-content: center;
+  }
 }
 </style>

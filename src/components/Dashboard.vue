@@ -994,8 +994,8 @@ const nbAlertesOptimisation = computed(() => alertesDetails.value.length)
   .dash__bottom-grid { grid-template-columns: 1fr; gap: 12px; }
   .dash__bottom-card { min-height: 260px; }
 
-  .btn-optimiser-inline { font-size: 11px; padding: 5px 10px; }
+  .btn-optimiser-inline { display: none; }
 
-  .dash__alert-cta { display: none; }
+  .dash__alert-cta { display: flex; }
 }
 </style>
