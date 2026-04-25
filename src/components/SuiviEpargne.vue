@@ -437,6 +437,13 @@ function enregistrerMouvement() {
 .epargne-header { display: flex; align-items: center; justify-content: space-between; }
 .se__title-row { display: flex; align-items: center; gap: 8px; }
 
+@media (max-width: 768px) {
+  .epargne-header { flex-wrap: wrap; gap: 8px; }
+  .epargne-actions { width: 100%; display: flex; gap: 8px; }
+  .btn-gerer    { flex: 1; text-align: center; }
+  .btn-mouvement { flex: 1; text-align: center; }
+}
+
 .se__icon-cartouche {
   display: flex;
   align-items: center;

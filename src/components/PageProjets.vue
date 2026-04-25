@@ -337,4 +337,8 @@ function charger(p) {
   transition: background 150ms, color 150ms;
 }
 .pp__card-load:hover { background: var(--primary); color: var(--primary-foreground); }
+
+@media (max-width: 768px) {
+  .pp { grid-template-columns: 1fr; }
+}
 </style>

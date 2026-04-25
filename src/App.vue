@@ -749,7 +749,7 @@ const pctCharges = computed(() => {
     row-gap: 8px;
   }
 
-  .main__title { font-size: 14px; font-weight: 700; }
+  .main__title { display: none; }
 
   .header-pills {
     order: 3;

@@ -297,15 +297,19 @@
     <div v-if="store.enveloppes.length && !isSolo" class="env__summary">
       <div class="env__summary-person">
         <span class="env__summary-dot" :style="{ background: store.personnes[0]?.couleur }"></span>
-        <span class="env__summary-name">{{ store.personnes[0]?.nom }}</span>
-        <span class="env__summary-label">à virer / mois</span>
+        <div class="env__summary-info">
+          <span class="env__summary-name">{{ store.personnes[0]?.nom }}</span>
+          <span class="env__summary-label">à virer / mois</span>
+        </div>
         <span class="env__summary-amount">{{ fmt(totalAVirerP1) }}</span>
       </div>
       <div class="env__summary-sep"></div>
       <div class="env__summary-person">
         <span class="env__summary-dot" :style="{ background: store.personnes[1]?.couleur }"></span>
-        <span class="env__summary-name">{{ store.personnes[1]?.nom }}</span>
-        <span class="env__summary-label">à virer / mois</span>
+        <div class="env__summary-info">
+          <span class="env__summary-name">{{ store.personnes[1]?.nom }}</span>
+          <span class="env__summary-label">à virer / mois</span>
+        </div>
         <span class="env__summary-amount">{{ fmt(totalAVirerP2) }}</span>
       </div>
     </div>
@@ -958,9 +962,10 @@ function doDeleteEnv() {
 }
 .env__summary-sep { width: 1px; background: var(--border); align-self: stretch; }
 .env__summary-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-.env__summary-name { font-size: 13px; font-weight: 600; color: var(--foreground); flex: 1; }
+.env__summary-info { display: flex; flex-direction: column; gap: 1px; flex: 1; }
+.env__summary-name { font-size: 13px; font-weight: 600; color: var(--foreground); }
 .env__summary-label { font-size: 11px; color: var(--muted-foreground); }
-.env__summary-amount { font-size: 16px; font-weight: 700; color: var(--foreground); }
+.env__summary-amount { font-size: 16px; font-weight: 700; color: var(--foreground); flex-shrink: 0; }
 
 /* ── Grille ─────────────────────────────────────────────── */
 .env__grid {
