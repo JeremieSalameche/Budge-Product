@@ -1163,7 +1163,7 @@ function doDeleteEnv() {
   .sum__stat-sep { display: none; }
 
   /* Env header */
-  .env__header { flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+  .env__header { flex-wrap: wrap; gap: 10px; margin-top: 18px; }
 
   /* Add/edit modal full screen */
   .env__modal {
