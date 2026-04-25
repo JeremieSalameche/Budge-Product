@@ -29,7 +29,24 @@
     </div>
 
     <!-- ── Colonnes ────────────────────────────────────────── -->
-    <div v-else :class="['dep__cols', { 'dep__cols--solo': isSolo }]">
+    <div v-if="store.depenses.length > 0">
+
+      <!-- Tabs mobile (couple uniquement) -->
+      <div v-if="!isSolo" class="dep__mobile-tabs">
+        <button :class="['dep__mobile-tab', { 'dep__mobile-tab--active': mobileCol === 'p1' }]" @click="mobileCol = 'p1'">
+          <span class="dep__mobile-tab-dot" :style="{ background: p1.couleur }"></span>
+          {{ p1.nom }}
+        </button>
+        <button :class="['dep__mobile-tab', { 'dep__mobile-tab--active': mobileCol === 'commun' }]" @click="mobileCol = 'commun'">
+          Commun
+        </button>
+        <button :class="['dep__mobile-tab', { 'dep__mobile-tab--active': mobileCol === 'p2' }]" @click="mobileCol = 'p2'">
+          <span class="dep__mobile-tab-dot" :style="{ background: p2.couleur }"></span>
+          {{ p2.nom }}
+        </button>
+      </div>
+
+    <div :class="['dep__cols', { 'dep__cols--solo': isSolo }]" :data-mobile-col="mobileCol">
 
       <!-- Colonne P1 (masquée en solo) -->
       <div v-if="!isSolo" class="dep__col">
@@ -192,6 +209,7 @@
       </div>
 
     </div>
+    </div><!-- /v-if depenses.length > 0 -->
 
     <!-- ── Modale ajout / édition ─────────────────────────────── -->
     <Teleport to="body">
@@ -389,6 +407,9 @@ const { scheduleAutoSave } = useStorage()
 const isSolo = computed(() => store.personnes.length < 2)
 const p1 = computed(() => store.personnes[0] ?? { id: 'p1', nom: '?', couleur: '#7C6FCD', salaire: 0 })
 const p2 = computed(() => store.personnes[1] ?? { id: 'p2', nom: '?', couleur: '#4A9EDB', salaire: 0 })
+
+// ── Mobile col switcher ───────────────────────────────────
+const mobileCol = ref('p1')
 
 // ── Filtre ────────────────────────────────────────────────
 const filterCat = ref('')
@@ -851,4 +872,50 @@ function suggestSplit() {
 .dep__mbtn--primary:disabled { opacity: 0.35; cursor: not-allowed; }
 .dep__mbtn--danger { background: #ef4444; color: #fff; }
 .dep__mbtn--danger:hover { background: #dc2626; }
+
+/* ── Mobile responsive ───────────────────────────────────── */
+.dep__mobile-tabs { display: none; }
+
+@media (max-width: 768px) {
+  .dep__bar { flex-wrap: wrap; gap: 8px; }
+  .dep__select { flex: 1; min-width: 0; }
+
+  .dep__mobile-tabs {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+
+  .dep__mobile-tab {
+    flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 10px 8px; font-size: 13px; font-weight: 500; font-family: inherit;
+    background: var(--card); border: none; cursor: pointer;
+    color: var(--muted-foreground); border-right: 1px solid var(--border);
+    transition: background 0.12s, color 0.12s;
+  }
+  .dep__mobile-tab:last-child { border-right: none; }
+  .dep__mobile-tab--active { background: #18181b; color: #fff; font-weight: 700; }
+  .dep__mobile-tab-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  .dep__cols {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  /* Masquer les colonnes non actives sur mobile */
+  .dep__cols .dep__col:nth-child(1) { display: none; }
+  .dep__cols .dep__col:nth-child(2) { display: none; }
+  .dep__cols .dep__col:nth-child(3) { display: none; }
+  .dep__cols[data-mobile-col="p1"] .dep__col:nth-child(1) { display: flex; }
+  .dep__cols[data-mobile-col="commun"] .dep__col:nth-child(2) { display: flex; }
+  .dep__cols[data-mobile-col="p2"] .dep__col:nth-child(3) { display: flex; }
+
+  .dep__cols--solo .dep__col { display: flex !important; }
+
+  .dep__modal { width: calc(100vw - 32px); max-height: 90dvh; }
+  .dep__mrow { flex-direction: column; gap: 12px; }
+}
 </style>

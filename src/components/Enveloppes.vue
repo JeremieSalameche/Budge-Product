@@ -1131,4 +1131,62 @@ function doDeleteEnv() {
 .env__dep-nom { flex: 1; font-size: 13px; color: var(--foreground); }
 .env__dep-montant { font-size: 12px; font-weight: 600; color: var(--muted-foreground); }
 .env__dep-empty { padding: 16px; font-size: 13px; color: var(--muted-foreground); text-align: center; }
+
+/* ── Mobile responsive ───────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Drawer plein écran */
+  .sum__drawer {
+    width: 100vw;
+    max-width: 100vw;
+    border-left: none;
+  }
+
+  /* Schema flux : pile verticale */
+  .flo__grid {
+    grid-template-columns: 1fr;
+  }
+  .flo__source {
+    border-right: none;
+    border-bottom: 2px solid #e4e4e7;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+  }
+  .flo__source-hr { display: none; }
+  .flo__source-name { font-size: 12px; }
+  .flo__source-income { font-size: 18px; }
+  .flo__source-shield { margin-top: 0; }
+
+  .flo__wire { display: none; }
+
+  .flo__card { border-radius: 8px; }
+
+  /* Banner */
+  .env__banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .env__banner-cta { width: 100%; justify-content: center; }
+
+  /* Grid providers 2x2 → 1 colonne */
+  .sum__providers-grid { grid-template-columns: 1fr; }
+
+  /* Stat row */
+  .sum__stat-row { flex-direction: column; gap: 12px; }
+  .sum__stat-sep { display: none; }
+
+  /* Env header */
+  .env__header { flex-wrap: wrap; gap: 10px; }
+
+  /* Add/edit modal full screen */
+  .env__modal {
+    width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    border-radius: 0;
+  }
+}
 </style>

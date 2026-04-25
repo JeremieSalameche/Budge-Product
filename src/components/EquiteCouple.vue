@@ -677,4 +677,8 @@ function applyReco(r) {
   font-size: 12px; color: var(--muted-foreground); line-height: 1.5;
   margin: 0; padding-top: 4px; border-top: 1px solid var(--border);
 }
+
+@media (max-width: 768px) {
+  .eq-panel, .eq-info-panel { width: 100vw; }
+}
 </style>

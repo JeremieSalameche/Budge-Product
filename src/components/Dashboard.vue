@@ -974,4 +974,28 @@ const nbAlertesOptimisation = computed(() => alertesDetails.value.length)
 .dash__bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 @media (max-width: 900px) { .dash__bottom-grid { grid-template-columns: 1fr; } }
 .dash__bottom-card { min-height: 320px; display: flex; flex-direction: column; }
+
+/* ── Responsive mobile ────────────────────────────────────── */
+@media (max-width: 768px) {
+  .dash { gap: 12px; }
+
+  .dash__kpis { grid-template-columns: 1fr; gap: 8px; }
+  .dash__kpi-group { grid-template-columns: 1fr 1fr; }
+  .dash__kpi { padding: 12px 14px; }
+  .dash__kpi-value { font-size: 18px; }
+  .dash__kpi-donut { display: none; }
+
+  .dash__charts { grid-template-columns: 1fr; gap: 12px; }
+  .dash__chart-right { height: auto; }
+  .dash__right-col { grid-template-rows: auto; height: auto; }
+
+  .dash__ccard { padding: 14px 14px; border-radius: 12px; }
+
+  .dash__bottom-grid { grid-template-columns: 1fr; gap: 12px; }
+  .dash__bottom-card { min-height: 260px; }
+
+  .btn-optimiser-inline { font-size: 11px; padding: 5px 10px; }
+
+  .dash__alert-cta { display: none; }
+}
 </style>

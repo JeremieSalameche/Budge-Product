@@ -334,4 +334,11 @@ function fmtDate(dateStr) {
   padding: 32px; text-align: center;
   font-size: 13px; color: var(--muted-foreground);
 }
+
+@media (max-width: 768px) {
+  .et__th--person, .et__td--person { display: none; }
+  .et__th--date { width: 40%; }
+  .et__th--amount { width: 28%; }
+  .et__amount-input { width: 70px; }
+}
 </style>

@@ -162,6 +162,30 @@
     <!-- Overlay fermeture popover -->
     <div v-if="openPopover" class="popover-overlay" @click="openPopover = null"></div>
 
+    <!-- Bottom nav mobile -->
+    <nav class="mobile-nav">
+      <button
+        v-for="item in navItems" :key="item.id"
+        :class="['mobile-nav__item', { 'mobile-nav__item--active': activeTab === item.id }]"
+        type="button"
+        @click="activeTab = item.id"
+      >
+        <span class="mobile-nav__icon" v-html="item.icon"></span>
+        <span class="mobile-nav__label">{{ item.label }}</span>
+      </button>
+      <button
+        :class="['mobile-nav__item', { 'mobile-nav__item--active': activeTab === 'moncompte' }]"
+        type="button"
+        @click="activeTab = 'moncompte'"
+      >
+        <span class="mobile-nav__icon">
+          <img v-if="authStore.user?.photoURL" :src="authStore.user.photoURL" class="mobile-nav__avatar" referrerpolicy="no-referrer" />
+          <span v-else class="mobile-nav__avatar mobile-nav__avatar--initials">{{ authStore.user?.displayName?.[0]?.toUpperCase() ?? '?' }}</span>
+        </span>
+        <span class="mobile-nav__label">Compte</span>
+      </button>
+    </nav>
+
     <!-- Notification globale -->
     <div class="notif-zone">
       <MsNotification
@@ -606,6 +630,152 @@ const pctCharges = computed(() => {
 @media (max-width: 768px) {
   .preapp__left { display: none; }
   .preapp__right { width: 100%; }
+}
+
+/* ── Mobile nav bar ───────────────────────────────────────── */
+.mobile-nav {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  /* Layout global */
+  #app {
+    flex-direction: column;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  .sidebar { display: none; }
+
+  .main {
+    flex: 1;
+    padding: 0;
+    min-height: 0;
+  }
+
+  .main__container {
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .main__header {
+    padding: 12px 16px 10px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .main__title { font-size: 14px; }
+
+  .header-pills {
+    order: 3;
+    width: 100%;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 2px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .header-pills::-webkit-scrollbar { display: none; }
+
+  .header-spacer { display: none; }
+
+  .header-reste { margin-left: auto; }
+
+  .main__content {
+    padding: 16px;
+    padding-bottom: calc(72px + env(safe-area-inset-bottom) + 16px);
+  }
+
+  .main__revenu-chip { font-size: 11px; padding: 3px 10px; }
+
+  /* Bottom nav */
+  .mobile-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 300;
+    background: #fff;
+    border-top: 1px solid #e4e4e7;
+    padding-bottom: env(safe-area-inset-bottom);
+    height: calc(60px + env(safe-area-inset-bottom));
+    align-items: stretch;
+  }
+
+  .mobile-nav__item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #71717a;
+    padding: 6px 4px;
+    font-family: inherit;
+    transition: color 0.15s;
+    min-width: 0;
+  }
+
+  .mobile-nav__item--active { color: #18181b; }
+
+  .mobile-nav__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mobile-nav__icon svg { width: 20px; height: 20px; }
+
+  .mobile-nav__label {
+    font-size: 9px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 56px;
+  }
+
+  .mobile-nav__item--active .mobile-nav__label { font-weight: 700; }
+
+  .mobile-nav__avatar {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .mobile-nav__avatar--initials {
+    background: #18181b;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Popovers fullscreen sur mobile */
+  .main__popover {
+    position: fixed;
+    top: auto;
+    bottom: calc(60px + env(safe-area-inset-bottom));
+    left: 16px;
+    right: 16px;
+    width: auto;
+  }
+
+  /* Notification */
+  .notif-zone {
+    bottom: calc(72px + env(safe-area-inset-bottom));
+    right: 16px;
+  }
 }
 
 /* ── Auth ──────────────────────────────────────────────────── */
