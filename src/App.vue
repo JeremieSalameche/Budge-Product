@@ -415,7 +415,7 @@ const pctCharges = computed(() => {
   border-bottom: 1px solid var(--sidebar-border);
   margin-bottom: 12px;
 }
-.sidebar__logo-img { height: 26px; width: auto; display: block; }
+.sidebar__logo-img { height: 32px; width: auto; display: block; }
 
 .sidebar__nav { flex: 1; padding: 0; display: flex; flex-direction: column; gap: 2px; }
 .sidebar__nav-item {
@@ -794,9 +794,9 @@ const pctCharges = computed(() => {
   .header-spacer { display: none; }
 
   /* Row 2: membres + reste à vivre on same line */
-  .header-row-break { width: 100%; height: 0; order: 3; }
-  .mobile-members-btn { order: 4; flex: 1; margin-left: 0; }
-  .header-reste { order: 5; margin-left: 0; }
+  .header-row-break { display: none; }
+  .mobile-members-btn { order: 1; flex: none; margin-left: auto; }
+  .header-reste { display: none; }
 
   .main__content {
     padding: 14px 14px;
@@ -895,7 +895,7 @@ const pctCharges = computed(() => {
   /* Mobile logo */
   .mobile-logo {
     display: block;
-    height: 22px;
+    height: 28px;
     width: auto;
     flex-shrink: 0;
   }
