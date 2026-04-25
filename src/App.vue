@@ -1129,7 +1129,6 @@ const pctCharges = computed(() => {
 @media (max-width: 768px) {
   .page-header  { margin-top: 24px; flex-wrap: wrap; gap: 10px; }
   .page-header-actions { width: 100%; }
-  .page-title   { font-size: 16px; }
   .page-subtitle { font-size: 12px; }
 }
 </style>
