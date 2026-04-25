@@ -55,34 +55,67 @@
           <!-- Titre accroche -->
           <div class="sum__hero">
             <h3 class="sum__hero-title">La méthode des enveloppes numériques</h3>
-            <p class="sum__hero-sub">Chaque poste de budget a son propre compte, son IBAN et sa CB. Plus aucune surprise en fin de mois.</p>
+            <p class="sum__hero-sub">Une technique de gestion financière éprouvée depuis des générations, réinventée pour l'ère du virement et du prélèvement automatique.</p>
+          </div>
+
+          <!-- Stat intro -->
+          <div class="sum__stat-row">
+            <div class="sum__stat">
+              <div class="sum__stat-num">68%</div>
+              <div class="sum__stat-lbl">des Français ont du mal à boucler leurs fins de mois</div>
+            </div>
+            <div class="sum__stat-sep"></div>
+            <div class="sum__stat-body">
+              La méthode des enveloppes répond à une question simple : <strong>où part mon argent chaque mois ?</strong> En affectant chaque euro à une catégorie avant de dépenser, vous arrêtez de subir votre compte et vous reprenez le contrôle.
+            </div>
+          </div>
+
+          <!-- Pourquoi ça marche -->
+          <div class="sum__why">
+            <div class="sum__why-title">Pourquoi ça fonctionne</div>
+            <div class="sum__why-list">
+              <div class="sum__why-item">
+                <span class="sum__why-ico">👁</span>
+                <div>
+                  <strong>Clarté totale</strong>
+                  <span>Chaque poste a sa limite définie. Fini le solde global flou dont vous ne savez plus si vos prélèvements sont déjà passés.</span>
+                </div>
+              </div>
+              <div class="sum__why-item">
+                <span class="sum__why-ico">🧠</span>
+                <div>
+                  <strong>Moins de dépenses impulsives</strong>
+                  <span>Voir l'argent restant dans une enveloppe avant d'acheter crée une prise de conscience que le paiement par carte n'active pas.</span>
+                </div>
+              </div>
+              <div class="sum__why-item">
+                <span class="sum__why-ico">📈</span>
+                <div>
+                  <strong>Une épargne qui se forme naturellement</strong>
+                  <span>Ce qui reste dans chaque enveloppe en fin de mois part en épargne. Pas par discipline, par mécanique.</span>
+                </div>
+              </div>
+            </div>
           </div>
 
           <!-- Réalité numérique -->
           <div class="sum__reality">
-            <div class="sum__reality-chips">
-              <span class="sum__chip">🏠 Loyer</span>
-              <span class="sum__chip">📱 Abonnements</span>
-              <span class="sum__chip">⚡ Énergie</span>
-              <span class="sum__chip">🛒 Courses en ligne</span>
-              <span class="sum__chip">🏥 Mutuelle</span>
+            <div class="sum__anxiety-box">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <span>La vraie anxiété : <em>« Est-ce que tous mes prélèvements du mois sont passés avant que je dépense ce qu'il reste ? »</em></span>
             </div>
             <p class="sum__reality-text">
-              En 2026, presque toutes vos charges sont <strong>numériques</strong> : loyer par virement, Netflix/Spotify/salle de sport par prélèvement CB, Engie ou EDF par prélèvement automatique, achats en ligne…
+              En 2026, presque toutes vos charges sont <strong>numériques</strong> : loyer par virement, Netflix/Spotify/salle de sport par prélèvement CB, Engie ou EDF par prélèvement automatique, achats en ligne.
               Les enveloppes en papier avec du cash ne s'appliquent pas à cette réalité.
             </p>
             <p class="sum__reality-text">
-              Et l'épargne (Livret A, PEL, ou matelas à la maison) c'est votre affaire. Budge ne la juge pas.
+              La version numérique résout ce problème : chaque poste a son propre <strong>compte bancaire avec un IBAN dédié</strong>. Les prélèvements tombent directement sur le bon compte. Votre compte principal n'est jamais débité par surprise.
             </p>
-            <div class="sum__anxiety-box">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-              <span>La vraie anxiété : <em>« Est-ce que tous mes prélèvements du mois sont passés avant que je dépense ce qu'il reste sur mon compte ? »</em></span>
-            </div>
           </div>
 
           <!-- Séparateur -->
           <div class="sum__divider">
-            <span>Une solution concrète</span>
+            <span>Comment ça s'organise concrètement</span>
           </div>
 
           <!-- Schéma de flux -->
@@ -684,6 +717,33 @@ function doDeleteEnv() {
 .sum__hero-sub {
   font-size: 13px; color: #71717a; margin: 0; line-height: 1.55;
 }
+
+/* Stat row */
+.sum__stat-row {
+  display: flex; align-items: center; gap: 20px;
+  padding: 16px 18px; border-radius: 12px;
+  background: #f0fdf4; border: 1px solid #bbf7d0;
+}
+.sum__stat { flex-shrink: 0; text-align: center; }
+.sum__stat-num { font-size: 28px; font-weight: 900; color: #15803d; letter-spacing: -1px; line-height: 1; }
+.sum__stat-lbl { font-size: 10px; color: #166534; font-weight: 500; margin-top: 3px; max-width: 80px; line-height: 1.3; }
+.sum__stat-sep { width: 1px; height: 48px; background: #86efac; flex-shrink: 0; }
+.sum__stat-body { font-size: 13px; color: #166534; line-height: 1.6; }
+.sum__stat-body strong { color: #14532d; font-weight: 700; }
+
+/* Pourquoi ça marche */
+.sum__why { display: flex; flex-direction: column; gap: 8px; }
+.sum__why-title { font-size: 12px; font-weight: 700; color: var(--muted-foreground); text-transform: uppercase; letter-spacing: 0.05em; }
+.sum__why-list { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.sum__why-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 14px; background: var(--card);
+  border-bottom: 1px solid var(--border); font-size: 13px;
+}
+.sum__why-item:last-child { border-bottom: none; }
+.sum__why-ico { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.sum__why-item strong { display: block; font-weight: 700; color: var(--foreground); margin-bottom: 2px; font-size: 13px; }
+.sum__why-item span { color: var(--muted-foreground); line-height: 1.5; }
 
 /* Réalité numérique */
 .sum__reality { display: flex; flex-direction: column; gap: 12px; }
