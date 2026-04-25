@@ -15,4 +15,13 @@ import SuiviEpargne from './SuiviEpargne.vue'
   border-radius: 12px;
   padding: 20px;
 }
+
+@media (max-width: 768px) {
+  .pe {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+  }
+}
 </style>
