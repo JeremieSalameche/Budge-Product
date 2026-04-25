@@ -293,27 +293,6 @@
       </Transition>
     </Teleport>
 
-    <!-- Résumé virements par personne -->
-    <div v-if="store.enveloppes.length && !isSolo" class="env__summary">
-      <div class="env__summary-person">
-        <span class="env__summary-dot" :style="{ background: store.personnes[0]?.couleur }"></span>
-        <div class="env__summary-info">
-          <span class="env__summary-name">{{ store.personnes[0]?.nom }}</span>
-          <span class="env__summary-label">à virer / mois</span>
-        </div>
-        <span class="env__summary-amount">{{ fmt(totalAVirerP1) }}</span>
-      </div>
-      <div class="env__summary-sep"></div>
-      <div class="env__summary-person">
-        <span class="env__summary-dot" :style="{ background: store.personnes[1]?.couleur }"></span>
-        <div class="env__summary-info">
-          <span class="env__summary-name">{{ store.personnes[1]?.nom }}</span>
-          <span class="env__summary-label">à virer / mois</span>
-        </div>
-        <span class="env__summary-amount">{{ fmt(totalAVirerP2) }}</span>
-      </div>
-    </div>
-
     <!-- Grille comptes -->
     <div class="env__grid" v-if="store.enveloppes.length">
       <div v-for="env in store.enveloppes" :key="env.id"

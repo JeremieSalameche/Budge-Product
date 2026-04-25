@@ -1054,3 +1054,21 @@ const pctCharges = computed(() => {
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 </style>
+
+<style>
+/* ── Page header — structure commune à toutes les pages ── */
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+.page-header-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.page-title   { font-size: 18px; font-weight: 700; margin: 0; color: var(--foreground); line-height: 1.2; }
+.page-subtitle { font-size: 13px; color: var(--muted-foreground); margin: 4px 0 0; line-height: 1.4; }
+
+@media (max-width: 768px) {
+  .page-title   { font-size: 16px; }
+  .page-subtitle { font-size: 12px; }
+}
+</style>

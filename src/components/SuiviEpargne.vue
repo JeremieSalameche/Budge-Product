@@ -1,17 +1,12 @@
 <template>
   <div class="se">
-    <!-- Header -->
-    <div class="epargne-header">
-      <div class="se__title-row">
-        <div class="se__icon-cartouche">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
-            <polyline points="17 6 23 6 23 12"/>
-          </svg>
-        </div>
-        <h3 class="card-title">Suivi de l'épargne</h3>
+    <!-- Page header -->
+    <div class="page-header epargne-header">
+      <div>
+        <h2 class="page-title">Épargne</h2>
+        <p class="page-subtitle">Suivez et planifiez votre épargne</p>
       </div>
-      <div class="epargne-actions">
+      <div class="page-header-actions epargne-actions">
         <button class="btn-gerer" @click="ouvrirPanel" type="button">Gérer</button>
         <button class="btn-mouvement" @click="openModal" type="button">Nouveau mouvement</button>
       </div>
@@ -434,30 +429,14 @@ function enregistrerMouvement() {
 <style scoped>
 .se { display: flex; flex-direction: column; gap: 16px; height: 100%; }
 
-.epargne-header { display: flex; align-items: center; justify-content: space-between; }
-.se__title-row { display: flex; align-items: center; gap: 8px; }
+.epargne-actions { display: flex; gap: 8px; align-items: center; }
 
 @media (max-width: 768px) {
   .epargne-header { flex-wrap: wrap; gap: 8px; }
   .epargne-actions { width: 100%; display: flex; gap: 8px; }
-  .btn-gerer    { flex: 1; text-align: center; }
+  .btn-gerer     { flex: 1; text-align: center; }
   .btn-mouvement { flex: 1; text-align: center; }
 }
-
-.se__icon-cartouche {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  flex-shrink: 0;
-  color: var(--foreground);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-}
-.epargne-actions { display: flex; gap: 8px; align-items: center; }
 
 .btn-gerer {
   font-size: 13px; font-weight: 500; font-family: inherit;

@@ -1,5 +1,13 @@
 <template>
   <div class="dash">
+    <!-- Page header -->
+    <div class="page-header">
+      <div>
+        <h2 class="page-title">Tableau de bord</h2>
+        <p class="page-subtitle">Vue d'ensemble de votre budget mensuel</p>
+      </div>
+    </div>
+
     <!-- KPI Cards -->
     <div class="dash__kpis">
       <!-- Card 1 : flux -->

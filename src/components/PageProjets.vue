@@ -1,6 +1,14 @@
 <template>
   <div class="pp">
 
+    <!-- Page header -->
+    <div class="page-header pp__page-header">
+      <div>
+        <h2 class="page-title">Projets</h2>
+        <p class="page-subtitle">Calculez le temps pour atteindre vos objectifs</p>
+      </div>
+    </div>
+
     <!-- Gauche : calculateur -->
     <div class="pp__left">
       <CalculateurProjet ref="calcRef" />
@@ -167,6 +175,7 @@ function charger(p) {
   gap: 20px;
   align-items: stretch;
 }
+.pp__page-header { grid-column: 1 / -1; }
 
 /* Gauche */
 .pp__left {

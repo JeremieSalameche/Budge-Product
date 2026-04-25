@@ -1,6 +1,14 @@
 <template>
   <div class="dep">
 
+    <!-- Page header -->
+    <div class="page-header">
+      <div>
+        <h2 class="page-title">Dépenses</h2>
+        <p class="page-subtitle">Gérez toutes vos charges fixes et variables</p>
+      </div>
+    </div>
+
     <!-- ── Barre de contrôle ─────────────────────────────────── -->
     <div class="dep__bar">
       <select v-model="filterCat" class="dep__select">
