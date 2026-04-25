@@ -95,6 +95,11 @@
     <main class="main">
       <div class="main__container">
         <header class="main__header">
+          <!-- FoyerSwitcher mobile only -->
+          <div class="mobile-foyer-switch">
+            <FoyerSwitcher />
+          </div>
+
           <h1 class="main__title">{{ activeTab === 'moncompte' ? 'Mon compte' : currentNavItem?.label }}</h1>
 
           <div v-if="activeTab !== 'moncompte'" class="header-pills">
@@ -637,12 +642,16 @@ const pctCharges = computed(() => {
   display: none;
 }
 
+/* FoyerSwitcher dans header : caché sur desktop */
+.mobile-foyer-switch { display: none; }
+
 @media (max-width: 768px) {
   /* Layout global */
   #app {
     flex-direction: column;
     height: 100dvh;
     overflow: hidden;
+    background: #fff;
   }
 
   .sidebar { display: none; }
@@ -650,23 +659,46 @@ const pctCharges = computed(() => {
   .main {
     flex: 1;
     padding: 0;
-    min-height: 0;
+    min-width: 0;
+    height: 0; /* force flex:1 to compute correctly */
+    overflow: hidden;
   }
 
   .main__container {
     border-radius: 0;
     border: none;
     box-shadow: none;
-    padding-bottom: env(safe-area-inset-bottom);
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* FoyerSwitcher dans header mobile */
+  .mobile-foyer-switch {
+    display: block;
+    width: 100%;
+    order: -1;
+  }
+  /* Reset des styles sidebar du FoyerSwitcher */
+  .mobile-foyer-switch .fs {
+    padding: 0;
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+  .mobile-foyer-switch .fs__trigger {
+    padding: 6px 10px;
+    background: #f4f4f5;
+    font-size: 12px;
   }
 
   .main__header {
-    padding: 12px 16px 10px;
+    padding: 10px 14px 8px;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 6px;
+    row-gap: 8px;
   }
 
-  .main__title { font-size: 14px; }
+  .main__title { font-size: 14px; font-weight: 700; }
 
   .header-pills {
     order: 3;
@@ -684,8 +716,8 @@ const pctCharges = computed(() => {
   .header-reste { margin-left: auto; }
 
   .main__content {
-    padding: 16px;
-    padding-bottom: calc(72px + env(safe-area-inset-bottom) + 16px);
+    padding: 14px 14px;
+    padding-bottom: calc(76px + env(safe-area-inset-bottom));
   }
 
   .main__revenu-chip { font-size: 11px; padding: 3px 10px; }
