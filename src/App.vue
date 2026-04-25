@@ -495,7 +495,8 @@ const pctCharges = computed(() => {
 
 .main__revenu-chip {
   display: inline-flex; align-items: center;
-  padding: 4px 12px; border-radius: var(--radius-full);
+  height: 32px;
+  padding: 0 12px; border-radius: var(--radius-full);
   border: 1px solid var(--border);
   font-size: 12px; font-weight: 500;
   background: var(--secondary);
@@ -567,7 +568,8 @@ const pctCharges = computed(() => {
 
 .main__reste {
   display: flex; flex-direction: row; align-items: center; gap: 8px;
-  padding: 6px 14px; border-radius: var(--radius-md);
+  height: 32px;
+  padding: 0 14px; border-radius: var(--radius-md);
   background: #FFFFFF; border: 1px solid var(--border);
   flex-shrink: 0;
 }
@@ -879,7 +881,8 @@ const pctCharges = computed(() => {
     background: #f4f4f5;
     border: 1px solid #e4e4e7;
     border-radius: 99px;
-    padding: 5px 10px 5px 8px;
+    height: 32px;
+    padding: 0 10px 0 8px;
     font-size: 12px;
     font-weight: 500;
     color: #18181b;
