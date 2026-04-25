@@ -121,11 +121,7 @@
                       </div>
                     </div>
                     <div class="flo__card-r">
-                      <div class="flo__bank-logo flo__bank-logo--sumeria">Sumeria</div>
-                      <div class="flo__tags">
-                        <span class="flo__tag flo__tag--iban">IBAN</span>
-                        <span class="flo__tag flo__tag--cb">CB propre</span>
-                      </div>
+                      <div class="flo__bank-logo flo__bank-logo--ca">CA</div>
                       <div class="flo__card-amt">750 €</div>
                     </div>
                   </div>
