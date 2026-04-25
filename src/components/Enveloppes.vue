@@ -88,7 +88,7 @@
           <!-- Schéma de flux -->
           <div class="flo">
 
-            <div class="flo__label">Exemple · Crédit Agricole comme compte principal, Sumeria pour les enveloppes</div>
+            <div class="flo__label">Exemple · règle des 50/30/20 · Crédit Agricole + Sumeria</div>
 
             <div class="flo__grid">
 
@@ -116,7 +116,7 @@
                     <div class="flo__card-l">
                       <span class="flo__card-ico">🏠</span>
                       <div>
-                        <div class="flo__card-name">Loyer</div>
+                        <div class="flo__card-name">Loyer <span class="flo__card-pct">30%</span></div>
                         <div class="flo__card-detail">Virement permanent propriétaire</div>
                       </div>
                     </div>
@@ -126,7 +126,7 @@
                         <span class="flo__tag flo__tag--iban">IBAN</span>
                         <span class="flo__tag flo__tag--cb">CB propre</span>
                       </div>
-                      <div class="flo__card-amt">650 €</div>
+                      <div class="flo__card-amt">750 €</div>
                     </div>
                   </div>
                 </div>
@@ -137,8 +137,8 @@
                     <div class="flo__card-l">
                       <span class="flo__card-ico">💳</span>
                       <div>
-                        <div class="flo__card-name">Charges fixes</div>
-                        <div class="flo__card-detail">Netflix · Assurance · Forfait · Crédit auto</div>
+                        <div class="flo__card-name">Charges fixes <span class="flo__card-pct">16%</span></div>
+                        <div class="flo__card-detail">Netflix · Assurance · Téléphone · Internet · Crédit auto</div>
                       </div>
                     </div>
                     <div class="flo__card-r">
@@ -147,7 +147,7 @@
                         <span class="flo__tag flo__tag--iban">IBAN</span>
                         <span class="flo__tag flo__tag--cb">CB propre</span>
                       </div>
-                      <div class="flo__card-amt">580 €</div>
+                      <div class="flo__card-amt">400 €</div>
                     </div>
                   </div>
                 </div>
@@ -158,7 +158,7 @@
                     <div class="flo__card-l">
                       <span class="flo__card-ico">⚡</span>
                       <div>
-                        <div class="flo__card-name">Énergie</div>
+                        <div class="flo__card-name">Énergie <span class="flo__card-pct">4%</span></div>
                         <div class="flo__card-detail">Engie · lissé, facturé tous les 2 mois</div>
                       </div>
                     </div>
@@ -168,7 +168,7 @@
                         <span class="flo__tag flo__tag--iban">IBAN</span>
                         <span class="flo__tag flo__tag--cb">CB propre</span>
                       </div>
-                      <div class="flo__card-amt">80 €</div>
+                      <div class="flo__card-amt">100 €</div>
                     </div>
                   </div>
                 </div>
@@ -179,13 +179,13 @@
                     <div class="flo__card-l">
                       <span class="flo__card-ico">🛒</span>
                       <div>
-                        <div class="flo__card-name">Alimentation &amp; loisirs</div>
+                        <div class="flo__card-name">Alimentation &amp; loisirs <span class="flo__card-pct">30%</span></div>
                         <div class="flo__card-detail">Courses · restaurant · sorties</div>
                       </div>
                     </div>
                     <div class="flo__card-r">
                       <span class="flo__tag flo__tag--especes">💵 Retrait en espèces</span>
-                      <div class="flo__card-amt">300 €</div>
+                      <div class="flo__card-amt">750 €</div>
                     </div>
                   </div>
                 </div>
@@ -199,11 +199,11 @@
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1.5 6.5L4.5 9.5L10.5 2.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </div>
               <div class="flo__result-body">
-                <strong>Zéro prélèvement imprévisible</strong> sur votre compte principal. Vous savez exactement ce qu'il vous reste chaque mois.
+                <strong>Zéro prélèvement imprévisible</strong> sur votre compte principal. Les 20% restants partent directement en épargne.
               </div>
               <div class="flo__result-r">
-                <div class="flo__result-amt">890 €</div>
-                <div class="flo__result-lbl">reste à vivre</div>
+                <div class="flo__result-amt">500 €</div>
+                <div class="flo__result-lbl">épargne (20%)</div>
               </div>
             </div>
 
@@ -810,7 +810,8 @@ function doDeleteEnv() {
 
 .flo__card-l { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
 .flo__card-ico  { font-size: 18px; flex-shrink: 0; }
-.flo__card-name { font-size: 13px; font-weight: 700; color: #18181b; }
+.flo__card-name { font-size: 13px; font-weight: 700; color: #18181b; display: flex; align-items: center; gap: 6px; }
+.flo__card-pct { font-size: 10px; font-weight: 700; color: #6d28d9; background: #ede9fe; padding: 1px 5px; border-radius: 4px; }
 .flo__card-detail { font-size: 10px; color: #71717a; margin-top: 1px; }
 
 .flo__card-r { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; flex-shrink: 0; }
