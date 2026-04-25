@@ -773,7 +773,7 @@ const pctCharges = computed(() => {
   }
 
   .main__header {
-    padding: 10px 14px 8px;
+    padding: 14px 14px 12px;
     flex-wrap: wrap;
     gap: 6px;
     row-gap: 8px;
@@ -1127,6 +1127,7 @@ const pctCharges = computed(() => {
 .page-subtitle { font-size: 13px; color: var(--muted-foreground); margin: 4px 0 0; line-height: 1.4; }
 
 @media (max-width: 768px) {
+  .page-header  { margin-top: 24px; }
   .page-title   { font-size: 16px; }
   .page-subtitle { font-size: 12px; }
 }
