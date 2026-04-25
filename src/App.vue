@@ -95,14 +95,14 @@
     <main class="main">
       <div class="main__container">
         <header class="main__header">
-          <!-- FoyerSwitcher mobile only -->
-          <div class="mobile-foyer-switch">
-            <FoyerSwitcher />
-          </div>
+
+          <!-- Logo mobile only -->
+          <img src="/logobudge.svg" class="mobile-logo" alt="Budge" />
 
           <h1 class="main__title">{{ activeTab === 'moncompte' ? 'Mon compte' : currentNavItem?.label }}</h1>
 
-          <div v-if="activeTab !== 'moncompte'" class="header-pills">
+          <!-- Pills desktop -->
+          <div v-if="activeTab !== 'moncompte'" class="header-pills desktop-pills">
             <div
               v-for="(p, pi) in store.personnes"
               :key="p.id"
@@ -122,7 +122,7 @@
                 <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style="margin-left:4px;opacity:0.5"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </button>
 
-              <!-- Popover édition -->
+              <!-- Popover édition desktop -->
               <div v-if="openPopover === p.id" class="main__popover" @click.stop>
                 <div class="main__popover-field">
                   <label class="main__popover-label">Prénom</label>
@@ -148,7 +148,43 @@
               <span class="main__reste-value">{{ fmt(store.resteAVivre) }}</span>
             </div>
           </div>
+
+          <!-- Bouton membres mobile -->
+          <button v-if="activeTab !== 'moncompte'" class="mobile-members-btn" type="button" @click.stop="membersSheetOpen = !membersSheetOpen">
+            <span class="mobile-members-avatars">
+              <span v-for="(p, pi) in store.personnes" :key="p.id" class="mobile-members-dot" :style="{ background: PERSON_COLORS[pi] }"></span>
+            </span>
+            <span class="mobile-members-label">{{ store.personnes.map(p => p.nom).join(' · ') }}</span>
+            <svg width="12" height="12" viewBox="0 0 10 10" fill="none"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+
         </header>
+
+        <!-- Bottom sheet membres (mobile) -->
+        <Teleport to="body">
+          <Transition name="sheet">
+            <div v-if="membersSheetOpen" class="members-sheet-overlay" @click.self="membersSheetOpen = false">
+              <div class="members-sheet">
+                <div class="members-sheet__handle"></div>
+                <div class="members-sheet__title">Membres du foyer</div>
+                <div class="members-sheet__list">
+                  <div v-for="(p, pi) in store.personnes" :key="p.id" class="members-sheet__row">
+                    <div class="members-sheet__avatar" :style="{ background: PERSON_COLORS[pi] }">{{ p.nom[0]?.toUpperCase() }}</div>
+                    <div class="members-sheet__info">
+                      <input class="members-sheet__name-input" :value="p.nom" @change="e => { store.updateNomPersonne(p.id, e.target.value); scheduleAutoSave() }" />
+                      <div class="members-sheet__salary-wrap">
+                        <input class="members-sheet__salary-input" type="number" :value="p.salaire" min="0" step="50"
+                          @change="e => { store.updateSalaire(p.id, +e.target.value); scheduleAutoSave() }" />
+                        <span class="members-sheet__suffix">€/mois</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <button class="members-sheet__close" @click="membersSheetOpen = false">Fermer</button>
+              </div>
+            </div>
+          </Transition>
+        </Teleport>
 
         <div class="main__content">
           <Dashboard         v-if="activeTab === 'dashboard'" @navigate="activeTab = $event" />
@@ -231,6 +267,7 @@ const { scheduleAutoSave, lastSavedLabel } = useStorage()
 
 const activeTab        = ref('dashboard')
 const selectedDepenses = ref([])
+const membersSheetOpen = ref(false)
 
 // ── Popover salaires ───────────────────────────────────────
 const openPopover = ref(null)
@@ -808,7 +845,191 @@ const pctCharges = computed(() => {
     bottom: calc(72px + env(safe-area-inset-bottom));
     right: 16px;
   }
+
+  /* Mobile logo */
+  .mobile-logo {
+    display: block;
+    height: 22px;
+    width: auto;
+    flex-shrink: 0;
+  }
+
+  /* Desktop pills hidden on mobile */
+  .desktop-pills { display: none !important; }
+
+  /* Members button (mobile only) */
+  .mobile-members-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+    background: #f4f4f5;
+    border: 1px solid #e4e4e7;
+    border-radius: 99px;
+    padding: 5px 10px 5px 8px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #18181b;
+    cursor: pointer;
+    font-family: inherit;
+    flex-shrink: 0;
+  }
+  .mobile-members-avatars {
+    display: inline-flex;
+    gap: -3px;
+  }
+  .mobile-members-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1.5px solid #fff;
+    flex-shrink: 0;
+    margin-right: -3px;
+  }
+  .mobile-members-label {
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
+
+/* Mobile logo hidden on desktop */
+.mobile-logo { display: none; }
+
+/* Members button hidden on desktop */
+.mobile-members-btn { display: none; }
+
+/* ── Members bottom sheet ─────────────────────────────────── */
+.members-sheet-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.members-sheet {
+  background: #fff;
+  border-radius: 16px 16px 0 0;
+  padding: 12px 20px calc(20px + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.members-sheet__handle {
+  width: 36px;
+  height: 4px;
+  border-radius: 2px;
+  background: #e4e4e7;
+  margin: 0 auto 4px;
+  flex-shrink: 0;
+}
+
+.members-sheet__title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #18181b;
+}
+
+.members-sheet__list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.members-sheet__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.members-sheet__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.members-sheet__info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.members-sheet__name-input {
+  width: 100%;
+  font-size: 14px;
+  font-weight: 500;
+  color: #18181b;
+  background: #f4f4f5;
+  border: 1px solid #e4e4e7;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-family: inherit;
+  outline: none;
+  box-sizing: border-box;
+}
+.members-sheet__name-input:focus { border-color: #18181b; }
+
+.members-sheet__salary-wrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.members-sheet__salary-input {
+  width: 80px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #18181b;
+  background: #f4f4f5;
+  border: 1px solid #e4e4e7;
+  border-radius: 8px;
+  padding: 5px 8px;
+  font-family: inherit;
+  outline: none;
+  text-align: right;
+}
+.members-sheet__salary-input:focus { border-color: #18181b; }
+
+.members-sheet__suffix {
+  font-size: 12px;
+  color: #71717a;
+}
+
+.members-sheet__close {
+  height: 40px;
+  border-radius: 10px;
+  background: #f4f4f5;
+  border: 1px solid #e4e4e7;
+  font-size: 14px;
+  font-weight: 500;
+  color: #18181b;
+  cursor: pointer;
+  font-family: inherit;
+  width: 100%;
+}
+.members-sheet__close:hover { background: #e4e4e7; }
+
+/* Sheet slide-up transition */
+.sheet-enter-active { transition: transform 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.2s ease; }
+.sheet-leave-active { transition: transform 0.22s ease-in, opacity 0.18s ease; }
+.sheet-enter-from .members-sheet,
+.sheet-leave-to .members-sheet { transform: translateY(100%); }
+.sheet-enter-from { opacity: 0; }
+.sheet-leave-to   { opacity: 0; }
 
 /* ── Auth ──────────────────────────────────────────────────── */
 .app-loading {
