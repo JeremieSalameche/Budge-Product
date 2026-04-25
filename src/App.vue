@@ -273,7 +273,6 @@ import { ref, computed, onMounted, watch } from 'vue'
 import { useBudgetStore } from './stores/budget'
 import { useAuthStore }   from './stores/auth'
 import { useStorage } from './composables/useStorage'
-import { useTheme }   from './composables/useTheme'
 import Dashboard from './components/Dashboard.vue'
 import DepensesTable from './components/DepensesTable.vue'
 import Enveloppes from './components/Enveloppes.vue'
@@ -292,7 +291,6 @@ const needsOnboarding = ref(false)
 const appLoading      = ref(false)
 const PERSON_COLORS = ['#7C6FCD', '#4A9EDB']
 const { scheduleAutoSave, lastSavedLabel } = useStorage()
-useTheme()
 
 const activeTab             = ref('dashboard')
 const selectedDepenses      = ref([])
@@ -460,7 +458,7 @@ const pctCharges = computed(() => {
   flex-shrink: 0; object-fit: cover;
 }
 .sidebar__user-avatar--initials {
-  background: var(--foreground); color: var(--card);
+  background: #18181b; color: #fff;
   display: flex; align-items: center; justify-content: center;
   font-size: 12px; font-weight: 700;
 }
@@ -815,8 +813,8 @@ const pctCharges = computed(() => {
     left: 0;
     right: 0;
     z-index: 300;
-    background: var(--card);
-    border-top: 1px solid var(--border);
+    background: #fff;
+    border-top: 1px solid #e4e4e7;
     padding-bottom: env(safe-area-inset-bottom);
     height: calc(60px + env(safe-area-inset-bottom));
     align-items: stretch;
@@ -832,14 +830,14 @@ const pctCharges = computed(() => {
     background: none;
     border: none;
     cursor: pointer;
-    color: var(--muted-foreground);
+    color: #71717a;
     padding: 6px 4px;
     font-family: inherit;
     transition: color 0.15s;
     min-width: 0;
   }
 
-  .mobile-nav__item--active { color: var(--foreground); }
+  .mobile-nav__item--active { color: #18181b; }
 
   .mobile-nav__icon {
     display: flex;
@@ -869,8 +867,8 @@ const pctCharges = computed(() => {
   }
 
   .mobile-nav__avatar--initials {
-    background: var(--foreground);
-    color: var(--card);
+    background: #18181b;
+    color: #fff;
     font-size: 10px;
     font-weight: 700;
     display: flex;
@@ -911,14 +909,14 @@ const pctCharges = computed(() => {
     align-items: center;
     gap: 6px;
     margin-left: auto;
-    background: var(--muted);
-    border: 1px solid var(--border);
+    background: #f4f4f5;
+    border: 1px solid #e4e4e7;
     border-radius: 99px;
     height: 32px;
     padding: 0 10px 0 8px;
     font-size: 12px;
     font-weight: 500;
-    color: var(--foreground);
+    color: #18181b;
     cursor: pointer;
     font-family: inherit;
     flex-shrink: 0;
@@ -937,7 +935,7 @@ const pctCharges = computed(() => {
 /* ── Members bottom sheet ─────────────────────────────────── */
 /* ── Sheet sections label ── */
 .members-sheet__section-label {
-  font-size: 11px; font-weight: 600; color: var(--muted-foreground);
+  font-size: 11px; font-weight: 600; color: #71717a;
   text-transform: uppercase; letter-spacing: 0.05em;
 }
 
@@ -953,24 +951,24 @@ const pctCharges = computed(() => {
   transition: background 120ms;
 }
 .members-sheet__foyer-item:hover,
-.members-sheet__foyer-item--active { background: var(--muted); }
+.members-sheet__foyer-item--active { background: #f4f4f5; }
 .members-sheet__foyer-check { flex-shrink: 0; }
 .members-sheet__foyer-bullet {
   width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
 }
 .members-sheet__foyer-nom {
-  flex: 1; font-size: 14px; font-weight: 500; color: var(--foreground);
+  flex: 1; font-size: 14px; font-weight: 500; color: #18181b;
 }
 .members-sheet__new-foyer {
   margin-top: 4px; width: 100%; padding: 9px 8px;
-  background: none; border: 1px solid var(--border); border-radius: 8px;
-  font-size: 13px; font-weight: 500; color: var(--foreground); font-family: inherit;
+  background: none; border: 1px solid #e4e4e7; border-radius: 8px;
+  font-size: 13px; font-weight: 500; color: #18181b; font-family: inherit;
   cursor: pointer; text-align: center; transition: background 120ms;
 }
-.members-sheet__new-foyer:hover { background: var(--muted); }
+.members-sheet__new-foyer:hover { background: #f4f4f5; }
 
 /* ── Separator ── */
-.members-sheet__sep { height: 1px; background: var(--border); }
+.members-sheet__sep { height: 1px; background: #e4e4e7; }
 
 .members-sheet-overlay {
   position: fixed;
@@ -983,7 +981,7 @@ const pctCharges = computed(() => {
 }
 
 .members-sheet {
-  background: var(--card);
+  background: #fff;
   border-radius: 16px 16px 0 0;
   padding: 12px 20px calc(20px + env(safe-area-inset-bottom));
   display: flex;
@@ -995,7 +993,7 @@ const pctCharges = computed(() => {
   width: 36px;
   height: 4px;
   border-radius: 2px;
-  background: var(--border);
+  background: #e4e4e7;
   margin: 0 auto 4px;
   flex-shrink: 0;
 }
@@ -1003,7 +1001,7 @@ const pctCharges = computed(() => {
 .members-sheet__title {
   font-size: 15px;
   font-weight: 600;
-  color: var(--foreground);
+  color: #18181b;
 }
 
 .members-sheet__list {
@@ -1046,17 +1044,17 @@ const pctCharges = computed(() => {
   font-family: inherit;
   outline: none;
   box-sizing: border-box;
-  background: var(--muted);
-  border: 1px solid var(--border);
+  background: #f4f4f5;
+  border: 1px solid #e4e4e7;
   border-radius: 8px;
-  color: var(--foreground);
+  color: #18181b;
 }
 .members-sheet__name-input {
   font-size: 15px;
   font-weight: 600;
   padding: 11px 12px;
 }
-.members-sheet__name-input:focus { border-color: var(--foreground); }
+.members-sheet__name-input:focus { border-color: #18181b; }
 
 .members-sheet__salary-wrap {
   position: relative;
