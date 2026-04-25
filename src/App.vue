@@ -304,6 +304,8 @@ async function initApp(user) {
   if (!user) return
   appLoading.value = true
   await store.loadFromStorage()
+  // Push local data to Firestore so it's available on all devices
+  await store.saveToStorage()
   appLoading.value = false
   // Onboarding si aucune dépense et aucun revenu saisi
   const f = store.foyerActif
