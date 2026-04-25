@@ -167,7 +167,7 @@
                       <span class="flo__card-ico">💳</span>
                       <div>
                         <div class="flo__card-name">Charges fixes <span class="flo__card-pct">16%</span></div>
-                        <div class="flo__card-detail">Netflix · Assurance · Téléphone · Internet · Crédit auto</div>
+                        <div class="flo__card-detail">Netflix · Assurance · Téléphone · Internet</div>
                       </div>
                     </div>
                     <div class="flo__card-r">
