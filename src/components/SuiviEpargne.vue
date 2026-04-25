@@ -434,8 +434,8 @@ function enregistrerMouvement() {
 @media (max-width: 768px) {
   .epargne-header { flex-wrap: wrap; gap: 8px; }
   .epargne-actions { width: 100%; display: flex; gap: 8px; }
-  .btn-gerer     { flex: 1; text-align: center; }
-  .btn-mouvement { flex: 1; text-align: center; }
+  .btn-gerer     { flex: 0 0 auto; white-space: nowrap; }
+  .btn-mouvement { flex: 1; white-space: nowrap; text-align: center; }
 }
 
 .btn-gerer {
