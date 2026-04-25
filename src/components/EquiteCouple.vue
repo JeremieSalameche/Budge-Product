@@ -74,9 +74,12 @@
       <!-- Footer gris collé en bas -->
       <div class="eq__shared-card">
         <span class="eq__shared-title">Dépenses partagées à rééquilibrer</span>
-        <span v-if="recos.length === 0" class="eq__recos-empty">
+        <span v-if="recos.length === 0 && score >= 78" class="eq__recos-empty">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           Tout équilibré
+        </span>
+        <span v-else-if="recos.length === 0 && score < 78" class="eq__recos-none">
+          Aucune dépense n'est actuellement partagée entre les deux
         </span>
         <button v-else class="eq__cta" @click="panelOpen = true">
           Dépenses à rééquilibrer
@@ -487,6 +490,7 @@ function applyReco(r) {
 }
 .eq__shared-title { font-size: 12px; font-weight: 600; color: var(--foreground); flex-shrink: 0; }
 .eq__recos-empty  { font-size: 12px; color: var(--muted-foreground); }
+.eq__recos-none   { font-size: 12px; color: #DC2626; font-style: italic; }
 
 .eq__cta-badge {
   background: #EF5350;
