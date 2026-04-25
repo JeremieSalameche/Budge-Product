@@ -189,19 +189,31 @@
                 <div class="eq-panel__persons">
                   <div class="eq-panel__person eq-panel__person--p1">
                     <span class="eq-panel__person-dot"></span>
-                    <span class="eq-panel__person-name">{{ p1.nom }}</span>
-                    <span class="eq-panel__person-amount">{{ r.m1 }} €/mois</span>
-                    <span class="eq-panel__person-sep">·</span>
-                    <span class="eq-panel__person-pct">{{ r.pctP1 }}% de la ligne</span>
-                    <span class="eq-panel__person-ideal">Idéal : {{ r.idealP1 }} €</span>
+                    <div class="eq-panel__person-body">
+                      <div class="eq-panel__person-row1">
+                        <span class="eq-panel__person-name">{{ p1.nom }}</span>
+                        <span class="eq-panel__person-amount">{{ r.m1 }} €/mois</span>
+                      </div>
+                      <div class="eq-panel__person-row2">
+                        <span class="eq-panel__person-pct">{{ r.pctP1 }}% de la ligne</span>
+                        <span class="eq-panel__person-sep">·</span>
+                        <span class="eq-panel__person-ideal">Idéal : {{ r.idealP1 }} €</span>
+                      </div>
+                    </div>
                   </div>
                   <div class="eq-panel__person eq-panel__person--p2">
                     <span class="eq-panel__person-dot"></span>
-                    <span class="eq-panel__person-name">{{ p2.nom }}</span>
-                    <span class="eq-panel__person-amount">{{ r.m2 }} €/mois</span>
-                    <span class="eq-panel__person-sep">·</span>
-                    <span class="eq-panel__person-pct">{{ r.pctP2 }}% de la ligne</span>
-                    <span class="eq-panel__person-ideal">Idéal : {{ r.idealP2 }} €</span>
+                    <div class="eq-panel__person-body">
+                      <div class="eq-panel__person-row1">
+                        <span class="eq-panel__person-name">{{ p2.nom }}</span>
+                        <span class="eq-panel__person-amount">{{ r.m2 }} €/mois</span>
+                      </div>
+                      <div class="eq-panel__person-row2">
+                        <span class="eq-panel__person-pct">{{ r.pctP2 }}% de la ligne</span>
+                        <span class="eq-panel__person-sep">·</span>
+                        <span class="eq-panel__person-ideal">Idéal : {{ r.idealP2 }} €</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div class="eq-panel__suggestion">
@@ -224,17 +236,27 @@
                 <div class="eq-panel__leisure-row">
                   <div class="eq-panel__leisure-person eq-panel__leisure-person--p1">
                     <span class="eq-panel__leisure-dot"></span>
-                    <span class="eq-panel__leisure-name">{{ p1.nom }}</span>
-                    <span class="eq-panel__leisure-amount">{{ leisureInsight.totalP1 }} €/mois</span>
-                    <span class="eq-panel__person-sep">·</span>
-                    <span class="eq-panel__leisure-pct" :class="leisureInsight.pct1 < 3 ? 'eq-panel__leisure-pct--low' : ''">{{ leisureInsight.pct1 }}% de son revenu</span>
+                    <div class="eq-panel__person-body">
+                      <div class="eq-panel__person-row1">
+                        <span class="eq-panel__leisure-name">{{ p1.nom }}</span>
+                        <span class="eq-panel__leisure-amount">{{ leisureInsight.totalP1 }} €/mois</span>
+                      </div>
+                      <div class="eq-panel__person-row2">
+                        <span class="eq-panel__leisure-pct" :class="leisureInsight.pct1 < 3 ? 'eq-panel__leisure-pct--low' : ''">{{ leisureInsight.pct1 }}% de son revenu</span>
+                      </div>
+                    </div>
                   </div>
                   <div class="eq-panel__leisure-person eq-panel__leisure-person--p2">
                     <span class="eq-panel__leisure-dot"></span>
-                    <span class="eq-panel__leisure-name">{{ p2.nom }}</span>
-                    <span class="eq-panel__leisure-amount">{{ leisureInsight.totalP2 }} €/mois</span>
-                    <span class="eq-panel__person-sep">·</span>
-                    <span class="eq-panel__leisure-pct" :class="leisureInsight.pct2 < 3 ? 'eq-panel__leisure-pct--low' : ''">{{ leisureInsight.pct2 }}% de son revenu</span>
+                    <div class="eq-panel__person-body">
+                      <div class="eq-panel__person-row1">
+                        <span class="eq-panel__leisure-name">{{ p2.nom }}</span>
+                        <span class="eq-panel__leisure-amount">{{ leisureInsight.totalP2 }} €/mois</span>
+                      </div>
+                      <div class="eq-panel__person-row2">
+                        <span class="eq-panel__leisure-pct" :class="leisureInsight.pct2 < 3 ? 'eq-panel__leisure-pct--low' : ''">{{ leisureInsight.pct2 }}% de son revenu</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <p v-if="leisureInsight.disparity" class="eq-panel__leisure-note">
@@ -618,20 +640,23 @@ function applyReco(r) {
 .eq-panel__reco-top    { display: flex; justify-content: space-between; align-items: center; }
 .eq-panel__reco-nom    { font-size: 14px; font-weight: 600; color: var(--foreground); }
 .eq-panel__reco-badge  { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 99px; }
-.eq-panel__persons     { display: flex; flex-direction: column; gap: 6px; }
+.eq-panel__persons     { display: flex; flex-direction: column; gap: 8px; }
 .eq-panel__person {
-  display: flex; align-items: center; gap: 8px;
+  display: flex; align-items: flex-start; gap: 8px;
 }
 .eq-panel__person-dot {
-  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 4px;
 }
 .eq-panel__person--p1 .eq-panel__person-dot { background: #7C6FCD; }
 .eq-panel__person--p2 .eq-panel__person-dot { background: #4A9EDB; }
-.eq-panel__person-name   { font-size: 12px; font-weight: 600; color: var(--foreground); flex: 1; }
-.eq-panel__person-amount { font-size: 13px; font-weight: 700; color: var(--foreground); }
+.eq-panel__person-body   { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.eq-panel__person-row1   { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; min-width: 0; }
+.eq-panel__person-row2   { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.eq-panel__person-name   { font-size: 12px; font-weight: 600; color: var(--foreground); min-width: 0; }
+.eq-panel__person-amount { font-size: 13px; font-weight: 700; color: var(--foreground); flex-shrink: 0; white-space: nowrap; }
 .eq-panel__person-sep    { color: var(--muted-foreground); font-size: 11px; }
 .eq-panel__person-pct    { font-size: 11px; color: var(--muted-foreground); }
-.eq-panel__person-ideal  { font-size: 11px; color: var(--muted-foreground); font-style: italic; margin-left: auto; }
+.eq-panel__person-ideal  { font-size: 11px; color: var(--muted-foreground); font-style: italic; }
 .eq-panel__suggestion { font-size: 12px; color: var(--muted-foreground); font-style: italic; background: var(--card); border-radius: 6px; padding: 8px 10px; display: flex; align-items: flex-start; gap: 6px; }
 
 .eq-panel__apply {
@@ -662,15 +687,15 @@ function applyReco(r) {
   background: #FEF9C3; color: #CA8A04; border-radius: 99px;
   padding: 2px 8px; text-transform: none; letter-spacing: 0;
 }
-.eq-panel__leisure-row { display: flex; flex-direction: column; gap: 6px; }
-.eq-panel__leisure-person { display: flex; align-items: center; gap: 8px; }
+.eq-panel__leisure-row { display: flex; flex-direction: column; gap: 8px; }
+.eq-panel__leisure-person { display: flex; align-items: flex-start; gap: 8px; }
 .eq-panel__leisure-dot {
-  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 4px;
 }
 .eq-panel__leisure-person--p1 .eq-panel__leisure-dot { background: #7C6FCD; }
 .eq-panel__leisure-person--p2 .eq-panel__leisure-dot { background: #4A9EDB; }
-.eq-panel__leisure-name   { font-size: 12px; font-weight: 600; color: var(--foreground); flex: 1; }
-.eq-panel__leisure-amount { font-size: 13px; font-weight: 700; color: var(--foreground); }
+.eq-panel__leisure-name   { font-size: 12px; font-weight: 600; color: var(--foreground); min-width: 0; }
+.eq-panel__leisure-amount { font-size: 13px; font-weight: 700; color: var(--foreground); flex-shrink: 0; white-space: nowrap; }
 .eq-panel__leisure-pct    { font-size: 11px; color: var(--muted-foreground); }
 .eq-panel__leisure-pct--low { color: #DC2626; font-weight: 600; }
 .eq-panel__leisure-note {
