@@ -243,7 +243,7 @@
             <div class="sum__providers-title">Banques digitales qui proposent ce système</div>
             <div class="sum__providers-grid">
 
-              <a class="sum__prov" href="https://sumeria.eu" target="_blank" rel="noopener noreferrer">
+              <a class="sum__prov" href="https://sumeria.eu/blog/budget/mieux-gerer-son-budget-avec-les-enveloppes-virtuelles/" target="_blank" rel="noopener noreferrer">
                 <div class="sum__prov-top">
                   <span class="sum__prov-logo sum__prov-logo--sumeria">Sumeria</span>
                   <span class="sum__prov-price">3,90€<span>/mois</span></span>
@@ -252,7 +252,7 @@
                 <div class="sum__prov-desc">Comptes secondaires avec IBAN + CB dédiée</div>
               </a>
 
-              <a class="sum__prov" href="https://www.bunq.com/fr" target="_blank" rel="noopener noreferrer">
+              <a class="sum__prov" href="https://www.bunq.com/fr/personal-account/banking-features/budgeting" target="_blank" rel="noopener noreferrer">
                 <div class="sum__prov-top">
                   <span class="sum__prov-logo sum__prov-logo--bunq">bunq</span>
                   <span class="sum__prov-price">3,99€<span>/mois</span></span>
@@ -261,7 +261,7 @@
                 <div class="sum__prov-desc">Jusqu'à 25 comptes avec IBAN propre</div>
               </a>
 
-              <a class="sum__prov" href="https://n26.com/fr-fr" target="_blank" rel="noopener noreferrer">
+              <a class="sum__prov" href="https://n26.com/fr-fr/espaces" target="_blank" rel="noopener noreferrer">
                 <div class="sum__prov-top">
                   <span class="sum__prov-logo sum__prov-logo--n26">N26</span>
                   <span class="sum__prov-price sum__prov-price--free">Gratuit<span>+ premium</span></span>
@@ -270,7 +270,7 @@
                 <div class="sum__prov-desc">Spaces avec IBAN dédié par espace</div>
               </a>
 
-              <a class="sum__prov" href="https://vivid.money/fr-fr" target="_blank" rel="noopener noreferrer">
+              <a class="sum__prov" href="https://vivid.money/fr-fr/pockets" target="_blank" rel="noopener noreferrer">
                 <div class="sum__prov-top">
                   <span class="sum__prov-logo sum__prov-logo--vivid">Vivid</span>
                   <span class="sum__prov-price sum__prov-price--free">0€<span>/mois</span></span>
