@@ -7,8 +7,13 @@
         <p class="page-subtitle">Suivez et planifiez votre épargne</p>
       </div>
       <div class="page-header-actions epargne-actions">
-        <button class="btn-gerer" @click="ouvrirPanel" type="button">Gérer</button>
-        <button class="btn-mouvement" @click="openModal" type="button">Nouveau mouvement</button>
+        <MsButton variant="secondary" size="sm" @click="ouvrirPanel">Gérer</MsButton>
+        <MsButton variant="primary"   size="sm" @click="openModal">
+          <svg width="12" height="12" viewBox="0 0 14 14" fill="none" style="flex-shrink:0">
+            <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+          Nouveau mouvement
+        </MsButton>
       </div>
     </div>
 
@@ -191,6 +196,7 @@ import { LineChart } from 'echarts/charts'
 import { GridComponent, TooltipComponent, LegendComponent } from 'echarts/components'
 import VChart from 'vue-echarts'
 import EpargneTable from './EpargneTable.vue'
+import { MsButton } from './ui/index.js'
 import { useBudgetStore } from '../stores/budget'
 import { useStorage } from '../composables/useStorage'
 
@@ -434,30 +440,10 @@ function enregistrerMouvement() {
 @media (max-width: 768px) {
   .epargne-header { flex-wrap: wrap; gap: 8px; }
   .epargne-actions { width: 100%; display: flex; gap: 8px; }
-  .btn-gerer     { flex: 0 0 auto; white-space: nowrap; }
-  .btn-mouvement { flex: 1; white-space: nowrap; text-align: center; }
+  /* Gérer : taille fixe, Nouveau mouvement : prend le reste */
+  .epargne-actions :deep(.ms-btn:first-child) { flex: 0 0 auto; }
+  .epargne-actions :deep(.ms-btn:last-child)  { flex: 1; justify-content: center; }
 }
-
-.btn-gerer {
-  font-size: 13px; font-weight: 500; font-family: inherit;
-  color: var(--foreground);
-  background: transparent;
-  border: 1px solid var(--primary);
-  border-radius: var(--radius-md);
-  padding: 6px 14px; cursor: pointer;
-  transition: border-color 150ms, background 150ms, color 150ms;
-}
-.btn-gerer:hover { background: var(--primary); color: var(--primary-foreground); }
-
-.btn-mouvement {
-  font-size: 13px; font-family: inherit; font-weight: 500;
-  padding: 6px 16px; border-radius: var(--radius-md);
-  border: none;
-  background: var(--primary); color: var(--primary-foreground);
-  cursor: pointer;
-  transition: background 150ms ease;
-}
-.btn-mouvement:hover { background: var(--zinc-800); }
 
 .se__chart-wrap { height: 200px; position: relative; }
 .epargne-chart  { height: 200px; width: 100%; }

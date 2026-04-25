@@ -7,6 +7,14 @@
         <h2 class="page-title">Dépenses</h2>
         <p class="page-subtitle">Gérez toutes vos charges fixes et variables</p>
       </div>
+      <div class="page-header-actions">
+        <MsButton variant="primary" size="sm" @click="openAdd">
+          <svg width="12" height="12" viewBox="0 0 14 14" fill="none" style="flex-shrink:0">
+            <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+          Nouvelle dépense
+        </MsButton>
+      </div>
     </div>
 
     <!-- ── Barre de contrôle ─────────────────────────────────── -->
@@ -15,12 +23,6 @@
         <option value="">Toutes catégories</option>
         <option v-for="cat in store.categories" :key="cat.id" :value="cat.id">{{ cat.nom }}</option>
       </select>
-      <MsButton variant="primary" size="sm" @click="openAdd">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0">
-          <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-        </svg>
-        Ajouter une dépense
-      </MsButton>
     </div>
 
     <!-- ── Empty state (aucune dépense) ───────────────────── -->
