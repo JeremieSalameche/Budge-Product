@@ -303,4 +303,9 @@ function fmtDateCible(mois) {
   font-size: 12px; color: var(--muted-foreground); text-align: center;
   padding: 20px;
 }
+
+@media (max-width: 768px) {
+  .cp__row { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .cp__row-dur { align-items: flex-start; }
+}
 </style>
