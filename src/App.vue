@@ -99,8 +99,6 @@
           <!-- Logo mobile only -->
           <img src="/logobudge.svg" class="mobile-logo" alt="Budge" />
 
-          <h1 class="main__title">{{ activeTab === 'moncompte' ? 'Mon compte' : currentNavItem?.label }}</h1>
-
           <!-- Pills desktop -->
           <div v-if="activeTab !== 'moncompte'" class="header-pills desktop-pills">
             <div
@@ -334,7 +332,7 @@ function fmt(n) {
 }
 
 const navItems = [
-  { id: 'dashboard',  label: 'Accueil',
+  { id: 'dashboard',  label: 'Vue d\'ensemble',
     icon: `<svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="2" width="6" height="6" rx="2" stroke="currentColor" stroke-width="1.5"/><rect x="10" y="2" width="6" height="6" rx="2" stroke="currentColor" stroke-width="1.5"/><rect x="2" y="10" width="6" height="6" rx="2" stroke="currentColor" stroke-width="1.5"/><rect x="10" y="10" width="6" height="6" rx="2" stroke="currentColor" stroke-width="1.5"/></svg>` },
   { id: 'depenses',   label: 'Dépenses',
     icon: `<svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 5h12M3 9h12M3 13h7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>` },
@@ -488,7 +486,6 @@ const pctCharges = computed(() => {
   padding: 16px 24px 14px;
   display: flex; align-items: center; gap: 12px;
 }
-.main__title { font-size: 15px; font-weight: 600; color: var(--foreground); margin: 0; flex-shrink: 0; }
 .header-pills { display: flex; gap: 8px; flex-shrink: 0; flex-wrap: wrap; }
 .header-spacer { flex: 1; }
 .header-reste { flex-shrink: 0; }
@@ -749,7 +746,6 @@ const pctCharges = computed(() => {
     row-gap: 8px;
   }
 
-  .main__title { display: none; }
 
   .header-pills {
     order: 3;

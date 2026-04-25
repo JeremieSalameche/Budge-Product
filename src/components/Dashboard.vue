@@ -3,8 +3,8 @@
     <!-- Page header -->
     <div class="page-header">
       <div>
-        <h2 class="page-title">Tableau de bord</h2>
-        <p class="page-subtitle">Vue d'ensemble de votre budget mensuel</p>
+        <h2 class="page-title">Vue d'ensemble</h2>
+        <p class="page-subtitle">Votre budget mensuel en un coup d'oeil</p>
       </div>
     </div>
 
