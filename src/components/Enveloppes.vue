@@ -303,28 +303,37 @@
           <!-- Header compte -->
           <div class="env__card-header">
             <div class="env__card-left">
-              <div>
-                <div class="env__card-name">{{ env.nom }}</div>
-                <div v-if="(!env.appartientA || env.appartientA === 'tous') && !isSolo" class="env__persons-row">
-                  <div class="env__person-chip" v-if="store.personnes[0]"
-                       :style="{ background: hexToRgba(store.personnes[0].couleur, 0.09), borderColor: hexToRgba(store.personnes[0].couleur, 0.22) }">
-                    <span class="env__person-dot" :style="{ background: store.personnes[0].couleur }"></span>
-                    <span class="env__person-name">{{ store.personnes[0].nom }}</span>
-                    <span class="env__person-amt" :style="{ color: store.personnes[0].couleur }">{{ fmt(store.totalParEnveloppe[env.id]?.p1Charge || 0) }}</span>
-                  </div>
-                  <div class="env__person-chip" v-if="store.personnes[1]"
-                       :style="{ background: hexToRgba(store.personnes[1].couleur, 0.09), borderColor: hexToRgba(store.personnes[1].couleur, 0.22) }">
-                    <span class="env__person-dot" :style="{ background: store.personnes[1].couleur }"></span>
-                    <span class="env__person-name">{{ store.personnes[1].nom }}</span>
-                    <span class="env__person-amt" :style="{ color: store.personnes[1].couleur }">{{ fmt(store.totalParEnveloppe[env.id]?.p2Charge || 0) }}</span>
-                  </div>
-                </div>
-              </div>
+              <div class="env__card-name">{{ env.nom }}</div>
             </div>
             <div class="env__card-right">
               <span class="env__badge" :style="badgeStyle(env)">{{ badgeLabel(env) }}</span>
               <button class="env__cta" type="button" @click="openEditModal(env)">Modifier</button>
             </div>
+          </div>
+
+          <!-- Pills personne(s) -->
+          <div v-if="!isSolo" class="env__persons-row">
+            <template v-if="!env.appartientA || env.appartientA === 'tous'">
+              <div class="env__person-chip" v-if="store.personnes[0]"
+                   :style="{ background: hexToRgba(store.personnes[0].couleur, 0.09), borderColor: hexToRgba(store.personnes[0].couleur, 0.22) }">
+                <span class="env__person-dot" :style="{ background: store.personnes[0].couleur }"></span>
+                <span class="env__person-name">{{ store.personnes[0].nom }}</span>
+                <span class="env__person-amt" :style="{ color: store.personnes[0].couleur }">{{ fmt(store.totalParEnveloppe[env.id]?.p1Charge || 0) }}</span>
+              </div>
+              <div class="env__person-chip" v-if="store.personnes[1]"
+                   :style="{ background: hexToRgba(store.personnes[1].couleur, 0.09), borderColor: hexToRgba(store.personnes[1].couleur, 0.22) }">
+                <span class="env__person-dot" :style="{ background: store.personnes[1].couleur }"></span>
+                <span class="env__person-name">{{ store.personnes[1].nom }}</span>
+                <span class="env__person-amt" :style="{ color: store.personnes[1].couleur }">{{ fmt(store.totalParEnveloppe[env.id]?.p2Charge || 0) }}</span>
+              </div>
+            </template>
+            <template v-else>
+              <div class="env__person-chip"
+                   :style="{ background: hexToRgba((env.appartientA === 'p1' ? store.personnes[0] : store.personnes[1])?.couleur, 0.09), borderColor: hexToRgba((env.appartientA === 'p1' ? store.personnes[0] : store.personnes[1])?.couleur, 0.22) }">
+                <span class="env__person-dot" :style="{ background: (env.appartientA === 'p1' ? store.personnes[0] : store.personnes[1])?.couleur }"></span>
+                <span class="env__person-name">{{ (env.appartientA === 'p1' ? store.personnes[0] : store.personnes[1])?.nom }}</span>
+              </div>
+            </template>
           </div>
 
           <!-- Montant à virer -->
@@ -339,7 +348,7 @@
             <div class="env__lines">
             <div v-for="dep in depensesOfEnv(env.id)" :key="dep.id" class="env__line">
               <div class="env__line-cat">
-                <span class="env__line-cat-dot" :style="{ background: getCatColor(dep.categorieId) }"></span>
+                <span class="env__line-cat-icon" v-html="getCatIcon(dep)"></span>
                 <span class="env__line-cat-nom">{{ getCatNom(dep) }}</span>
               </div>
               <div class="env__line-main">
@@ -474,6 +483,24 @@ function getCatColor(catId) {
 }
 function getCatNom(dep) {
   return store.categories.find(c => c.id === dep.categorieId)?.nom ?? '—'
+}
+function getCatIcon(dep) {
+  const nom = getCatNom(dep).toLowerCase()
+  const map = {
+    logement:     '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>',
+    transport:    '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>',
+    alimentation: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>',
+    loisirs:      '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>',
+    'santé':      '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
+    'épargne':    '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>',
+    abonnements:  '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>',
+    enfants:      '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+    assurance:    '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+    emprunt:      '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>',
+    charges:      '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>',
+  }
+  const key = Object.keys(map).find(k => nom.includes(k))
+  return key ? map[key] : '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>'
 }
 function depensesOfEnv(envId) {
   return store.depenses.filter(d => d.enveloppeId === envId)
@@ -1011,7 +1038,7 @@ function doDeleteEnv() {
 .env__virement-amount { font-size: 16px; font-weight: 700; color: var(--foreground); letter-spacing: -0.5px; }
 
 /* Chips personnes */
-.env__persons-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.env__persons-row { display: flex; gap: 6px; flex-wrap: wrap; }
 .env__person-chip {
   display: flex; align-items: center; gap: 6px;
   border: 1px solid transparent; border-radius: 8px; padding: 7px 10px;
@@ -1034,21 +1061,21 @@ function doDeleteEnv() {
 .env__line:last-child { border-bottom: none; }
 
 .env__line-cat {
-  display: flex; align-items: center; gap: 5px;
+  display: flex; align-items: center; gap: 4px;
 }
-.env__line-cat-dot {
-  width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+.env__line-cat-icon {
+  flex-shrink: 0; display: flex; align-items: center; color: var(--muted-foreground);
 }
 .env__line-cat-nom {
-  font-size: 10px; font-weight: 600; color: var(--muted-foreground);
-  text-transform: uppercase; letter-spacing: 0.05em;
+  font-size: 9px; font-weight: 600; color: var(--muted-foreground);
+  text-transform: uppercase; letter-spacing: 0.06em;
 }
 
 .env__line-main {
-  display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
 }
-.env__line-nom  { flex: 1; font-size: 13px; font-weight: 500; color: var(--foreground); }
-.env__line-montant { font-size: 13px; font-weight: 600; color: var(--muted-foreground); flex-shrink: 0; }
+.env__line-nom  { flex: 1; font-size: 13px; font-weight: 600; color: var(--foreground); min-width: 0; }
+.env__line-montant { font-size: 13px; font-weight: 400; color: var(--foreground); flex-shrink: 0; }
 .env__line-inactive { opacity: 0.4; text-decoration: line-through; }
 .env__empty { font-size: 13px; color: var(--muted-foreground); text-align: center; padding: 8px 0; }
 
