@@ -303,7 +303,6 @@
           <!-- Header compte -->
           <div class="env__card-header">
             <div class="env__card-left">
-              <div class="env__dot"></div>
               <div>
                 <div class="env__card-name">{{ env.nom }}</div>
                 <div class="env__card-sub">{{ depensesOfEnv(env.id).length }} charge{{ depensesOfEnv(env.id).length > 1 ? 's' : '' }} assignée{{ depensesOfEnv(env.id).length > 1 ? 's' : '' }}</div>
