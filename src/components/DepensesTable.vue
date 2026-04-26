@@ -180,16 +180,18 @@
                     <span class="dep__card-cat-label">{{ catNom(dep) }}<template v-if="dep.frequence !== 'mensuel'"> · {{ freqLabel(dep.frequence) }}</template></span>
                   </div>
                   <span class="dep__card-nom">{{ dep.nom || '—' }}</span>
+                </div>
+                <div class="dep__card-amount-block">
+                  <span class="dep__card-amount">{{ fmtMonthly(dep) }}</span>
                   <div v-if="!isSolo" class="dep__card-shares">
                     <span class="dep__share" :style="{ background: p1.couleur + '22', color: p1.couleur }">
-                      {{ p1.nom }} · {{ fmt(store.toMonthly(dep.montantP1 || 0, dep.frequence)) }}
+                      {{ fmt(store.toMonthly(dep.montantP1 || 0, dep.frequence)) }}
                     </span>
                     <span class="dep__share" :style="{ background: p2.couleur + '22', color: p2.couleur }">
-                      {{ p2.nom }} · {{ fmt(store.toMonthly(dep.montantP2 || 0, dep.frequence)) }}
+                      {{ fmt(store.toMonthly(dep.montantP2 || 0, dep.frequence)) }}
                     </span>
                   </div>
                 </div>
-                <span class="dep__card-amount">{{ fmtMonthly(dep) }}</span>
               </div>
               <div class="dep__card-actions">
                 <button class="dep__cta dep__cta--del" type="button" @click="confirmDelete(dep)">Supprimer</button>
@@ -725,7 +727,12 @@ function suggestSplit() {
   white-space: nowrap; flex-shrink: 0;
 }
 
-.dep__card-shares { display: flex; gap: 5px; flex-wrap: wrap; }
+.dep__card-amount-block {
+  flex-shrink: 0;
+  display: flex; flex-direction: column; align-items: flex-end; gap: 5px;
+}
+
+.dep__card-shares { display: flex; gap: 5px; flex-wrap: wrap; justify-content: flex-end; }
 .dep__share {
   font-size: 11px; font-weight: 500;
   padding: 2px 8px; border-radius: 20px; white-space: nowrap;
