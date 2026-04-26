@@ -303,36 +303,27 @@
           <!-- Header compte -->
           <div class="env__card-header">
             <div class="env__card-left">
+              <!-- Pill propriétaire -->
+              <div v-if="!isSolo" class="env__owner-pill-wrap">
+                <template v-if="!env.appartientA || env.appartientA === 'tous'">
+                  <span class="env__owner-pill env__owner-pill--commun">Commun</span>
+                </template>
+                <template v-else>
+                  <span class="env__owner-pill"
+                    :style="{
+                      background: hexToRgba((env.appartientA === 'p1' ? store.personnes[0] : store.personnes[1])?.couleur, 0.12),
+                      color: (env.appartientA === 'p1' ? store.personnes[0] : store.personnes[1])?.couleur,
+                      borderColor: hexToRgba((env.appartientA === 'p1' ? store.personnes[0] : store.personnes[1])?.couleur, 0.28),
+                    }">
+                    {{ (env.appartientA === 'p1' ? store.personnes[0] : store.personnes[1])?.nom }}
+                  </span>
+                </template>
+              </div>
               <div class="env__card-name">{{ env.nom }}</div>
             </div>
             <div class="env__card-right">
               <button class="env__cta" type="button" @click="openEditModal(env)">Modifier</button>
             </div>
-          </div>
-
-          <!-- Pills personne(s) -->
-          <div v-if="!isSolo" class="env__persons-row">
-            <template v-if="!env.appartientA || env.appartientA === 'tous'">
-              <div class="env__person-chip" v-if="store.personnes[0]"
-                   :style="{ background: hexToRgba(store.personnes[0].couleur, 0.09), borderColor: hexToRgba(store.personnes[0].couleur, 0.22) }">
-                <span class="env__person-dot" :style="{ background: store.personnes[0].couleur }"></span>
-                <span class="env__person-name">{{ store.personnes[0].nom }}</span>
-                <span class="env__person-amt" :style="{ color: store.personnes[0].couleur }">{{ fmt(store.totalParEnveloppe[env.id]?.p1Charge || 0) }}</span>
-              </div>
-              <div class="env__person-chip" v-if="store.personnes[1]"
-                   :style="{ background: hexToRgba(store.personnes[1].couleur, 0.09), borderColor: hexToRgba(store.personnes[1].couleur, 0.22) }">
-                <span class="env__person-dot" :style="{ background: store.personnes[1].couleur }"></span>
-                <span class="env__person-name">{{ store.personnes[1].nom }}</span>
-                <span class="env__person-amt" :style="{ color: store.personnes[1].couleur }">{{ fmt(store.totalParEnveloppe[env.id]?.p2Charge || 0) }}</span>
-              </div>
-            </template>
-            <template v-else>
-              <div class="env__person-chip"
-                   :style="{ background: hexToRgba((env.appartientA === 'p1' ? store.personnes[0] : store.personnes[1])?.couleur, 0.09), borderColor: hexToRgba((env.appartientA === 'p1' ? store.personnes[0] : store.personnes[1])?.couleur, 0.22) }">
-                <span class="env__person-dot" :style="{ background: (env.appartientA === 'p1' ? store.personnes[0] : store.personnes[1])?.couleur }"></span>
-                <span class="env__person-name">{{ (env.appartientA === 'p1' ? store.personnes[0] : store.personnes[1])?.nom }}</span>
-              </div>
-            </template>
           </div>
 
           <!-- Montant à virer -->
@@ -1101,16 +1092,16 @@ function doDeleteEnv() {
 .env__virement-bank-name { font-size: 11px; font-weight: 500; color: var(--muted-foreground); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .env__virement-amount { font-size: 16px; font-weight: 700; color: var(--foreground); letter-spacing: -0.5px; flex-shrink: 0; }
 
-/* Chips personnes */
-.env__persons-row { display: flex; gap: 6px; flex-wrap: wrap; }
-.env__person-chip {
-  display: flex; align-items: center; gap: 6px;
-  border: 1px solid transparent; border-radius: 8px; padding: 7px 10px;
-  flex: 1; min-width: 0;
+/* Pill propriétaire */
+.env__owner-pill-wrap { margin-bottom: 4px; }
+.env__owner-pill {
+  display: inline-flex; align-items: center;
+  padding: 2px 8px; border-radius: 99px; border: 1px solid var(--border);
+  font-size: 10px; font-weight: 600; white-space: nowrap;
 }
-.env__person-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.env__person-name { font-size: 12px; font-weight: 500; color: var(--foreground); flex: 1; }
-.env__person-amt { font-size: 13px; font-weight: 700; }
+.env__owner-pill--commun {
+  background: var(--muted); color: var(--muted-foreground); border-color: var(--border);
+}
 
 /* Charges */
 .env__lines-header {
