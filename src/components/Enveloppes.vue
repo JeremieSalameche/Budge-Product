@@ -298,7 +298,6 @@
       <div v-for="env in store.enveloppes" :key="env.id"
            class="env__card"
            :style="{ '--env-color': env.couleur }">
-        <div class="env__card-stripe"></div>
         <div class="env__card-body">
 
           <!-- Header compte -->
@@ -312,14 +311,7 @@
             </div>
             <div class="env__card-right">
               <span class="env__badge" :style="badgeStyle(env)">{{ badgeLabel(env) }}</span>
-              <div class="env__card-actions">
-                <button class="env__icon-btn" @click="openEditModal(env)" title="Modifier" type="button">
-                  <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M9 2l2 2-6 6H3V8l6-6z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
-                </button>
-                <button class="env__icon-btn env__icon-btn--danger" @click="confirmDeleteEnv(env)" title="Supprimer" type="button">
-                  <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1.5 3H12M4.5 3V2.2a.7.7 0 01.7-.7h2.6a.7.7 0 01.7.7V3M9.5 3l-.5 7.5H4L3.5 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </button>
-              </div>
+              <button class="env__cta" type="button" @click="openEditModal(env)">Modifier</button>
             </div>
           </div>
 
@@ -437,8 +429,11 @@
           </div>
 
           <div class="env__modal-actions">
-            <MsButton variant="secondary" @click="editTarget = null">Annuler</MsButton>
-            <MsButton variant="primary" @click="saveEdit">Enregistrer</MsButton>
+            <button class="env__del-link" type="button" @click="() => { const t = editTarget; editTarget = null; deleteTarget = t }">Supprimer ce compte</button>
+            <div style="display:flex;gap:8px;">
+              <MsButton variant="secondary" @click="editTarget = null">Annuler</MsButton>
+              <MsButton variant="primary" @click="saveEdit">Enregistrer</MsButton>
+            </div>
           </div>
         </div>
       </div>
@@ -949,7 +944,7 @@ function doDeleteEnv() {
 /* ── Grille ─────────────────────────────────────────────── */
 .env__grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
 }
 @media (max-width: 900px) { .env__grid { grid-template-columns: minmax(0, 1fr); } }
@@ -965,7 +960,6 @@ function doDeleteEnv() {
   box-shadow: 0 6px 20px rgba(0,0,0,0.09), 0 2px 6px rgba(0,0,0,0.06);
   transform: translateY(-2px);
 }
-.env__card-stripe { height: 5px; width: 100%; flex-shrink: 0; background: var(--env-color, #e5e7eb); }
 .env__card-body { padding: 18px; display: flex; flex-direction: column; gap: 14px; }
 
 .env__card-header { display: flex; align-items: flex-start; justify-content: space-between; }
@@ -974,8 +968,15 @@ function doDeleteEnv() {
 .env__dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; background: var(--env-color, #e5e7eb); }
 .env__card-name { font-size: 15px; font-weight: 600; color: var(--foreground); }
 .env__card-sub  { font-size: 12px; color: var(--muted-foreground); margin-top: 2px; }
-.env__card-actions { display: flex; gap: 4px; opacity: 0; transition: opacity 0.15s; }
-.env__card:hover .env__card-actions { opacity: 1; }
+.env__cta {
+  height: 24px; padding: 0 9px; border-radius: 5px;
+  font-size: 11px; font-weight: 500; font-family: inherit;
+  background: transparent; border: 1px solid var(--border);
+  color: var(--muted-foreground); cursor: pointer;
+  transition: border-color 0.12s, color 0.12s;
+  white-space: nowrap;
+}
+.env__cta:hover { border-color: var(--zinc-400); color: var(--foreground); }
 
 .env__badge {
   font-size: 11px; padding: 2px 10px;
@@ -985,14 +986,14 @@ function doDeleteEnv() {
   border: 1px solid var(--border);
 }
 
-.env__icon-btn {
-  width: 28px; height: 28px; border-radius: var(--radius-sm);
-  display: flex; align-items: center; justify-content: center;
-  color: var(--muted-foreground); cursor: pointer; border: none; background: transparent;
-  transition: background 150ms, color 150ms;
+.env__del-link {
+  background: none; border: none; padding: 0;
+  font-size: 12px; font-weight: 500; color: #ef4444;
+  cursor: pointer; text-decoration: underline; text-underline-offset: 2px;
+  transition: opacity 0.12s;
 }
-.env__icon-btn:hover { background: var(--accent); color: var(--foreground); }
-.env__icon-btn--danger:hover { background: #fef2f2; color: #ef4444; }
+.env__del-link:hover { opacity: 0.7; }
+.env__modal-actions { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 4px; }
 
 /* Virement principal */
 .env__virement {
@@ -1066,7 +1067,7 @@ function doDeleteEnv() {
 .env__modal--large { max-width: 520px; }
 .env__modal h3 { font-size: 16px; font-weight: 600; margin: 0; }
 .env__modal p  { font-size: 14px; color: var(--muted-foreground); margin: 0; }
-.env__modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 4px; }
+
 
 .env__edit-field { display: flex; flex-direction: column; gap: 6px; }
 .env__edit-label { font-size: 12px; font-weight: 500; color: var(--muted-foreground); }
