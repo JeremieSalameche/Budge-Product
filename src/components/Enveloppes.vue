@@ -306,7 +306,6 @@
               <div class="env__card-name">{{ env.nom }}</div>
             </div>
             <div class="env__card-right">
-              <span class="env__badge" :style="badgeStyle(env)">{{ badgeLabel(env) }}</span>
               <button class="env__cta" type="button" @click="openEditModal(env)">Modifier</button>
             </div>
           </div>
