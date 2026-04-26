@@ -84,8 +84,8 @@
                 <div class="dep__card-acts">
                   <div class="dep__menu-wrap">
                     <button class="dep__kebab" type="button" @click.stop="openMenuId = openMenuId === dep.id ? null : dep.id">
-                      <svg width="3" height="13" viewBox="0 0 3 13" fill="currentColor">
-                        <circle cx="1.5" cy="1.5" r="1.5"/><circle cx="1.5" cy="6.5" r="1.5"/><circle cx="1.5" cy="11.5" r="1.5"/>
+                      <svg width="13" height="3" viewBox="0 0 13 3" fill="currentColor">
+                        <circle cx="1.5" cy="1.5" r="1.5"/><circle cx="6.5" cy="1.5" r="1.5"/><circle cx="11.5" cy="1.5" r="1.5"/>
                       </svg>
                     </button>
                     <div v-if="openMenuId === dep.id" class="dep__menu" @click.stop>
@@ -142,8 +142,8 @@
                 <div class="dep__card-acts">
                   <div class="dep__menu-wrap">
                     <button class="dep__kebab" type="button" @click.stop="openMenuId = openMenuId === dep.id ? null : dep.id">
-                      <svg width="3" height="13" viewBox="0 0 3 13" fill="currentColor">
-                        <circle cx="1.5" cy="1.5" r="1.5"/><circle cx="1.5" cy="6.5" r="1.5"/><circle cx="1.5" cy="11.5" r="1.5"/>
+                      <svg width="13" height="3" viewBox="0 0 13 3" fill="currentColor">
+                        <circle cx="1.5" cy="1.5" r="1.5"/><circle cx="6.5" cy="1.5" r="1.5"/><circle cx="11.5" cy="1.5" r="1.5"/>
                       </svg>
                     </button>
                     <div v-if="openMenuId === dep.id" class="dep__menu" @click.stop>
@@ -232,8 +232,8 @@
                 <div class="dep__card-acts">
                   <div class="dep__menu-wrap">
                     <button class="dep__kebab" type="button" @click.stop="openMenuId = openMenuId === dep.id ? null : dep.id">
-                      <svg width="3" height="13" viewBox="0 0 3 13" fill="currentColor">
-                        <circle cx="1.5" cy="1.5" r="1.5"/><circle cx="1.5" cy="6.5" r="1.5"/><circle cx="1.5" cy="11.5" r="1.5"/>
+                      <svg width="13" height="3" viewBox="0 0 13 3" fill="currentColor">
+                        <circle cx="1.5" cy="1.5" r="1.5"/><circle cx="6.5" cy="1.5" r="1.5"/><circle cx="11.5" cy="1.5" r="1.5"/>
                       </svg>
                     </button>
                     <div v-if="openMenuId === dep.id" class="dep__menu" @click.stop>
