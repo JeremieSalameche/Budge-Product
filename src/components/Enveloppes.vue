@@ -341,8 +341,11 @@
 
           <!-- Montant à virer -->
           <div class="env__virement">
-            <span class="env__virement-label">À virer le 1er du mois</span>
-            <span class="env__virement-amount">{{ fmt(getTotal(env.id)) }}</span>
+            <span class="env__virement-label">Total à virer</span>
+            <div class="env__virement-right">
+              <img v-if="env.banque && getBankDomain(env.banque)" :src="`https://www.google.com/s2/favicons?domain=${getBankDomain(env.banque)}&sz=32`" class="env__virement-bank-logo" />
+              <span class="env__virement-amount">{{ fmt(getTotal(env.id)) }}</span>
+            </div>
           </div>
 
           <!-- Liste charges -->
@@ -1096,6 +1099,8 @@ function doDeleteEnv() {
   display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
 }
 .env__virement-label { font-size: 11px; font-weight: 500; color: var(--muted-foreground); }
+.env__virement-right { display: flex; align-items: center; gap: 6px; }
+.env__virement-bank-logo { width: 16px; height: 16px; border-radius: 3px; object-fit: contain; }
 .env__virement-amount { font-size: 16px; font-weight: 700; color: var(--foreground); letter-spacing: -0.5px; }
 
 /* Chips personnes */
