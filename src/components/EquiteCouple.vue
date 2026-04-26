@@ -110,21 +110,21 @@
                   <div class="eq-info-case-score eq-info-case-score--green">100<span>/100</span></div>
                   <div>
                     <strong>Partage équitable</strong>
-                    <p>Budgio gagne 60 % des revenus du foyer et paie 60 % des charges. Chacun contribue selon ses moyens.</p>
+                    <p>Budgio gagne 60 % des revenus, Budgia 40 %. Budgio paie 60 % des charges, Budgia 40 %. Chacun contribue selon ses moyens.</p>
                   </div>
                 </div>
                 <div class="eq-info-case">
                   <div class="eq-info-case-score eq-info-case-score--yellow">60<span>/100</span></div>
                   <div>
                     <strong>Léger déséquilibre</strong>
-                    <p>Budgio gagne 60 % des revenus mais prend en charge 70 % des dépenses. L'un contribue plus que sa part.</p>
+                    <p>Budgio gagne 60 % des revenus mais paie 70 % des charges. Budgia paie moins que sa part — l'un porte davantage que l'autre.</p>
                   </div>
                 </div>
                 <div class="eq-info-case">
                   <div class="eq-info-case-score eq-info-case-score--red">0<span>/100</span></div>
                   <div>
                     <strong>Déséquilibre important</strong>
-                    <p>Budgio gagne la moitié des revenus mais supporte les trois quarts des charges. Le partage est très inégal.</p>
+                    <p>Budgio gagne 50 % des revenus mais supporte 75 % des charges. Budgia ne paie que 25 % alors qu'elle gagne autant.</p>
                   </div>
                 </div>
               </div>
