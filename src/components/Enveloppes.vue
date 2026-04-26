@@ -304,6 +304,10 @@
           <div class="env__card-header">
             <div class="env__card-left">
               <div class="env__card-name">{{ env.nom }}</div>
+              <div v-if="env.banque" class="env__card-bank">
+                <img :src="`https://www.google.com/s2/favicons?domain=${getBankDomain(env.banque)}&sz=32`" class="env__card-bank-logo" :alt="getBankNom(env.banque)" />
+                <span class="env__card-bank-name">{{ getBankNom(env.banque) }}</span>
+              </div>
             </div>
             <div class="env__card-right">
               <button class="env__cta" type="button" @click="openEditModal(env)">Modifier</button>
@@ -420,6 +424,20 @@
           </div>
 
           <div class="env__edit-field">
+            <label class="env__edit-label">Compte bancaire associé</label>
+            <div class="env__bank-grid">
+              <button
+                v-for="bank in BANKS" :key="bank.id" type="button"
+                :class="['env__bank-btn', { 'env__bank-btn--active': editBanque === bank.id }]"
+                @click="editBanque = editBanque === bank.id ? null : bank.id"
+              >
+                <img :src="`https://www.google.com/s2/favicons?domain=${bank.domain}&sz=32`" class="env__bank-logo-img" :alt="bank.nom" />
+                <span class="env__bank-btn-name">{{ bank.nom }}</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="env__edit-field">
             <label class="env__edit-label">
               Charges assignées à ce compte
               <span class="env__edit-label-hint">— filtré selon le propriétaire ci-dessus</span>
@@ -473,6 +491,28 @@ const isSolo  = computed(() => store.personnes.length < 2)
 const sumOpen = ref(false)
 
 const COLORS = ['#18181B', '#71717A', '#E8643A', '#EF4444', '#22C55E', '#F08C46', '#25566E', '#D4A84B']
+
+const BANKS = [
+  { id: 'sumeria',      nom: 'Sumeria',          domain: 'sumeria.eu' },
+  { id: 'boursorama',   nom: 'Boursorama',        domain: 'boursorama.com' },
+  { id: 'revolut',      nom: 'Revolut',           domain: 'revolut.com' },
+  { id: 'n26',          nom: 'N26',               domain: 'n26.com' },
+  { id: 'fortuneo',     nom: 'Fortuneo',          domain: 'fortuneo.fr' },
+  { id: 'hellobank',    nom: 'Hello bank!',       domain: 'hellobank.fr' },
+  { id: 'nickel',       nom: 'Nickel',            domain: 'nickel.eu' },
+  { id: 'qonto',        nom: 'Qonto',             domain: 'qonto.com' },
+  { id: 'traderepublic',nom: 'Trade Republic',    domain: 'traderepublic.com' },
+  { id: 'ca',           nom: 'Crédit Agricole',   domain: 'credit-agricole.fr' },
+  { id: 'bnp',          nom: 'BNP Paribas',       domain: 'bnpparibas.fr' },
+  { id: 'sg',           nom: 'Société Générale',  domain: 'societegenerale.fr' },
+  { id: 'lcl',          nom: 'LCL',               domain: 'lcl.fr' },
+  { id: 'postale',      nom: 'Banque Postale',    domain: 'labanquepostale.fr' },
+  { id: 'cic',          nom: 'CIC',               domain: 'cic.fr' },
+]
+
+function getBankById(id) { return BANKS.find(b => b.id === id) ?? null }
+function getBankNom(id)  { return getBankById(id)?.nom ?? '' }
+function getBankDomain(id) { return getBankById(id)?.domain ?? '' }
 
 function fmt(n) {
   return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n)
@@ -582,6 +622,7 @@ const editNom         = ref('')
 const editCouleur     = ref(COLORS[0])
 const editLignes      = ref([])
 const editAppartientA = ref('tous')
+const editBanque      = ref(null)
 
 // Bug fix: filtrer les dépenses selon le propriétaire sélectionné
 const filteredDepensesForEnv = computed(() => {
@@ -602,6 +643,7 @@ function openEditModal(env) {
   editNom.value         = env.nom
   editCouleur.value     = env.couleur || COLORS[0]
   editAppartientA.value = env.appartientA || 'tous'
+  editBanque.value      = env.banque ?? null
   editLignes.value      = store.depenses.filter(d => d.enveloppeId === env.id).map(d => d.id)
 }
 
@@ -618,6 +660,7 @@ function saveEdit() {
     nom:         editNom.value.trim() || editTarget.value.nom,
     couleur:     editCouleur.value,
     appartientA: editAppartientA.value,
+    banque:      editBanque.value,
   })
   store.depenses.forEach(d => {
     const shouldBeIn = editLignes.value.includes(d.id)
@@ -1135,6 +1178,33 @@ function doDeleteEnv() {
 }
 .env__color-swatch:hover { transform: scale(1.1); }
 .env__color-swatch--active { border-color: rgba(0,0,0,0.25); transform: scale(1.1); }
+
+/* Bank selection grid */
+.env__bank-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px;
+}
+.env__bank-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 8px 4px; border-radius: 8px;
+  border: 1.5px solid var(--border); background: var(--card);
+  cursor: pointer; transition: border-color 0.12s, background 0.12s;
+  font-family: inherit;
+}
+.env__bank-btn:hover { border-color: var(--zinc-300); background: var(--muted); }
+.env__bank-btn--active { border-color: var(--primary); background: rgba(74,109,196,0.07); }
+.env__bank-logo-img { width: 20px; height: 20px; border-radius: 4px; object-fit: contain; }
+.env__bank-btn-name {
+  font-size: 9px; font-weight: 500; color: var(--muted-foreground);
+  text-align: center; line-height: 1.2; word-break: break-word;
+}
+.env__bank-btn--active .env__bank-btn-name { color: var(--primary); }
+
+/* Bank on card */
+.env__card-bank {
+  display: flex; align-items: center; gap: 5px; margin-top: 4px;
+}
+.env__card-bank-logo { width: 14px; height: 14px; border-radius: 3px; object-fit: contain; }
+.env__card-bank-name { font-size: 11px; color: var(--muted-foreground); }
 
 .env__dep-list {
   border: 1px solid var(--border); border-radius: var(--radius-md);
