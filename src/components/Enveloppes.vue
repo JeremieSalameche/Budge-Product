@@ -1051,7 +1051,7 @@ function doDeleteEnv() {
 .env__card-left { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
 .env__card-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 .env__dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; background: var(--env-color, #e5e7eb); }
-.env__card-name { font-size: 13px; font-weight: 600; color: var(--foreground); }
+.env__card-name { font-size: 16px; font-weight: 600; color: var(--foreground); }
 .env__card-sub  { font-size: 12px; color: var(--muted-foreground); margin-top: 2px; }
 .env__cta {
   height: 24px; padding: 0 9px; border-radius: 5px;
