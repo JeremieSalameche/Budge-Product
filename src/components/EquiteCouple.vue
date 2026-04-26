@@ -110,21 +110,21 @@
                   <div class="eq-info-case-score eq-info-case-score--green">100<span>/100</span></div>
                   <div>
                     <strong>Partage équitable</strong>
-                    <p>{{ p1?.nom || 'P1' }} gagne 60 % des revenus du foyer et paie 60 % des charges. Chacun contribue selon ses moyens.</p>
+                    <p>Budgio gagne 60 % des revenus du foyer et paie 60 % des charges. Chacun contribue selon ses moyens.</p>
                   </div>
                 </div>
                 <div class="eq-info-case">
                   <div class="eq-info-case-score eq-info-case-score--yellow">60<span>/100</span></div>
                   <div>
                     <strong>Léger déséquilibre</strong>
-                    <p>{{ p1?.nom || 'P1' }} gagne 60 % des revenus mais prend en charge 70 % des dépenses. L'un contribue plus que sa part.</p>
+                    <p>Budgio gagne 60 % des revenus mais prend en charge 70 % des dépenses. L'un contribue plus que sa part.</p>
                   </div>
                 </div>
                 <div class="eq-info-case">
                   <div class="eq-info-case-score eq-info-case-score--red">0<span>/100</span></div>
                   <div>
                     <strong>Déséquilibre important</strong>
-                    <p>{{ p1?.nom || 'P1' }} gagne la moitié des revenus mais supporte les trois quarts des charges. Le partage est très inégal.</p>
+                    <p>Budgio gagne la moitié des revenus mais supporte les trois quarts des charges. Le partage est très inégal.</p>
                   </div>
                 </div>
               </div>
