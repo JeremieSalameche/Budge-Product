@@ -1002,7 +1002,7 @@ function doDeleteEnv() {
   display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
 }
 .env__virement-label { font-size: 11px; font-weight: 600; color: var(--primary); text-transform: uppercase; letter-spacing: 0.05em; }
-.env__virement-amount { font-size: 24px; font-weight: 800; color: var(--foreground); letter-spacing: -0.5px; }
+.env__virement-amount { font-size: 16px; font-weight: 700; color: var(--foreground); letter-spacing: -0.5px; }
 
 /* Chips personnes */
 .env__persons-row { display: flex; gap: 8px; flex-wrap: wrap; }
