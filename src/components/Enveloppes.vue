@@ -305,7 +305,20 @@
             <div class="env__card-left">
               <div>
                 <div class="env__card-name">{{ env.nom }}</div>
-                <div class="env__card-sub">{{ depensesOfEnv(env.id).length }} charge{{ depensesOfEnv(env.id).length > 1 ? 's' : '' }} assignée{{ depensesOfEnv(env.id).length > 1 ? 's' : '' }}</div>
+                <div v-if="(!env.appartientA || env.appartientA === 'tous') && !isSolo" class="env__persons-row">
+                  <div class="env__person-chip" v-if="store.personnes[0]"
+                       :style="{ background: hexToRgba(store.personnes[0].couleur, 0.09), borderColor: hexToRgba(store.personnes[0].couleur, 0.22) }">
+                    <span class="env__person-dot" :style="{ background: store.personnes[0].couleur }"></span>
+                    <span class="env__person-name">{{ store.personnes[0].nom }}</span>
+                    <span class="env__person-amt" :style="{ color: store.personnes[0].couleur }">{{ fmt(store.totalParEnveloppe[env.id]?.p1Charge || 0) }}</span>
+                  </div>
+                  <div class="env__person-chip" v-if="store.personnes[1]"
+                       :style="{ background: hexToRgba(store.personnes[1].couleur, 0.09), borderColor: hexToRgba(store.personnes[1].couleur, 0.22) }">
+                    <span class="env__person-dot" :style="{ background: store.personnes[1].couleur }"></span>
+                    <span class="env__person-name">{{ store.personnes[1].nom }}</span>
+                    <span class="env__person-amt" :style="{ color: store.personnes[1].couleur }">{{ fmt(store.totalParEnveloppe[env.id]?.p2Charge || 0) }}</span>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="env__card-right">
@@ -320,24 +333,10 @@
             <span class="env__virement-amount">{{ fmt(getTotal(env.id)) }}</span>
           </div>
 
-          <!-- Détail par personne si "tous" -->
-          <div v-if="(!env.appartientA || env.appartientA === 'tous') && !isSolo" class="env__persons-row">
-            <div class="env__person-chip" v-if="store.personnes[0]"
-                 :style="{ background: hexToRgba(store.personnes[0].couleur, 0.09), borderColor: hexToRgba(store.personnes[0].couleur, 0.22) }">
-              <span class="env__person-dot" :style="{ background: store.personnes[0].couleur }"></span>
-              <span class="env__person-name">{{ store.personnes[0].nom }}</span>
-              <span class="env__person-amt" :style="{ color: store.personnes[0].couleur }">{{ fmt(store.totalParEnveloppe[env.id]?.p1Charge || 0) }}</span>
-            </div>
-            <div class="env__person-chip" v-if="store.personnes[1]"
-                 :style="{ background: hexToRgba(store.personnes[1].couleur, 0.09), borderColor: hexToRgba(store.personnes[1].couleur, 0.22) }">
-              <span class="env__person-dot" :style="{ background: store.personnes[1].couleur }"></span>
-              <span class="env__person-name">{{ store.personnes[1].nom }}</span>
-              <span class="env__person-amt" :style="{ color: store.personnes[1].couleur }">{{ fmt(store.totalParEnveloppe[env.id]?.p2Charge || 0) }}</span>
-            </div>
-          </div>
-
           <!-- Liste charges -->
-          <div class="env__lines" v-if="depensesOfEnv(env.id).length">
+          <template v-if="depensesOfEnv(env.id).length">
+            <div class="env__lines-header">{{ depensesOfEnv(env.id).length }} dépense{{ depensesOfEnv(env.id).length > 1 ? 's' : '' }}</div>
+            <div class="env__lines">
             <div v-for="dep in depensesOfEnv(env.id)" :key="dep.id" class="env__line">
               <div class="env__line-cat">
                 <span class="env__line-cat-dot" :style="{ background: getCatColor(dep.categorieId) }"></span>
@@ -348,7 +347,8 @@
                 <span class="env__line-montant">{{ fmt(getMontantDepense(dep, env)) }}</span>
               </div>
             </div>
-          </div>
+            </div>
+          </template>
           <p v-else class="env__empty">Aucune charge assignée</p>
 
         </div>
@@ -1004,7 +1004,7 @@ function doDeleteEnv() {
 .env__virement-amount { font-size: 16px; font-weight: 700; color: var(--foreground); letter-spacing: -0.5px; }
 
 /* Chips personnes */
-.env__persons-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.env__persons-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
 .env__person-chip {
   display: flex; align-items: center; gap: 6px;
   border: 1px solid transparent; border-radius: 8px; padding: 7px 10px;
@@ -1015,6 +1015,10 @@ function doDeleteEnv() {
 .env__person-amt { font-size: 13px; font-weight: 700; }
 
 /* Charges */
+.env__lines-header {
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.05em; color: var(--muted-foreground);
+}
 .env__lines { display: flex; flex-direction: column; }
 .env__line {
   display: flex; flex-direction: column; gap: 3px;
