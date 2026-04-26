@@ -336,6 +336,7 @@
             <span class="env__virement-amount">{{ fmt(getTotal(env.id)) }}</span>
           </div>
 
+
           <!-- Liste charges -->
           <template v-if="depensesOfEnv(env.id).length">
 <div class="env__lines">
@@ -1081,8 +1082,9 @@ function doDeleteEnv() {
 
 /* Virement principal */
 .env__virement {
-  border: none; border-bottom: 1px solid var(--border);
-  padding: 0 0 12px;
+  padding: 12px;
+  border-radius: 4px;
+  background: var(--muted);
   display: flex; align-items: center; justify-content: space-between; gap: 8px;
 }
 .env__virement-left { display: flex; align-items: center; gap: 5px; min-width: 0; }
