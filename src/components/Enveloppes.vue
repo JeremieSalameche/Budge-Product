@@ -338,12 +338,9 @@
           <!-- Montant à virer -->
           <div class="env__virement">
             <div class="env__virement-left">
-              <span class="env__virement-label">Total à virer</span>
-              <template v-if="env.banque">
-                <span class="env__virement-sep">·</span>
-                <img v-if="getBankDomain(env.banque)" :src="`https://www.google.com/s2/favicons?domain=${getBankDomain(env.banque)}&sz=32`" class="env__virement-bank-logo" />
-                <span class="env__virement-bank-name">{{ getBankNom(env.banque) }}</span>
-              </template>
+              <span class="env__virement-label">A virer sur</span>
+              <img v-if="env.banque && getBankDomain(env.banque)" :src="`https://www.google.com/s2/favicons?domain=${getBankDomain(env.banque)}&sz=32`" class="env__virement-bank-logo" />
+              <span class="env__virement-bank-name">{{ env.banque ? getBankNom(env.banque) : '—' }}</span>
             </div>
             <span class="env__virement-amount">{{ fmt(getTotal(env.id)) }}</span>
           </div>
@@ -1100,7 +1097,6 @@ function doDeleteEnv() {
 }
 .env__virement-left { display: flex; align-items: center; gap: 5px; min-width: 0; }
 .env__virement-label { font-size: 11px; font-weight: 500; color: var(--muted-foreground); white-space: nowrap; }
-.env__virement-sep { font-size: 11px; color: var(--border); }
 .env__virement-bank-logo { width: 13px; height: 13px; border-radius: 2px; object-fit: contain; flex-shrink: 0; }
 .env__virement-bank-name { font-size: 11px; font-weight: 500; color: var(--muted-foreground); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .env__virement-amount { font-size: 16px; font-weight: 700; color: var(--foreground); letter-spacing: -0.5px; flex-shrink: 0; }
