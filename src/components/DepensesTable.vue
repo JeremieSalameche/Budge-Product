@@ -424,27 +424,27 @@ const depP1     = computed(() => filtered.value.filter(d => classify(d) === 'p1'
 const depP2     = computed(() => filtered.value.filter(d => classify(d) === 'p2'))
 const depCommun = computed(() => filtered.value.filter(d => classify(d) === 'commun'))
 
-// ── Totaux ────────────────────────────────────────────────
+// ── Totaux (dépenses actives uniquement) ──────────────────
 const totalP1 = computed(() =>
-  depP1.value.reduce((s, d) => s + store.toMonthly(d.montantP1 || 0, d.frequence), 0)
+  depP1.value.filter(d => d.actif !== false).reduce((s, d) => s + store.toMonthly(d.montantP1 || 0, d.frequence), 0)
 )
 const totalP2 = computed(() =>
-  depP2.value.reduce((s, d) => s + store.toMonthly(d.montantP2 || 0, d.frequence), 0)
+  depP2.value.filter(d => d.actif !== false).reduce((s, d) => s + store.toMonthly(d.montantP2 || 0, d.frequence), 0)
 )
 const totalCommun = computed(() =>
-  depCommun.value.reduce((s, d) =>
+  depCommun.value.filter(d => d.actif !== false).reduce((s, d) =>
     s + store.toMonthly((d.montantP1 || 0) + (d.montantP2 || 0) + (d.montantCommun || 0), d.frequence), 0)
 )
 const totalCommunP1 = computed(() =>
-  depCommun.value.reduce((s, d) =>
+  depCommun.value.filter(d => d.actif !== false).reduce((s, d) =>
     s + store.toMonthly((d.montantP1 || 0) + (d.montantCommun || 0) / 2, d.frequence), 0)
 )
 const totalCommunP2 = computed(() =>
-  depCommun.value.reduce((s, d) =>
+  depCommun.value.filter(d => d.actif !== false).reduce((s, d) =>
     s + store.toMonthly((d.montantP2 || 0) + (d.montantCommun || 0) / 2, d.frequence), 0)
 )
 const totalSolo = computed(() =>
-  filtered.value.reduce((s, d) =>
+  filtered.value.filter(d => d.actif !== false).reduce((s, d) =>
     s + store.toMonthly((d.montantP1 || 0) + (d.montantP2 || 0) + (d.montantCommun || 0), d.frequence), 0)
 )
 
