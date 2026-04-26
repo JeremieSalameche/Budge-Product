@@ -81,13 +81,6 @@
             <div class="dep__card-content">
               <div class="dep__card-top">
                 <span class="dep__card-nom">{{ dep.nom || '—' }}</span>
-                <span class="dep__card-amount">{{ fmtMonthly(dep) }}</span>
-              </div>
-              <div class="dep__card-bot">
-                <span class="dep__card-meta">
-                  <span class="dep__card-meta-dot" :style="{ background: catColor(dep) }"></span>
-                  {{ catNom(dep) }}<template v-if="dep.frequence !== 'mensuel'"> · {{ freqLabel(dep.frequence) }}</template>
-                </span>
                 <div class="dep__card-acts">
                   <div class="dep__menu-wrap">
                     <button class="dep__kebab" type="button" @click.stop="openMenuId = openMenuId === dep.id ? null : dep.id">
@@ -113,6 +106,13 @@
                     </div>
                   </div>
                 </div>
+              </div>
+              <div class="dep__card-bot">
+                <span class="dep__card-meta">
+                  <span class="dep__card-meta-dot" :style="{ background: catColor(dep) }"></span>
+                  {{ catNom(dep) }}<template v-if="dep.frequence !== 'mensuel'"> · {{ freqLabel(dep.frequence) }}</template>
+                </span>
+                <span class="dep__card-amount">{{ fmtMonthly(dep) }}</span>
               </div>
             </div>
           </div>
@@ -139,13 +139,6 @@
             <div class="dep__card-content">
               <div class="dep__card-top">
                 <span class="dep__card-nom">{{ dep.nom || '—' }}</span>
-                <span class="dep__card-amount">{{ fmtMonthly(dep) }}</span>
-              </div>
-              <div class="dep__card-bot">
-                <span class="dep__card-meta">
-                  <span class="dep__card-meta-dot" :style="{ background: catColor(dep) }"></span>
-                  {{ catNom(dep) }}<template v-if="dep.frequence !== 'mensuel'"> · {{ freqLabel(dep.frequence) }}</template>
-                </span>
                 <div class="dep__card-acts">
                   <div class="dep__menu-wrap">
                     <button class="dep__kebab" type="button" @click.stop="openMenuId = openMenuId === dep.id ? null : dep.id">
@@ -171,6 +164,13 @@
                     </div>
                   </div>
                 </div>
+              </div>
+              <div class="dep__card-bot">
+                <span class="dep__card-meta">
+                  <span class="dep__card-meta-dot" :style="{ background: catColor(dep) }"></span>
+                  {{ catNom(dep) }}<template v-if="dep.frequence !== 'mensuel'"> · {{ freqLabel(dep.frequence) }}</template>
+                </span>
+                <span class="dep__card-amount">{{ fmtMonthly(dep) }}</span>
               </div>
             </div>
           </div>
@@ -742,7 +742,7 @@ function suggestSplit() {
   flex: 1; min-width: 0; word-break: break-word;
 }
 .dep__card-amount {
-  font-size: 12px; font-weight: 500; color: var(--muted-foreground);
+  font-size: 13px; font-weight: 700; color: var(--foreground);
   white-space: nowrap; flex-shrink: 0;
 }
 
