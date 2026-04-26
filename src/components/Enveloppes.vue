@@ -1111,7 +1111,7 @@ function doDeleteEnv() {
 
 /* Charges */
 .env__lines-header {
-  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  font-size: 9px; font-weight: 600; text-transform: uppercase;
   letter-spacing: 0.05em; color: var(--muted-foreground);
 }
 .env__lines { display: flex; flex-direction: column; }
