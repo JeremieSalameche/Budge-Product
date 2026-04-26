@@ -30,6 +30,11 @@
           </div>
           <div class="eq__status eq__status--empty">Aucune donnée</div>
         </div>
+        <button class="eq__info-btn" @click="infoOpen = true" title="En savoir plus sur ce score">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="8"/><line x1="12" y1="12" x2="12" y2="16"/>
+          </svg>
+        </button>
       </div>
     </div>
 
@@ -82,6 +87,74 @@
         </button>
       </div>
     </template>
+
+    <!-- Side panel — explication du score -->
+    <Teleport to="body">
+      <Transition name="eq-panel">
+        <div v-if="infoOpen" class="eq-panel__overlay" @click.self="infoOpen = false">
+          <div class="eq-panel eq-info-panel">
+            <div class="eq-panel__header">
+              <div>
+                <div class="eq-panel__title">Comment fonctionne le score d'équité ?</div>
+                <div class="eq-panel__sub">Méthodologie et interprétation</div>
+              </div>
+              <button class="eq-panel__close" @click="infoOpen = false">✕</button>
+            </div>
+
+            <div class="eq-panel__body eq-info-body">
+
+              <p class="eq-info-intro">Chacun devrait payer une part des charges <strong>proportionnelle à ses revenus</strong>. Le score mesure à quel point c'est le cas — de 0 (très déséquilibré) à 100 (parfait).</p>
+
+              <div class="eq-info-section">
+                <div class="eq-info-section-title">
+                  <div class="eq-info-icon eq-info-icon--purple">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  </div>
+                  Comment c'est calculé
+                </div>
+                <div class="eq-info-formula">
+                  <div class="eq-info-formula-row"><span class="eq-info-formula-label">Écart</span><span class="eq-info-formula-val">| % charges P1 − % revenus P1 |</span></div>
+                  <div class="eq-info-formula-row"><span class="eq-info-formula-label">Score</span><span class="eq-info-formula-val">100 − (écart × 4), min 0</span></div>
+                </div>
+              </div>
+
+              <div class="eq-info-section">
+                <div class="eq-info-section-title">
+                  <div class="eq-info-icon eq-info-icon--green">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+                  </div>
+                  Exemples concrets
+                </div>
+                <div class="eq-info-cases">
+                  <div class="eq-info-case">
+                    <div class="eq-info-case-score eq-info-case-score--green">100<span>/100</span></div>
+                    <div>
+                      <strong>Répartition parfaite</strong>
+                      <p>{{ p1?.nom || 'P1' }} gagne 60 % des revenus et paie 60 % des charges. {{ p2?.nom || 'P2' }} gagne 40 % et paie 40 %. Écart = 0 pt.</p>
+                    </div>
+                  </div>
+                  <div class="eq-info-case">
+                    <div class="eq-info-case-score eq-info-case-score--yellow">60<span>/100</span></div>
+                    <div>
+                      <strong>Léger déséquilibre</strong>
+                      <p>{{ p1?.nom || 'P1' }} gagne 60 % des revenus mais supporte 70 % des charges. Écart = 10 pts → score 60/100.</p>
+                    </div>
+                  </div>
+                  <div class="eq-info-case">
+                    <div class="eq-info-case-score eq-info-case-score--red">0<span>/100</span></div>
+                    <div>
+                      <strong>Fort déséquilibre</strong>
+                      <p>{{ p1?.nom || 'P1' }} gagne 50 % des revenus mais supporte 75 % des charges. Écart = 25 pts → score 0/100.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
 
     <!-- Side panel — toutes les recommandations -->
     <Teleport to="body">
@@ -211,6 +284,7 @@ import { useStorage } from '../composables/useStorage'
 const store     = useBudgetStore()
 const { scheduleAutoSave } = useStorage()
 const panelOpen = ref(false)
+const infoOpen  = ref(false)
 
 const p1 = computed(() => store.personnes[0])
 const p2 = computed(() => store.personnes[1])
