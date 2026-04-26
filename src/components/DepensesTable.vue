@@ -38,6 +38,9 @@
       </MsButton>
     </div>
 
+    <!-- Overlay fermeture menu kebab -->
+    <div v-if="openMenuId" class="dep__menu-overlay" @click="openMenuId = null"></div>
+
     <!-- ── Colonnes ────────────────────────────────────────── -->
     <div v-if="store.depenses.length > 0">
 
@@ -86,16 +89,29 @@
                   {{ catNom(dep) }}<template v-if="dep.frequence !== 'mensuel'"> · {{ freqLabel(dep.frequence) }}</template>
                 </span>
                 <div class="dep__card-acts">
-                  <button class="dep__act" @click="openEdit(dep)" title="Modifier" type="button">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                  </button>
-                  <button class="dep__act" @click="toggleActif(dep)" :title="dep.actif ? 'Désactiver' : 'Activer'" type="button">
-                    <svg v-if="dep.actif" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                    <svg v-else width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-                  </button>
-                  <button class="dep__act dep__act--del" @click="confirmDelete(dep)" title="Supprimer" type="button">
-                    <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M1.75 3.5H12.25M5.25 3.5V2.333a.583.583 0 01.583-.583h2.334a.583.583 0 01.583.583V3.5M10.5 3.5l-.583 8.167H4.083L3.5 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                  </button>
+                  <div class="dep__menu-wrap">
+                    <button class="dep__kebab" type="button" @click.stop="openMenuId = openMenuId === dep.id ? null : dep.id">
+                      <svg width="3" height="13" viewBox="0 0 3 13" fill="currentColor">
+                        <circle cx="1.5" cy="1.5" r="1.5"/><circle cx="1.5" cy="6.5" r="1.5"/><circle cx="1.5" cy="11.5" r="1.5"/>
+                      </svg>
+                    </button>
+                    <div v-if="openMenuId === dep.id" class="dep__menu" @click.stop>
+                      <button class="dep__menu-item" type="button" @click="openEdit(dep); openMenuId = null">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                        Modifier
+                      </button>
+                      <button class="dep__menu-item" type="button" @click="toggleActif(dep); openMenuId = null">
+                        <svg v-if="dep.actif" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        <svg v-else width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                        {{ dep.actif ? 'Désactiver' : 'Activer' }}
+                      </button>
+                      <div class="dep__menu-sep"></div>
+                      <button class="dep__menu-item dep__menu-item--del" type="button" @click="confirmDelete(dep); openMenuId = null">
+                        <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M1.75 3.5H12.25M5.25 3.5V2.333a.583.583 0 01.583-.583h2.334a.583.583 0 01.583.583V3.5M10.5 3.5l-.583 8.167H4.083L3.5 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        Supprimer
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -131,16 +147,29 @@
                   {{ catNom(dep) }}<template v-if="dep.frequence !== 'mensuel'"> · {{ freqLabel(dep.frequence) }}</template>
                 </span>
                 <div class="dep__card-acts">
-                  <button class="dep__act" @click="openEdit(dep)" title="Modifier" type="button">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                  </button>
-                  <button class="dep__act" @click="toggleActif(dep)" :title="dep.actif ? 'Désactiver' : 'Activer'" type="button">
-                    <svg v-if="dep.actif" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                    <svg v-else width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-                  </button>
-                  <button class="dep__act dep__act--del" @click="confirmDelete(dep)" title="Supprimer" type="button">
-                    <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M1.75 3.5H12.25M5.25 3.5V2.333a.583.583 0 01.583-.583h2.334a.583.583 0 01.583.583V3.5M10.5 3.5l-.583 8.167H4.083L3.5 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                  </button>
+                  <div class="dep__menu-wrap">
+                    <button class="dep__kebab" type="button" @click.stop="openMenuId = openMenuId === dep.id ? null : dep.id">
+                      <svg width="3" height="13" viewBox="0 0 3 13" fill="currentColor">
+                        <circle cx="1.5" cy="1.5" r="1.5"/><circle cx="1.5" cy="6.5" r="1.5"/><circle cx="1.5" cy="11.5" r="1.5"/>
+                      </svg>
+                    </button>
+                    <div v-if="openMenuId === dep.id" class="dep__menu" @click.stop>
+                      <button class="dep__menu-item" type="button" @click="openEdit(dep); openMenuId = null">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                        Modifier
+                      </button>
+                      <button class="dep__menu-item" type="button" @click="toggleActif(dep); openMenuId = null">
+                        <svg v-if="dep.actif" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        <svg v-else width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                        {{ dep.actif ? 'Désactiver' : 'Activer' }}
+                      </button>
+                      <div class="dep__menu-sep"></div>
+                      <button class="dep__menu-item dep__menu-item--del" type="button" @click="confirmDelete(dep); openMenuId = null">
+                        <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M1.75 3.5H12.25M5.25 3.5V2.333a.583.583 0 01.583-.583h2.334a.583.583 0 01.583.583V3.5M10.5 3.5l-.583 8.167H4.083L3.5 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        Supprimer
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -201,16 +230,29 @@
                   {{ catNom(dep) }}<template v-if="dep.frequence !== 'mensuel'"> · {{ freqLabel(dep.frequence) }}</template>
                 </span>
                 <div class="dep__card-acts">
-                  <button class="dep__act" @click="openEdit(dep)" title="Modifier" type="button">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                  </button>
-                  <button class="dep__act" @click="toggleActif(dep)" :title="dep.actif ? 'Désactiver' : 'Activer'" type="button">
-                    <svg v-if="dep.actif" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                    <svg v-else width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-                  </button>
-                  <button class="dep__act dep__act--del" @click="confirmDelete(dep)" title="Supprimer" type="button">
-                    <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M1.75 3.5H12.25M5.25 3.5V2.333a.583.583 0 01.583-.583h2.334a.583.583 0 01.583.583V3.5M10.5 3.5l-.583 8.167H4.083L3.5 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                  </button>
+                  <div class="dep__menu-wrap">
+                    <button class="dep__kebab" type="button" @click.stop="openMenuId = openMenuId === dep.id ? null : dep.id">
+                      <svg width="3" height="13" viewBox="0 0 3 13" fill="currentColor">
+                        <circle cx="1.5" cy="1.5" r="1.5"/><circle cx="1.5" cy="6.5" r="1.5"/><circle cx="1.5" cy="11.5" r="1.5"/>
+                      </svg>
+                    </button>
+                    <div v-if="openMenuId === dep.id" class="dep__menu" @click.stop>
+                      <button class="dep__menu-item" type="button" @click="openEdit(dep); openMenuId = null">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                        Modifier
+                      </button>
+                      <button class="dep__menu-item" type="button" @click="toggleActif(dep); openMenuId = null">
+                        <svg v-if="dep.actif" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        <svg v-else width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                        {{ dep.actif ? 'Désactiver' : 'Activer' }}
+                      </button>
+                      <div class="dep__menu-sep"></div>
+                      <button class="dep__menu-item dep__menu-item--del" type="button" @click="confirmDelete(dep); openMenuId = null">
+                        <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M1.75 3.5H12.25M5.25 3.5V2.333a.583.583 0 01.583-.583h2.334a.583.583 0 01.583.583V3.5M10.5 3.5l-.583 8.167H4.083L3.5 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        Supprimer
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -419,7 +461,8 @@ const p1 = computed(() => store.personnes[0] ?? { id: 'p1', nom: '?', couleur: '
 const p2 = computed(() => store.personnes[1] ?? { id: 'p2', nom: '?', couleur: '#4A9EDB', salaire: 0 })
 
 // ── Mobile col switcher ───────────────────────────────────
-const mobileCol = ref('p1')
+const mobileCol  = ref('p1')
+const openMenuId = ref(null)
 
 // ── Filtre ────────────────────────────────────────────────
 const filterCat = ref('')
@@ -721,21 +764,48 @@ function suggestSplit() {
   width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
 }
 
-.dep__card-acts {
-  display: flex; gap: 2px; margin-left: auto;
-  opacity: 0; transition: opacity 0.15s;
-}
-.dep__card:hover .dep__card-acts { opacity: 1; }
+.dep__card-acts { margin-left: auto; }
 
-.dep__act {
+.dep__menu-overlay {
+  position: fixed; inset: 0; z-index: 99;
+}
+
+.dep__menu-wrap { position: relative; }
+
+.dep__kebab {
   width: 26px; height: 26px; border-radius: 6px;
   display: flex; align-items: center; justify-content: center;
   background: transparent; border: none;
   color: var(--muted-foreground); cursor: pointer;
   transition: background 0.12s, color 0.12s;
 }
-.dep__act:hover { background: var(--muted); color: var(--foreground); }
-.dep__act--del:hover { background: #fff0f0; color: #ef4444; }
+.dep__kebab:hover { background: var(--muted); color: var(--foreground); }
+
+.dep__menu {
+  position: absolute; right: 0; top: calc(100% + 4px);
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 10px; padding: 4px;
+  min-width: 160px; z-index: 100;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+  display: flex; flex-direction: column; gap: 1px;
+}
+
+.dep__menu-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; border-radius: 7px;
+  background: none; border: none; cursor: pointer;
+  font-family: inherit; font-size: 13px; font-weight: 500;
+  color: var(--foreground); text-align: left; width: 100%;
+  transition: background 0.1s;
+}
+.dep__menu-item:hover { background: var(--muted); }
+.dep__menu-item svg { flex-shrink: 0; color: var(--muted-foreground); }
+
+.dep__menu-item--del { color: #ef4444; }
+.dep__menu-item--del svg { color: #ef4444; }
+.dep__menu-item--del:hover { background: #fff0f0; }
+
+.dep__menu-sep { height: 1px; background: var(--border); margin: 3px 0; }
 
 /* ── Overlay / Modal ───────────────────────────────────── */
 .dep__overlay {
