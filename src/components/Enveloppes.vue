@@ -4,13 +4,13 @@
     <!-- Header -->
     <div class="env__header">
       <div>
-        <h2 class="env__title">Comptes & virements</h2>
+        <h2 class="env__title">Enveloppes</h2>
         <p class="env__subtitle">Automatisez ce que vous envoyez sur chaque compte de paiement chaque mois</p>
       </div>
       <div class="env__header-actions">
         <MsButton variant="primary" size="sm" @click="showAddModal = true">
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-          Nouveau compte
+          Nouvelle enveloppe
         </MsButton>
       </div>
     </div>
@@ -369,9 +369,9 @@
       <div class="env__empty-icon-wrap">
         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
       </div>
-      <p class="env__empty-title">Aucun compte de paiement</p>
-      <p class="env__empty-sub">Créez votre premier compte digital pour savoir exactement quoi virer chaque mois.</p>
-      <MsButton variant="primary" @click="showAddModal = true">Créer le premier compte</MsButton>
+      <p class="env__empty-title">Aucune enveloppe</p>
+      <p class="env__empty-sub">Créez votre première enveloppe pour savoir exactement quoi virer chaque mois.</p>
+      <MsButton variant="primary" @click="showAddModal = true">Créer la première enveloppe</MsButton>
     </div>
 
     <!-- ── MODALES ── -->
@@ -379,8 +379,8 @@
       <!-- Ajout rapide -->
       <div v-if="showAddModal" class="env__overlay" @click.self="showAddModal = false">
         <div class="env__modal">
-          <h3>Nouveau compte de paiement</h3>
-          <MsInput label="Nom du compte" v-model="newEnvNom" placeholder="Ex: Charges fixes, Loisirs, Alimentation…" />
+          <h3>Nouvelle enveloppe</h3>
+          <MsInput label="Nom de l'enveloppe" v-model="newEnvNom" placeholder="Ex: Charges fixes, Loisirs, Alimentation…" />
           <div class="env__modal-actions">
             <MsButton variant="secondary" @click="showAddModal = false">Annuler</MsButton>
             <MsButton variant="primary" @click="createEnveloppe" :disabled="!newEnvNom.trim()">Créer</MsButton>
@@ -391,9 +391,9 @@
       <!-- Édition complète -->
       <div v-if="editTarget" class="env__overlay" @click.self="editTarget = null">
         <div class="env__modal env__modal--large">
-          <h3>Configurer le compte</h3>
+          <h3>Configurer l'enveloppe</h3>
 
-          <MsInput label="Nom du compte" v-model="editNom" placeholder="Ex: Charges fixes" />
+          <MsInput label="Nom de l'enveloppe" v-model="editNom" placeholder="Ex: Charges fixes" />
 
           <div class="env__edit-field">
             <label class="env__edit-label">Couleur</label>
