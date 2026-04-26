@@ -632,7 +632,7 @@ function suggestSplit() {
 .dep__col-avas { display: flex; flex-shrink: 0; }
 
 .dep__col-sums-commun { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
-.dep__col-sum-person { font-size: 12px; font-weight: 700; white-space: nowrap; }
+.dep__col-sum-person { font-size: 16px; font-weight: 700; white-space: nowrap; }
 .dep__col-sum-sep { font-size: 11px; color: var(--muted-foreground); }
 .dep__col-ava {
   width: 34px; height: 34px; border-radius: 10px; flex-shrink: 0;
