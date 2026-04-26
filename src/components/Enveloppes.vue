@@ -519,9 +519,16 @@ function badgeStyle(env) {
 }
 
 function virementStyle(env) {
-  const col = env.couleur
-  if (!col) return {}
-  return { background: hexToRgba(col, 0.07), borderColor: hexToRgba(col, 0.2) }
+  const p1col = store.personnes[0]?.couleur ?? '#7C6FCD'
+  const p2col = store.personnes[1]?.couleur ?? '#4A9EDB'
+  if (!env.appartientA || env.appartientA === 'tous') {
+    return {
+      background: `linear-gradient(135deg, ${hexToRgba(p1col, 0.13)} 0%, ${hexToRgba(p2col, 0.13)} 100%)`,
+      borderColor: hexToRgba(p1col, 0.22),
+    }
+  }
+  const col = env.appartientA === 'p1' ? p1col : p2col
+  return { background: hexToRgba(col, 0.10), borderColor: hexToRgba(col, 0.25) }
 }
 
 // Totaux virements par personne
@@ -997,10 +1004,10 @@ function doDeleteEnv() {
 /* Virement principal */
 .env__virement {
   border: 1px solid transparent;
-  border-radius: 10px; padding: 14px 16px;
+  border-radius: 6px; padding: 10px 12px;
   display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
 }
-.env__virement-label { font-size: 11px; font-weight: 600; color: var(--primary); text-transform: uppercase; letter-spacing: 0.05em; }
+.env__virement-label { font-size: 11px; font-weight: 600; color: var(--muted-foreground); text-transform: uppercase; letter-spacing: 0.05em; }
 .env__virement-amount { font-size: 16px; font-weight: 700; color: var(--foreground); letter-spacing: -0.5px; }
 
 /* Chips personnes */
