@@ -734,7 +734,7 @@ function suggestSplit() {
 }
 
 .dep__card-actions {
-  display: flex; align-items: center; gap: 6px; margin-top: 3px;
+  display: flex; align-items: center; justify-content: flex-end; gap: 6px; margin-top: 3px;
 }
 
 .dep__cta {
