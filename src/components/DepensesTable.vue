@@ -716,12 +716,12 @@ function suggestSplit() {
 }
 
 .dep__card-nom {
-  font-size: 13px; font-weight: 400; color: var(--foreground);
+  font-size: 13px; font-weight: 600; color: var(--foreground);
   min-width: 0; word-break: break-word;
 }
 
 .dep__card-amount {
-  font-size: 15px; font-weight: 700; color: var(--foreground);
+  font-size: 15px; font-weight: 400; color: var(--foreground);
   white-space: nowrap; flex-shrink: 0;
 }
 
