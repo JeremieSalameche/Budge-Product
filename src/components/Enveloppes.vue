@@ -304,10 +304,6 @@
           <div class="env__card-header">
             <div class="env__card-left">
               <div class="env__card-name">{{ env.nom }}</div>
-              <div v-if="env.banque" class="env__card-bank">
-                <img v-if="getBankDomain(env.banque)" :src="`https://www.google.com/s2/favicons?domain=${getBankDomain(env.banque)}&sz=32`" class="env__card-bank-logo" />
-                <span class="env__card-bank-name">{{ getBankNom(env.banque) }}</span>
-              </div>
             </div>
             <div class="env__card-right">
               <button class="env__cta" type="button" @click="openEditModal(env)">Modifier</button>
@@ -341,10 +337,14 @@
 
           <!-- Montant à virer -->
           <div class="env__virement">
-            <span class="env__virement-label">Total à virer</span>
-            <div class="env__virement-right">
-              <img v-if="env.banque && getBankDomain(env.banque)" :src="`https://www.google.com/s2/favicons?domain=${getBankDomain(env.banque)}&sz=32`" class="env__virement-bank-logo" />
+            <div class="env__virement-top">
+              <span class="env__virement-label">Total à virer</span>
               <span class="env__virement-amount">{{ fmt(getTotal(env.id)) }}</span>
+            </div>
+            <div v-if="env.banque" class="env__virement-bank-pill">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              <img v-if="getBankDomain(env.banque)" :src="`https://www.google.com/s2/favicons?domain=${getBankDomain(env.banque)}&sz=32`" class="env__virement-bank-logo" />
+              <span>{{ getBankNom(env.banque) }}</span>
             </div>
           </div>
 
@@ -1096,12 +1096,19 @@ function doDeleteEnv() {
 .env__virement {
   border: none; border-bottom: 1px solid var(--border);
   border-radius: 0; padding: 0 0 12px;
-  display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
+  display: flex; flex-direction: column; gap: 6px;
 }
+.env__virement-top { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
 .env__virement-label { font-size: 11px; font-weight: 500; color: var(--muted-foreground); }
-.env__virement-right { display: flex; align-items: center; gap: 6px; }
-.env__virement-bank-logo { width: 16px; height: 16px; border-radius: 3px; object-fit: contain; }
 .env__virement-amount { font-size: 16px; font-weight: 700; color: var(--foreground); letter-spacing: -0.5px; }
+.env__virement-bank-pill {
+  display: inline-flex; align-items: center; gap: 5px; align-self: flex-start;
+  padding: 3px 8px; border-radius: 99px;
+  background: var(--muted); border: 1px solid var(--border);
+  font-size: 11px; font-weight: 500; color: var(--muted-foreground);
+}
+.env__virement-bank-pill svg { flex-shrink: 0; }
+.env__virement-bank-logo { width: 13px; height: 13px; border-radius: 2px; object-fit: contain; flex-shrink: 0; }
 
 /* Chips personnes */
 .env__persons-row { display: flex; gap: 6px; flex-wrap: wrap; }
