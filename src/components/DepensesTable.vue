@@ -87,11 +87,8 @@
                 <span class="dep__card-amount">{{ fmtMonthly(dep) }}</span>
               </div>
               <div class="dep__card-actions">
-                <button class="dep__cta dep__cta--del" type="button" @click="confirmDelete(dep)">Supprimer</button>
-                <div class="dep__cta-right">
-                  <button class="dep__cta" type="button" @click="toggleActif(dep)">{{ dep.actif ? 'Cacher' : 'Afficher' }}</button>
-                  <button class="dep__cta" type="button" @click="openEdit(dep)">Modifier</button>
-                </div>
+                <button class="dep__cta" type="button" @click="toggleActif(dep)">{{ dep.actif ? 'Cacher' : 'Afficher' }}</button>
+                <button class="dep__cta" type="button" @click="openEdit(dep)">Modifier</button>
               </div>
             </div>
           </div>
@@ -127,11 +124,8 @@
                 <span class="dep__card-amount">{{ fmtMonthly(dep) }}</span>
               </div>
               <div class="dep__card-actions">
-                <button class="dep__cta dep__cta--del" type="button" @click="confirmDelete(dep)">Supprimer</button>
-                <div class="dep__cta-right">
-                  <button class="dep__cta" type="button" @click="toggleActif(dep)">{{ dep.actif ? 'Cacher' : 'Afficher' }}</button>
-                  <button class="dep__cta" type="button" @click="openEdit(dep)">Modifier</button>
-                </div>
+                <button class="dep__cta" type="button" @click="toggleActif(dep)">{{ dep.actif ? 'Cacher' : 'Afficher' }}</button>
+                <button class="dep__cta" type="button" @click="openEdit(dep)">Modifier</button>
               </div>
             </div>
           </div>
@@ -184,21 +178,18 @@
                 <div class="dep__card-amount-block">
                   <span class="dep__card-amount">{{ fmtMonthly(dep) }}</span>
                   <div v-if="!isSolo" class="dep__card-shares">
-                    <span class="dep__share" :style="{ background: p1.couleur + '22', color: p1.couleur }">
+                    <span class="dep__share" :style="{ background: p1.couleur + '22', color: p1.couleur }" :title="p1.nom">
                       {{ fmt(store.toMonthly(dep.montantP1 || 0, dep.frequence)) }}
                     </span>
-                    <span class="dep__share" :style="{ background: p2.couleur + '22', color: p2.couleur }">
+                    <span class="dep__share" :style="{ background: p2.couleur + '22', color: p2.couleur }" :title="p2.nom">
                       {{ fmt(store.toMonthly(dep.montantP2 || 0, dep.frequence)) }}
                     </span>
                   </div>
                 </div>
               </div>
               <div class="dep__card-actions">
-                <button class="dep__cta dep__cta--del" type="button" @click="confirmDelete(dep)">Supprimer</button>
-                <div class="dep__cta-right">
-                  <button class="dep__cta" type="button" @click="toggleActif(dep)">{{ dep.actif ? 'Cacher' : 'Afficher' }}</button>
-                  <button class="dep__cta" type="button" @click="openEdit(dep)">Modifier</button>
-                </div>
+                <button class="dep__cta" type="button" @click="toggleActif(dep)">{{ dep.actif ? 'Cacher' : 'Afficher' }}</button>
+                <button class="dep__cta" type="button" @click="openEdit(dep)">Modifier</button>
               </div>
             </div>
           </div>
@@ -358,10 +349,13 @@
           </div>
 
           <div class="dep__modal-foot">
-            <button class="dep__mbtn dep__mbtn--ghost" type="button" @click="closeModal">Annuler</button>
-            <button class="dep__mbtn dep__mbtn--primary" type="button" :disabled="!canSave" @click="saveModal">
-              {{ editId ? 'Enregistrer' : 'Ajouter la dépense' }}
-            </button>
+            <button v-if="editId" class="dep__mbtn dep__mbtn--del-link" type="button" @click="closeModal(); confirmDelete(editingDep)">Supprimer cette dépense</button>
+            <div class="dep__modal-foot-actions">
+              <button class="dep__mbtn dep__mbtn--ghost" type="button" @click="closeModal">Annuler</button>
+              <button class="dep__mbtn dep__mbtn--primary" type="button" :disabled="!canSave" @click="saveModal">
+                {{ editId ? 'Enregistrer' : 'Ajouter la dépense' }}
+              </button>
+            </div>
           </div>
 
         </div>
@@ -530,6 +524,7 @@ function openEdit(dep) {
 }
 
 function closeModal() { modalOpen.value = false }
+const editingDep = computed(() => store.depenses.find(d => d.id === editId.value) ?? null)
 
 const canSave = computed(() => {
   if (!form.value.nom.trim()) return false
@@ -751,9 +746,6 @@ function suggestSplit() {
   white-space: nowrap;
 }
 .dep__cta:hover { border-color: var(--zinc-400); color: var(--foreground); }
-.dep__cta--del:hover { border-color: #fca5a5; color: #ef4444; background: #fff5f5; }
-
-.dep__cta-right { display: flex; align-items: center; gap: 6px; margin-left: auto; }
 
 /* ── Overlay / Modal ───────────────────────────────────── */
 .dep__overlay {
@@ -789,10 +781,18 @@ function suggestSplit() {
 .dep__modal-text { font-size: 14px; color: var(--muted-foreground); margin: 0; }
 
 .dep__modal-foot {
-  display: flex; align-items: center; justify-content: flex-end; gap: 8px;
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
   padding: 16px 24px; border-top: 1px solid var(--border);
   position: sticky; bottom: 0; background: #fff;
 }
+.dep__modal-foot-actions { display: flex; align-items: center; gap: 8px; }
+.dep__mbtn--del-link {
+  background: none; border: none; padding: 0;
+  font-size: 12px; font-weight: 500; color: #ef4444;
+  cursor: pointer; text-decoration: underline; text-underline-offset: 2px;
+  transition: opacity 0.12s;
+}
+.dep__mbtn--del-link:hover { opacity: 0.7; }
 
 /* Champs */
 .dep__mfield { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0; }
