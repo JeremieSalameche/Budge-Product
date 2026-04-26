@@ -38,9 +38,6 @@
       </MsButton>
     </div>
 
-    <!-- Overlay fermeture menu kebab -->
-    <div v-if="openMenuId" class="dep__menu-overlay" @click="openMenuId = null"></div>
-
     <!-- ── Colonnes ────────────────────────────────────────── -->
     <div v-if="store.depenses.length > 0">
 
@@ -79,39 +76,21 @@
             :style="{ '--acc': catColor(dep) }"
           >
             <div class="dep__card-content">
-              <div class="dep__card-top">
+              <div class="dep__card-left">
+                <div class="dep__card-cat">
+                  <span class="dep__card-cat-icon" v-html="catIcon(dep)"></span>
+                  <span class="dep__card-cat-label">{{ catNom(dep) }}<template v-if="dep.frequence !== 'mensuel'"> · {{ freqLabel(dep.frequence) }}</template></span>
+                </div>
                 <span class="dep__card-nom">{{ dep.nom || '—' }}</span>
-                <div class="dep__card-acts">
-                  <div class="dep__menu-wrap">
-                    <button class="dep__kebab" type="button" @click.stop="openMenuId = openMenuId === dep.id ? null : dep.id">
-                      <svg width="13" height="3" viewBox="0 0 13 3" fill="currentColor">
-                        <circle cx="1.5" cy="1.5" r="1.5"/><circle cx="6.5" cy="1.5" r="1.5"/><circle cx="11.5" cy="1.5" r="1.5"/>
-                      </svg>
-                    </button>
-                    <div v-if="openMenuId === dep.id" class="dep__menu" @click.stop>
-                      <button class="dep__menu-item" type="button" @click="openEdit(dep); openMenuId = null">
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                        Modifier
-                      </button>
-                      <button class="dep__menu-item" type="button" @click="toggleActif(dep); openMenuId = null">
-                        <svg v-if="dep.actif" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                        <svg v-else width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-                        {{ dep.actif ? 'Désactiver' : 'Activer' }}
-                      </button>
-                      <div class="dep__menu-sep"></div>
-                      <button class="dep__menu-item dep__menu-item--del" type="button" @click="confirmDelete(dep); openMenuId = null">
-                        <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M1.75 3.5H12.25M5.25 3.5V2.333a.583.583 0 01.583-.583h2.334a.583.583 0 01.583.583V3.5M10.5 3.5l-.583 8.167H4.083L3.5 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        Supprimer
-                      </button>
-                    </div>
+                <div class="dep__card-actions">
+                  <button class="dep__cta dep__cta--del" type="button" @click="confirmDelete(dep)">Supprimer</button>
+                  <div class="dep__cta-right">
+                    <button class="dep__cta" type="button" @click="toggleActif(dep)">{{ dep.actif ? 'Cacher' : 'Afficher' }}</button>
+                    <button class="dep__cta" type="button" @click="openEdit(dep)">Modifier</button>
                   </div>
                 </div>
               </div>
-              <div class="dep__card-bot">
-                <span class="dep__card-meta">
-                  <span class="dep__card-meta-dot" :style="{ background: catColor(dep) }"></span>
-                  {{ catNom(dep) }}<template v-if="dep.frequence !== 'mensuel'"> · {{ freqLabel(dep.frequence) }}</template>
-                </span>
+              <div class="dep__card-right">
                 <span class="dep__card-amount">{{ fmtMonthly(dep) }}</span>
               </div>
             </div>
@@ -137,39 +116,21 @@
             :style="{ '--acc': catColor(dep) }"
           >
             <div class="dep__card-content">
-              <div class="dep__card-top">
+              <div class="dep__card-left">
+                <div class="dep__card-cat">
+                  <span class="dep__card-cat-icon" v-html="catIcon(dep)"></span>
+                  <span class="dep__card-cat-label">{{ catNom(dep) }}<template v-if="dep.frequence !== 'mensuel'"> · {{ freqLabel(dep.frequence) }}</template></span>
+                </div>
                 <span class="dep__card-nom">{{ dep.nom || '—' }}</span>
-                <div class="dep__card-acts">
-                  <div class="dep__menu-wrap">
-                    <button class="dep__kebab" type="button" @click.stop="openMenuId = openMenuId === dep.id ? null : dep.id">
-                      <svg width="13" height="3" viewBox="0 0 13 3" fill="currentColor">
-                        <circle cx="1.5" cy="1.5" r="1.5"/><circle cx="6.5" cy="1.5" r="1.5"/><circle cx="11.5" cy="1.5" r="1.5"/>
-                      </svg>
-                    </button>
-                    <div v-if="openMenuId === dep.id" class="dep__menu" @click.stop>
-                      <button class="dep__menu-item" type="button" @click="openEdit(dep); openMenuId = null">
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                        Modifier
-                      </button>
-                      <button class="dep__menu-item" type="button" @click="toggleActif(dep); openMenuId = null">
-                        <svg v-if="dep.actif" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                        <svg v-else width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-                        {{ dep.actif ? 'Désactiver' : 'Activer' }}
-                      </button>
-                      <div class="dep__menu-sep"></div>
-                      <button class="dep__menu-item dep__menu-item--del" type="button" @click="confirmDelete(dep); openMenuId = null">
-                        <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M1.75 3.5H12.25M5.25 3.5V2.333a.583.583 0 01.583-.583h2.334a.583.583 0 01.583.583V3.5M10.5 3.5l-.583 8.167H4.083L3.5 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        Supprimer
-                      </button>
-                    </div>
+                <div class="dep__card-actions">
+                  <button class="dep__cta dep__cta--del" type="button" @click="confirmDelete(dep)">Supprimer</button>
+                  <div class="dep__cta-right">
+                    <button class="dep__cta" type="button" @click="toggleActif(dep)">{{ dep.actif ? 'Cacher' : 'Afficher' }}</button>
+                    <button class="dep__cta" type="button" @click="openEdit(dep)">Modifier</button>
                   </div>
                 </div>
               </div>
-              <div class="dep__card-bot">
-                <span class="dep__card-meta">
-                  <span class="dep__card-meta-dot" :style="{ background: catColor(dep) }"></span>
-                  {{ catNom(dep) }}<template v-if="dep.frequence !== 'mensuel'"> · {{ freqLabel(dep.frequence) }}</template>
-                </span>
+              <div class="dep__card-right">
                 <span class="dep__card-amount">{{ fmtMonthly(dep) }}</span>
               </div>
             </div>
@@ -212,48 +173,30 @@
             :style="{ '--acc': catColor(dep) }"
           >
             <div class="dep__card-content">
-              <div class="dep__card-top">
+              <div class="dep__card-left">
+                <div class="dep__card-cat">
+                  <span class="dep__card-cat-icon" v-html="catIcon(dep)"></span>
+                  <span class="dep__card-cat-label">{{ catNom(dep) }}<template v-if="dep.frequence !== 'mensuel'"> · {{ freqLabel(dep.frequence) }}</template></span>
+                </div>
                 <span class="dep__card-nom">{{ dep.nom || '—' }}</span>
-                <span class="dep__card-amount">{{ fmtMonthly(dep) }}</span>
-              </div>
-              <div v-if="!isSolo" class="dep__card-shares">
-                <span class="dep__share" :style="{ background: p1.couleur + '22', color: p1.couleur }">
-                  {{ p1.nom }} · {{ fmt(store.toMonthly(dep.montantP1 || 0, dep.frequence)) }}
-                </span>
-                <span class="dep__share" :style="{ background: p2.couleur + '22', color: p2.couleur }">
-                  {{ p2.nom }} · {{ fmt(store.toMonthly(dep.montantP2 || 0, dep.frequence)) }}
-                </span>
-              </div>
-              <div class="dep__card-bot">
-                <span class="dep__card-meta">
-                  <span class="dep__card-meta-dot" :style="{ background: catColor(dep) }"></span>
-                  {{ catNom(dep) }}<template v-if="dep.frequence !== 'mensuel'"> · {{ freqLabel(dep.frequence) }}</template>
-                </span>
-                <div class="dep__card-acts">
-                  <div class="dep__menu-wrap">
-                    <button class="dep__kebab" type="button" @click.stop="openMenuId = openMenuId === dep.id ? null : dep.id">
-                      <svg width="13" height="3" viewBox="0 0 13 3" fill="currentColor">
-                        <circle cx="1.5" cy="1.5" r="1.5"/><circle cx="6.5" cy="1.5" r="1.5"/><circle cx="11.5" cy="1.5" r="1.5"/>
-                      </svg>
-                    </button>
-                    <div v-if="openMenuId === dep.id" class="dep__menu" @click.stop>
-                      <button class="dep__menu-item" type="button" @click="openEdit(dep); openMenuId = null">
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                        Modifier
-                      </button>
-                      <button class="dep__menu-item" type="button" @click="toggleActif(dep); openMenuId = null">
-                        <svg v-if="dep.actif" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                        <svg v-else width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-                        {{ dep.actif ? 'Désactiver' : 'Activer' }}
-                      </button>
-                      <div class="dep__menu-sep"></div>
-                      <button class="dep__menu-item dep__menu-item--del" type="button" @click="confirmDelete(dep); openMenuId = null">
-                        <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M1.75 3.5H12.25M5.25 3.5V2.333a.583.583 0 01.583-.583h2.334a.583.583 0 01.583.583V3.5M10.5 3.5l-.583 8.167H4.083L3.5 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        Supprimer
-                      </button>
-                    </div>
+                <div v-if="!isSolo" class="dep__card-shares">
+                  <span class="dep__share" :style="{ background: p1.couleur + '22', color: p1.couleur }">
+                    {{ p1.nom }} · {{ fmt(store.toMonthly(dep.montantP1 || 0, dep.frequence)) }}
+                  </span>
+                  <span class="dep__share" :style="{ background: p2.couleur + '22', color: p2.couleur }">
+                    {{ p2.nom }} · {{ fmt(store.toMonthly(dep.montantP2 || 0, dep.frequence)) }}
+                  </span>
+                </div>
+                <div class="dep__card-actions">
+                  <button class="dep__cta dep__cta--del" type="button" @click="confirmDelete(dep)">Supprimer</button>
+                  <div class="dep__cta-right">
+                    <button class="dep__cta" type="button" @click="toggleActif(dep)">{{ dep.actif ? 'Cacher' : 'Afficher' }}</button>
+                    <button class="dep__cta" type="button" @click="openEdit(dep)">Modifier</button>
                   </div>
                 </div>
+              </div>
+              <div class="dep__card-right">
+                <span class="dep__card-amount">{{ fmtMonthly(dep) }}</span>
               </div>
             </div>
           </div>
@@ -462,8 +405,6 @@ const p2 = computed(() => store.personnes[1] ?? { id: 'p2', nom: '?', couleur: '
 
 // ── Mobile col switcher ───────────────────────────────────
 const mobileCol  = ref('p1')
-const openMenuId = ref(null)
-
 // ── Filtre ────────────────────────────────────────────────
 const filterCat = ref('')
 
@@ -527,6 +468,24 @@ function catNom(dep) {
 }
 function catColor(dep) {
   return store.categories.find(c => c.id === dep.categorieId)?.couleur ?? '#a1a1aa'
+}
+function catIcon(dep) {
+  const nom = catNom(dep).toLowerCase()
+  const map = {
+    logement:      '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>',
+    transport:     '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>',
+    alimentation:  '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>',
+    loisirs:       '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>',
+    'santé':       '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
+    'épargne':     '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>',
+    abonnements:   '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>',
+    enfants:       '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+    assurance:     '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+    emprunt:       '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>',
+    charges:       '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>',
+  }
+  const key = Object.keys(map).find(k => nom.includes(k))
+  return key ? map[key] : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>'
 }
 
 // ── Actions ───────────────────────────────────────────────
@@ -731,19 +690,43 @@ function suggestSplit() {
 
 .dep__card-content {
   flex: 1; min-width: 0; padding: 10px 12px;
-  display: flex; flex-direction: column; gap: 6px;
+  display: flex; flex-direction: row; gap: 10px; align-items: stretch;
 }
 
-.dep__card-top {
-  display: flex; align-items: flex-start; justify-content: space-between; gap: 8px;
+.dep__card-left {
+  flex: 1; min-width: 0;
+  display: flex; flex-direction: column; gap: 5px;
 }
+
+.dep__card-right {
+  flex-shrink: 0;
+  display: flex; align-items: center;
+  border-left: 1px solid var(--border);
+  margin: -10px 0; padding: 10px 0 10px 12px;
+}
+
+.dep__card-cat {
+  display: flex; align-items: center; gap: 5px;
+}
+.dep__card-cat-icon {
+  flex-shrink: 0; display: flex; align-items: center;
+  color: var(--muted-foreground);
+}
+.dep__card-cat-label {
+  font-size: 10px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--muted-foreground);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
 .dep__card-nom {
   font-size: 13px; font-weight: 600; color: var(--foreground);
-  flex: 1; min-width: 0; word-break: break-word;
+  min-width: 0; word-break: break-word;
 }
+
 .dep__card-amount {
-  font-size: 13px; font-weight: 700; color: var(--foreground);
-  white-space: nowrap; flex-shrink: 0;
+  font-size: 22px; font-weight: 700; color: var(--foreground);
+  white-space: nowrap; line-height: 1.1;
 }
 
 .dep__card-shares { display: flex; gap: 5px; flex-wrap: wrap; }
@@ -752,60 +735,22 @@ function suggestSplit() {
   padding: 2px 8px; border-radius: 20px; white-space: nowrap;
 }
 
-.dep__card-bot {
-  display: flex; align-items: center; gap: 6px;
-}
-.dep__card-meta {
-  display: flex; align-items: center; gap: 5px;
-  font-size: 11px; color: var(--muted-foreground);
-  flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.dep__card-meta-dot {
-  width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+.dep__card-actions {
+  display: flex; align-items: center; gap: 6px; margin-top: 3px;
 }
 
-.dep__card-acts { margin-left: auto; }
-
-.dep__menu-overlay {
-  position: fixed; inset: 0; z-index: 99;
-}
-
-.dep__menu-wrap { position: relative; }
-
-.dep__kebab {
-  width: 26px; height: 26px; border-radius: 6px;
-  display: flex; align-items: center; justify-content: center;
-  background: transparent; border: none;
+.dep__cta {
+  height: 24px; padding: 0 9px; border-radius: 5px;
+  font-size: 11px; font-weight: 500; font-family: inherit;
+  background: transparent; border: 1px solid var(--border);
   color: var(--muted-foreground); cursor: pointer;
-  transition: background 0.12s, color 0.12s;
+  transition: border-color 0.12s, color 0.12s, background 0.12s;
+  white-space: nowrap;
 }
-.dep__kebab:hover { background: var(--muted); color: var(--foreground); }
+.dep__cta:hover { border-color: var(--zinc-400); color: var(--foreground); }
+.dep__cta--del:hover { border-color: #fca5a5; color: #ef4444; background: #fff5f5; }
 
-.dep__menu {
-  position: absolute; right: 0; top: calc(100% + 4px);
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: 10px; padding: 4px;
-  min-width: 160px; z-index: 100;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
-  display: flex; flex-direction: column; gap: 1px;
-}
-
-.dep__menu-item {
-  display: flex; align-items: center; gap: 10px;
-  padding: 9px 12px; border-radius: 7px;
-  background: none; border: none; cursor: pointer;
-  font-family: inherit; font-size: 13px; font-weight: 500;
-  color: var(--foreground); text-align: left; width: 100%;
-  transition: background 0.1s;
-}
-.dep__menu-item:hover { background: var(--muted); }
-.dep__menu-item svg { flex-shrink: 0; color: var(--muted-foreground); }
-
-.dep__menu-item--del { color: #ef4444; }
-.dep__menu-item--del svg { color: #ef4444; }
-.dep__menu-item--del:hover { background: #fff0f0; }
-
-.dep__menu-sep { height: 1px; background: var(--border); margin: 3px 0; }
+.dep__cta-right { display: flex; align-items: center; gap: 6px; margin-left: auto; }
 
 /* ── Overlay / Modal ───────────────────────────────────── */
 .dep__overlay {
