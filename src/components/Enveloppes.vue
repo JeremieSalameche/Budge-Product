@@ -338,8 +338,7 @@
 
           <!-- Liste charges -->
           <template v-if="depensesOfEnv(env.id).length">
-            <div class="env__lines-header">{{ depensesOfEnv(env.id).length }} dépense{{ depensesOfEnv(env.id).length > 1 ? 's' : '' }}</div>
-            <div class="env__lines">
+<div class="env__lines">
             <div v-for="dep in depensesOfEnv(env.id)" :key="dep.id" class="env__line">
               <div class="env__line-cat">
                 <span class="env__line-cat-icon" v-html="getCatIcon(dep)"></span>
