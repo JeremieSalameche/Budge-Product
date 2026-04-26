@@ -8,7 +8,7 @@
         <p class="env__subtitle">Automatisez ce que vous envoyez sur chaque compte de paiement chaque mois</p>
       </div>
       <div class="env__header-actions">
-        <MsButton variant="primary" size="sm" @click="showAddModal = true">
+        <MsButton variant="primary" size="sm" @click="openNewModal()">
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
           Nouvelle enveloppe
         </MsButton>
@@ -305,7 +305,7 @@
             <div class="env__card-left">
               <div class="env__card-name">{{ env.nom }}</div>
               <div v-if="env.banque" class="env__card-bank">
-                <img :src="`https://www.google.com/s2/favicons?domain=${getBankDomain(env.banque)}&sz=32`" class="env__card-bank-logo" :alt="getBankNom(env.banque)" />
+                <img v-if="getBankDomain(env.banque)" :src="`https://www.google.com/s2/favicons?domain=${getBankDomain(env.banque)}&sz=32`" class="env__card-bank-logo" />
                 <span class="env__card-bank-name">{{ getBankNom(env.banque) }}</span>
               </div>
             </div>
@@ -340,7 +340,7 @@
           </div>
 
           <!-- Montant à virer -->
-          <div class="env__virement" :style="virementStyle(env)">
+          <div class="env__virement">
             <span class="env__virement-label">À virer le 1er du mois</span>
             <span class="env__virement-amount">{{ fmt(getTotal(env.id)) }}</span>
           </div>
@@ -374,27 +374,15 @@
       </div>
       <p class="env__empty-title">Aucune enveloppe</p>
       <p class="env__empty-sub">Créez votre première enveloppe pour savoir exactement quoi virer chaque mois.</p>
-      <MsButton variant="primary" @click="showAddModal = true">Créer la première enveloppe</MsButton>
+      <MsButton variant="primary" @click="openNewModal()">Créer la première enveloppe</MsButton>
     </div>
 
     <!-- ── MODALES ── -->
     <Teleport to="body">
-      <!-- Ajout rapide -->
-      <div v-if="showAddModal" class="env__overlay" @click.self="showAddModal = false">
-        <div class="env__modal">
-          <h3>Nouvelle enveloppe</h3>
-          <MsInput label="Nom de l'enveloppe" v-model="newEnvNom" placeholder="Ex: Charges fixes, Loisirs, Alimentation…" />
-          <div class="env__modal-actions">
-            <MsButton variant="secondary" @click="showAddModal = false">Annuler</MsButton>
-            <MsButton variant="primary" @click="createEnveloppe" :disabled="!newEnvNom.trim()">Créer</MsButton>
-          </div>
-        </div>
-      </div>
-
-      <!-- Édition complète -->
+      <!-- Édition / Création -->
       <div v-if="editTarget" class="env__overlay" @click.self="editTarget = null">
         <div class="env__modal env__modal--large">
-          <h3>Configurer l'enveloppe</h3>
+          <h3>{{ editTarget.id ? 'Modifier l\'enveloppe' : 'Nouvelle enveloppe' }}</h3>
 
           <MsInput label="Nom de l'enveloppe" v-model="editNom" placeholder="Ex: Charges fixes" />
 
@@ -425,16 +413,25 @@
 
           <div class="env__edit-field">
             <label class="env__edit-label">Compte bancaire associé</label>
-            <div class="env__bank-grid">
-              <button
-                v-for="bank in BANKS" :key="bank.id" type="button"
-                :class="['env__bank-btn', { 'env__bank-btn--active': editBanque === bank.id }]"
-                @click="editBanque = editBanque === bank.id ? null : bank.id"
-              >
-                <img :src="`https://www.google.com/s2/favicons?domain=${bank.domain}&sz=32`" class="env__bank-logo-img" :alt="bank.nom" />
-                <span class="env__bank-btn-name">{{ bank.nom }}</span>
-              </button>
+            <div class="env__bank-select-wrap">
+              <img
+                v-if="editBanque && editBanque !== 'autre' && getBankDomain(editBanque)"
+                :src="`https://www.google.com/s2/favicons?domain=${getBankDomain(editBanque)}&sz=32`"
+                class="env__bank-select-favicon"
+                alt=""
+              />
+              <select :class="['env__bank-select', { 'env__bank-select--with-icon': editBanque && editBanque !== 'autre' && getBankDomain(editBanque) }]" v-model="editBanque">
+                <option :value="null">Aucune banque</option>
+                <option v-for="bank in BANKS" :key="bank.id" :value="bank.id">{{ bank.nom }}</option>
+                <option value="autre">Autre...</option>
+              </select>
             </div>
+            <input
+              v-if="editBanque === 'autre'"
+              class="env__edit-input env__bank-autre"
+              v-model="editBanqueAutre"
+              placeholder="Nom de votre banque"
+            />
           </div>
 
           <div class="env__edit-field">
@@ -454,10 +451,11 @@
           </div>
 
           <div class="env__modal-actions">
-            <button class="env__del-link" type="button" @click="() => { const t = editTarget; editTarget = null; deleteTarget = t }">Supprimer ce compte</button>
+            <button v-if="editTarget && editTarget.id" class="env__del-link" type="button" @click="() => { const t = editTarget; editTarget = null; deleteTarget = t }">Supprimer ce compte</button>
+            <div v-else></div>
             <div style="display:flex;gap:8px;">
               <MsButton variant="secondary" @click="editTarget = null">Annuler</MsButton>
-              <MsButton variant="primary" @click="saveEdit">Enregistrer</MsButton>
+              <MsButton variant="primary" @click="saveEdit" :disabled="!editNom.trim()">{{ editTarget && editTarget.id ? 'Enregistrer' : 'Créer l\'enveloppe' }}</MsButton>
             </div>
           </div>
         </div>
@@ -511,7 +509,12 @@ const BANKS = [
 ]
 
 function getBankById(id) { return BANKS.find(b => b.id === id) ?? null }
-function getBankNom(id)  { return getBankById(id)?.nom ?? '' }
+function getBankNom(id)  {
+  if (!id) return ''
+  const bank = getBankById(id)
+  if (bank) return bank.nom
+  return id // custom free-text stored directly as the value
+}
 function getBankDomain(id) { return getBankById(id)?.domain ?? '' }
 
 function fmt(n) {
@@ -605,24 +608,24 @@ const totalAVirerP2 = computed(() =>
   store.enveloppes.reduce((s, env) => s + (store.totalParEnveloppe[env.id]?.p2Charge || 0), 0)
 )
 
-// ── Ajout rapide ──────────────────────────────────────────
-const showAddModal = ref(false)
-const newEnvNom    = ref('')
-function createEnveloppe() {
-  if (!newEnvNom.value.trim()) return
-  store.addEnveloppe(newEnvNom.value.trim())
-  scheduleAutoSave()
-  newEnvNom.value = ''
-  showAddModal.value = false
-}
-
-// ── Édition complète ──────────────────────────────────────
-const editTarget      = ref(null)
+// ── Ajout / Édition (modale unifiée) ─────────────────────
+const editTarget      = ref(null)   // null = fermé, {} = création, env = édition
 const editNom         = ref('')
 const editCouleur     = ref(COLORS[0])
 const editLignes      = ref([])
 const editAppartientA = ref('tous')
-const editBanque      = ref(null)
+const editBanque      = ref(null)   // id prédéfini | 'autre' | null
+const editBanqueAutre = ref('')     // texte libre si editBanque === 'autre'
+
+function openNewModal() {
+  editTarget.value      = {}        // objet vide = pas d'id → mode création
+  editNom.value         = ''
+  editCouleur.value     = COLORS[0]
+  editAppartientA.value = 'tous'
+  editBanque.value      = null
+  editBanqueAutre.value = ''
+  editLignes.value      = []
+}
 
 // Bug fix: filtrer les dépenses selon le propriétaire sélectionné
 const filteredDepensesForEnv = computed(() => {
@@ -643,7 +646,10 @@ function openEditModal(env) {
   editNom.value         = env.nom
   editCouleur.value     = env.couleur || COLORS[0]
   editAppartientA.value = env.appartientA || 'tous'
-  editBanque.value      = env.banque ?? null
+  const storedBanque    = env.banque ?? null
+  const isKnown         = storedBanque && BANKS.find(b => b.id === storedBanque)
+  editBanque.value      = isKnown ? storedBanque : (storedBanque ? 'autre' : null)
+  editBanqueAutre.value = (!isKnown && storedBanque) ? storedBanque : ''
   editLignes.value      = store.depenses.filter(d => d.enveloppeId === env.id).map(d => d.id)
 }
 
@@ -655,13 +661,26 @@ function toggleDepLigne(depId) {
 
 function saveEdit() {
   if (!editTarget.value) return
-  const envId = editTarget.value.id
-  store.updateEnveloppe(envId, {
-    nom:         editNom.value.trim() || editTarget.value.nom,
-    couleur:     editCouleur.value,
-    appartientA: editAppartientA.value,
-    banque:      editBanque.value,
-  })
+  const nomTrimmed = editNom.value.trim()
+  if (!nomTrimmed) return
+  const banqueVal = editBanque.value === 'autre'
+    ? (editBanqueAutre.value.trim() || null)
+    : editBanque.value
+
+  const isCreate = !editTarget.value.id
+  let envId
+  if (isCreate) {
+    envId = store.addEnveloppe(nomTrimmed, [], editAppartientA.value)
+    store.updateEnveloppe(envId, { couleur: editCouleur.value, banque: banqueVal })
+  } else {
+    envId = editTarget.value.id
+    store.updateEnveloppe(envId, {
+      nom:         nomTrimmed,
+      couleur:     editCouleur.value,
+      appartientA: editAppartientA.value,
+      banque:      banqueVal,
+    })
+  }
   store.depenses.forEach(d => {
     const shouldBeIn = editLignes.value.includes(d.id)
     const isIn       = d.enveloppeId === envId
@@ -1072,11 +1091,11 @@ function doDeleteEnv() {
 
 /* Virement principal */
 .env__virement {
-  border: 1px solid transparent;
-  border-radius: 6px; padding: 10px 12px;
+  border: none; border-bottom: 1px solid var(--border);
+  border-radius: 0; padding: 0 0 12px;
   display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
 }
-.env__virement-label { font-size: 11px; font-weight: 600; color: var(--muted-foreground); text-transform: uppercase; letter-spacing: 0.05em; }
+.env__virement-label { font-size: 11px; font-weight: 500; color: var(--muted-foreground); }
 .env__virement-amount { font-size: 16px; font-weight: 700; color: var(--foreground); letter-spacing: -0.5px; }
 
 /* Chips personnes */
@@ -1179,25 +1198,29 @@ function doDeleteEnv() {
 .env__color-swatch:hover { transform: scale(1.1); }
 .env__color-swatch--active { border-color: rgba(0,0,0,0.25); transform: scale(1.1); }
 
-/* Bank selection grid */
-.env__bank-grid {
-  display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px;
+/* Bank select dropdown */
+.env__bank-select-wrap {
+  position: relative; display: flex; align-items: center;
 }
-.env__bank-btn {
-  display: flex; flex-direction: column; align-items: center; gap: 4px;
-  padding: 8px 4px; border-radius: 8px;
-  border: 1.5px solid var(--border); background: var(--card);
-  cursor: pointer; transition: border-color 0.12s, background 0.12s;
-  font-family: inherit;
+.env__bank-select-favicon {
+  position: absolute; left: 10px; width: 16px; height: 16px;
+  border-radius: 3px; object-fit: contain; pointer-events: none; z-index: 1;
 }
-.env__bank-btn:hover { border-color: var(--zinc-300); background: var(--muted); }
-.env__bank-btn--active { border-color: var(--primary); background: rgba(74,109,196,0.07); }
-.env__bank-logo-img { width: 20px; height: 20px; border-radius: 4px; object-fit: contain; }
-.env__bank-btn-name {
-  font-size: 9px; font-weight: 500; color: var(--muted-foreground);
-  text-align: center; line-height: 1.2; word-break: break-word;
+.env__bank-select {
+  width: 100%; height: 36px;
+  padding: 0 32px 0 12px;
+  border: 1px solid var(--input); border-radius: var(--radius-md);
+  font-size: 13px; font-family: inherit; color: var(--foreground);
+  background: var(--background); outline: none; cursor: pointer;
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  transition: border-color 150ms;
 }
-.env__bank-btn--active .env__bank-btn-name { color: var(--primary); }
+.env__bank-select:focus { border-color: var(--ring); }
+.env__bank-select--with-icon { padding-left: 34px; }
+.env__bank-autre { margin-top: 6px; width: 100%; }
 
 /* Bank on card */
 .env__card-bank {
