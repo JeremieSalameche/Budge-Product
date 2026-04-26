@@ -718,7 +718,7 @@ function suggestSplit() {
 }
 
 .dep__card-amount {
-  font-size: 15px; font-weight: 400; color: var(--foreground);
+  font-size: 14px; font-weight: 400; color: var(--foreground);
   white-space: nowrap; flex-shrink: 0;
 }
 
