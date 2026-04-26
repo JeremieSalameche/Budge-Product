@@ -645,7 +645,7 @@ function suggestSplit() {
 .dep__col-headinfo { flex: 1; display: flex; flex-direction: column; gap: 1px; min-width: 0; }
 .dep__col-name { font-size: 13px; font-weight: 600; color: var(--foreground); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .dep__col-count { font-size: 11px; color: var(--muted-foreground); }
-.dep__col-sum { font-size: 13px; font-weight: 700; color: var(--foreground); white-space: nowrap; }
+.dep__col-sum { font-size: 16px; font-weight: 700; color: var(--foreground); white-space: nowrap; }
 
 .dep__col-body {
   display: flex; flex-direction: column; gap: 8px;
@@ -716,7 +716,7 @@ function suggestSplit() {
 }
 
 .dep__card-nom {
-  font-size: 13px; font-weight: 600; color: var(--foreground);
+  font-size: 13px; font-weight: 400; color: var(--foreground);
   min-width: 0; word-break: break-word;
 }
 
