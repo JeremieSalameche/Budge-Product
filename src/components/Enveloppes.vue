@@ -1085,6 +1085,7 @@ function doDeleteEnv() {
   padding: 12px;
   border-radius: 4px;
   background: var(--muted);
+  border: 1px solid var(--zinc-300);
   display: flex; align-items: center; justify-content: space-between; gap: 8px;
 }
 .env__virement-left { display: flex; align-items: center; gap: 5px; min-width: 0; }
