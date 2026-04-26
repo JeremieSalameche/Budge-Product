@@ -1048,7 +1048,7 @@ function doDeleteEnv() {
 .env__card-body { padding: 18px; display: flex; flex-direction: column; gap: 14px; }
 
 .env__card-header { display: flex; align-items: flex-start; justify-content: space-between; }
-.env__card-left { display: flex; align-items: flex-start; gap: 10px; }
+.env__card-left { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
 .env__card-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 .env__dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; background: var(--env-color, #e5e7eb); }
 .env__card-name { font-size: 13px; font-weight: 600; color: var(--foreground); }
@@ -1093,7 +1093,7 @@ function doDeleteEnv() {
 .env__virement-amount { font-size: 16px; font-weight: 700; color: var(--foreground); letter-spacing: -0.5px; flex-shrink: 0; }
 
 /* Pill propriétaire */
-.env__owner-pill-wrap { margin-bottom: 4px; }
+.env__owner-pill-wrap { }
 .env__owner-pill {
   display: inline-flex; align-items: center;
   padding: 2px 8px; border-radius: 99px; border: 1px solid var(--border);
