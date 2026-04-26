@@ -76,22 +76,22 @@
             :style="{ '--acc': catColor(dep) }"
           >
             <div class="dep__card-content">
-              <div class="dep__card-left">
-                <div class="dep__card-cat">
-                  <span class="dep__card-cat-icon" v-html="catIcon(dep)"></span>
-                  <span class="dep__card-cat-label">{{ catNom(dep) }}<template v-if="dep.frequence !== 'mensuel'"> · {{ freqLabel(dep.frequence) }}</template></span>
-                </div>
-                <span class="dep__card-nom">{{ dep.nom || '—' }}</span>
-                <div class="dep__card-actions">
-                  <button class="dep__cta dep__cta--del" type="button" @click="confirmDelete(dep)">Supprimer</button>
-                  <div class="dep__cta-right">
-                    <button class="dep__cta" type="button" @click="toggleActif(dep)">{{ dep.actif ? 'Cacher' : 'Afficher' }}</button>
-                    <button class="dep__cta" type="button" @click="openEdit(dep)">Modifier</button>
+              <div class="dep__card-toprow">
+                <div class="dep__card-info">
+                  <div class="dep__card-cat">
+                    <span class="dep__card-cat-icon" v-html="catIcon(dep)"></span>
+                    <span class="dep__card-cat-label">{{ catNom(dep) }}<template v-if="dep.frequence !== 'mensuel'"> · {{ freqLabel(dep.frequence) }}</template></span>
                   </div>
+                  <span class="dep__card-nom">{{ dep.nom || '—' }}</span>
                 </div>
-              </div>
-              <div class="dep__card-right">
                 <span class="dep__card-amount">{{ fmtMonthly(dep) }}</span>
+              </div>
+              <div class="dep__card-actions">
+                <button class="dep__cta dep__cta--del" type="button" @click="confirmDelete(dep)">Supprimer</button>
+                <div class="dep__cta-right">
+                  <button class="dep__cta" type="button" @click="toggleActif(dep)">{{ dep.actif ? 'Cacher' : 'Afficher' }}</button>
+                  <button class="dep__cta" type="button" @click="openEdit(dep)">Modifier</button>
+                </div>
               </div>
             </div>
           </div>
@@ -116,22 +116,22 @@
             :style="{ '--acc': catColor(dep) }"
           >
             <div class="dep__card-content">
-              <div class="dep__card-left">
-                <div class="dep__card-cat">
-                  <span class="dep__card-cat-icon" v-html="catIcon(dep)"></span>
-                  <span class="dep__card-cat-label">{{ catNom(dep) }}<template v-if="dep.frequence !== 'mensuel'"> · {{ freqLabel(dep.frequence) }}</template></span>
-                </div>
-                <span class="dep__card-nom">{{ dep.nom || '—' }}</span>
-                <div class="dep__card-actions">
-                  <button class="dep__cta dep__cta--del" type="button" @click="confirmDelete(dep)">Supprimer</button>
-                  <div class="dep__cta-right">
-                    <button class="dep__cta" type="button" @click="toggleActif(dep)">{{ dep.actif ? 'Cacher' : 'Afficher' }}</button>
-                    <button class="dep__cta" type="button" @click="openEdit(dep)">Modifier</button>
+              <div class="dep__card-toprow">
+                <div class="dep__card-info">
+                  <div class="dep__card-cat">
+                    <span class="dep__card-cat-icon" v-html="catIcon(dep)"></span>
+                    <span class="dep__card-cat-label">{{ catNom(dep) }}<template v-if="dep.frequence !== 'mensuel'"> · {{ freqLabel(dep.frequence) }}</template></span>
                   </div>
+                  <span class="dep__card-nom">{{ dep.nom || '—' }}</span>
                 </div>
-              </div>
-              <div class="dep__card-right">
                 <span class="dep__card-amount">{{ fmtMonthly(dep) }}</span>
+              </div>
+              <div class="dep__card-actions">
+                <button class="dep__cta dep__cta--del" type="button" @click="confirmDelete(dep)">Supprimer</button>
+                <div class="dep__cta-right">
+                  <button class="dep__cta" type="button" @click="toggleActif(dep)">{{ dep.actif ? 'Cacher' : 'Afficher' }}</button>
+                  <button class="dep__cta" type="button" @click="openEdit(dep)">Modifier</button>
+                </div>
               </div>
             </div>
           </div>
@@ -173,30 +173,30 @@
             :style="{ '--acc': catColor(dep) }"
           >
             <div class="dep__card-content">
-              <div class="dep__card-left">
-                <div class="dep__card-cat">
-                  <span class="dep__card-cat-icon" v-html="catIcon(dep)"></span>
-                  <span class="dep__card-cat-label">{{ catNom(dep) }}<template v-if="dep.frequence !== 'mensuel'"> · {{ freqLabel(dep.frequence) }}</template></span>
-                </div>
-                <span class="dep__card-nom">{{ dep.nom || '—' }}</span>
-                <div v-if="!isSolo" class="dep__card-shares">
-                  <span class="dep__share" :style="{ background: p1.couleur + '22', color: p1.couleur }">
-                    {{ p1.nom }} · {{ fmt(store.toMonthly(dep.montantP1 || 0, dep.frequence)) }}
-                  </span>
-                  <span class="dep__share" :style="{ background: p2.couleur + '22', color: p2.couleur }">
-                    {{ p2.nom }} · {{ fmt(store.toMonthly(dep.montantP2 || 0, dep.frequence)) }}
-                  </span>
-                </div>
-                <div class="dep__card-actions">
-                  <button class="dep__cta dep__cta--del" type="button" @click="confirmDelete(dep)">Supprimer</button>
-                  <div class="dep__cta-right">
-                    <button class="dep__cta" type="button" @click="toggleActif(dep)">{{ dep.actif ? 'Cacher' : 'Afficher' }}</button>
-                    <button class="dep__cta" type="button" @click="openEdit(dep)">Modifier</button>
+              <div class="dep__card-toprow">
+                <div class="dep__card-info">
+                  <div class="dep__card-cat">
+                    <span class="dep__card-cat-icon" v-html="catIcon(dep)"></span>
+                    <span class="dep__card-cat-label">{{ catNom(dep) }}<template v-if="dep.frequence !== 'mensuel'"> · {{ freqLabel(dep.frequence) }}</template></span>
+                  </div>
+                  <span class="dep__card-nom">{{ dep.nom || '—' }}</span>
+                  <div v-if="!isSolo" class="dep__card-shares">
+                    <span class="dep__share" :style="{ background: p1.couleur + '22', color: p1.couleur }">
+                      {{ p1.nom }} · {{ fmt(store.toMonthly(dep.montantP1 || 0, dep.frequence)) }}
+                    </span>
+                    <span class="dep__share" :style="{ background: p2.couleur + '22', color: p2.couleur }">
+                      {{ p2.nom }} · {{ fmt(store.toMonthly(dep.montantP2 || 0, dep.frequence)) }}
+                    </span>
                   </div>
                 </div>
-              </div>
-              <div class="dep__card-right">
                 <span class="dep__card-amount">{{ fmtMonthly(dep) }}</span>
+              </div>
+              <div class="dep__card-actions">
+                <button class="dep__cta dep__cta--del" type="button" @click="confirmDelete(dep)">Supprimer</button>
+                <div class="dep__cta-right">
+                  <button class="dep__cta" type="button" @click="toggleActif(dep)">{{ dep.actif ? 'Cacher' : 'Afficher' }}</button>
+                  <button class="dep__cta" type="button" @click="openEdit(dep)">Modifier</button>
+                </div>
               </div>
             </div>
           </div>
@@ -690,19 +690,15 @@ function suggestSplit() {
 
 .dep__card-content {
   flex: 1; min-width: 0; padding: 10px 12px;
-  display: flex; flex-direction: row; gap: 10px; align-items: stretch;
+  display: flex; flex-direction: column; gap: 6px;
 }
 
-.dep__card-left {
-  flex: 1; min-width: 0;
-  display: flex; flex-direction: column; gap: 5px;
+.dep__card-toprow {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
 }
 
-.dep__card-right {
-  flex-shrink: 0;
-  display: flex; align-items: center;
-  border-left: 1px solid var(--border);
-  margin: -10px 0; padding: 10px 0 10px 12px;
+.dep__card-info {
+  flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px;
 }
 
 .dep__card-cat {
@@ -725,8 +721,8 @@ function suggestSplit() {
 }
 
 .dep__card-amount {
-  font-size: 22px; font-weight: 700; color: var(--foreground);
-  white-space: nowrap; line-height: 1.1;
+  font-size: 15px; font-weight: 700; color: var(--foreground);
+  white-space: nowrap; flex-shrink: 0;
 }
 
 .dep__card-shares { display: flex; gap: 5px; flex-wrap: wrap; }
