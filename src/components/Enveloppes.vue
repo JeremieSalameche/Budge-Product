@@ -330,7 +330,8 @@
           <div class="env__virement">
             <div class="env__virement-left">
               <span class="env__virement-label">A virer sur</span>
-              <img v-if="env.banque && getBankDomain(env.banque)" :src="`https://www.google.com/s2/favicons?domain=${getBankDomain(env.banque)}&sz=32`" class="env__virement-bank-logo" />
+              <span v-if="env.banque === 'cash'" class="env__virement-cash-icon" v-html="CASH_ICON"></span>
+              <img v-else-if="env.banque && getBankDomain(env.banque)" :src="`https://www.google.com/s2/favicons?domain=${getBankDomain(env.banque)}&sz=32`" class="env__virement-bank-logo" />
               <span class="env__virement-bank-name">{{ env.banque ? getBankNom(env.banque) : '—' }}</span>
             </div>
             <span class="env__virement-amount">{{ fmt(getTotal(env.id)) }}</span>
@@ -405,13 +406,14 @@
           <div class="env__edit-field">
             <label class="env__edit-label">Compte bancaire associé</label>
             <div class="env__bank-select-wrap">
+              <span v-if="editBanque === 'cash'" class="env__bank-select-favicon env__bank-select-cash-icon" v-html="CASH_ICON"></span>
               <img
-                v-if="editBanque && editBanque !== 'autre' && getBankDomain(editBanque)"
+                v-else-if="editBanque && editBanque !== 'autre' && getBankDomain(editBanque)"
                 :src="`https://www.google.com/s2/favicons?domain=${getBankDomain(editBanque)}&sz=32`"
                 class="env__bank-select-favicon"
                 alt=""
               />
-              <select :class="['env__bank-select', { 'env__bank-select--with-icon': editBanque && editBanque !== 'autre' && getBankDomain(editBanque) }]" v-model="editBanque">
+              <select :class="['env__bank-select', { 'env__bank-select--with-icon': editBanque && editBanque !== 'autre' && (getBankDomain(editBanque) || editBanque === 'cash') }]" v-model="editBanque">
                 <option :value="null">Aucune banque</option>
                 <option v-for="bank in BANKS" :key="bank.id" :value="bank.id">{{ bank.nom }}</option>
                 <option value="autre">Autre...</option>
@@ -497,7 +499,10 @@ const BANKS = [
   { id: 'lcl',          nom: 'LCL',               domain: 'lcl.fr' },
   { id: 'postale',      nom: 'Banque Postale',    domain: 'labanquepostale.fr' },
   { id: 'cic',          nom: 'CIC',               domain: 'cic.fr' },
+  { id: 'cash',         nom: 'Retrait en espèces', domain: null },
 ]
+
+const CASH_ICON = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M6 12h.01M18 12h.01"/></svg>'
 
 function getBankById(id) { return BANKS.find(b => b.id === id) ?? null }
 function getBankNom(id)  {
@@ -1091,6 +1096,8 @@ function doDeleteEnv() {
 .env__virement-left { display: flex; align-items: center; gap: 5px; min-width: 0; }
 .env__virement-label { font-size: 11px; font-weight: 500; color: var(--muted-foreground); white-space: nowrap; }
 .env__virement-bank-logo { width: 13px; height: 13px; border-radius: 2px; object-fit: contain; flex-shrink: 0; }
+.env__virement-cash-icon { display: flex; align-items: center; flex-shrink: 0; color: var(--muted-foreground); }
+.env__bank-select-cash-icon { display: flex; align-items: center; color: var(--muted-foreground); }
 .env__virement-bank-name { font-size: 11px; font-weight: 500; color: var(--muted-foreground); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .env__virement-amount { font-size: 16px; font-weight: 700; color: var(--foreground); letter-spacing: -0.5px; flex-shrink: 0; }
 
