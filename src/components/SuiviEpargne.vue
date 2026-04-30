@@ -278,15 +278,19 @@ const chartOption = computed(() => {
     },
     yAxis: {
       type: 'value',
-      min: 0,
+      min: value => Math.min(0, Math.floor(value.min * 1.1)),
       axisLine: { show: false },
       axisTick: { show: false },
       axisLabel: {
         color: '#71717A',
         fontSize: 11,
-        formatter: v => v >= 1000
-          ? (v / 1000).toFixed(v % 1000 === 0 ? 0 : 1) + 'k€'
-          : v + ' €'
+        formatter: v => {
+          const abs = Math.abs(v)
+          const str = abs >= 1000
+            ? (abs / 1000).toFixed(abs % 1000 === 0 ? 0 : 1) + 'k€'
+            : abs + ' €'
+          return v < 0 ? '-' + str : str
+        }
       },
       splitLine: { lineStyle: { color: '#E4E4E7', width: 0.5 } },
     },
