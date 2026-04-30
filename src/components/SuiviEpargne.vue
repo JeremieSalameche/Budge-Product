@@ -22,9 +22,6 @@
       <div class="se__chart-wrap">
         <VChart class="epargne-chart" :option="chartOption" autoresize />
       </div>
-      <p v-if="chartData.labels.length < 4" class="chart-hint">
-        Ajoutez encore {{ 4 - chartData.labels.length }} mois de données pour voir les courbes s'arrondir.
-      </p>
     </template>
     <div v-else class="se__empty">
       <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
@@ -218,31 +215,20 @@ const totalP1 = computed(() => store.totalEpargneParPersonne.p1)
 const totalP2 = computed(() => store.totalEpargneParPersonne.p2)
 const totalCouple = computed(() => totalP1.value + totalP2.value)
 
-// ── Données cumulées par mois (ordre chronologique garanti) ──
+// ── Données cumulées par mouvement individuel ──────────────
 const chartData = computed(() => {
   if (!store.epargnes?.length) return { labels: [], dataP1: [], dataP2: [] }
 
-  // 1. Tri par date croissante
   const sorted = [...store.epargnes].sort((a, b) => new Date(a.date) - new Date(b.date))
 
-  // 2. Agrégation dans une Map ordonnée (clé = label affiché)
-  const moisMap = new Map()
-  sorted.forEach(e => {
-    const d = new Date(e.date)
-    const key = d.toLocaleDateString('fr-FR', { month: 'short', year: '2-digit' })
-    if (!moisMap.has(key)) moisMap.set(key, { deltaP1: 0, deltaP2: 0 })
-    const entry = moisMap.get(key)
-    entry.deltaP1 += (e.montantP1 || 0)
-    entry.deltaP2 += (e.montantP2 || 0)
-  })
-
-  // 3. Cumul progressif — dernier point doit égaler store.totalEpargneParPersonne
   const labels = [], dataP1 = [], dataP2 = []
   let cumulP1 = 0, cumulP2 = 0
-  moisMap.forEach((val, key) => {
-    cumulP1 += val.deltaP1
-    cumulP2 += val.deltaP2
-    labels.push(key)
+  sorted.forEach(e => {
+    const d = new Date(e.date + 'T12:00:00')
+    const label = d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })
+    cumulP1 += (e.montantP1 || 0)
+    cumulP2 += (e.montantP2 || 0)
+    labels.push(label)
     dataP1.push(Math.round(cumulP1))
     dataP2.push(Math.round(cumulP2))
   })
@@ -380,8 +366,9 @@ function onModifier(mvt) {
 }
 
 function onSupprimer(id) {
+  store.supprimerEpargne(id)
   mouvementsEdition.value = mouvementsEdition.value.filter(m => m.id !== id)
-  hasChanges.value = true
+  scheduleAutoSave()
 }
 
 function sauvegarder() {
