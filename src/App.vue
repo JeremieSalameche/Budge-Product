@@ -628,7 +628,7 @@ const pctCharges = computed(() => {
 
 /* ── Notification ─────────────────────────────────────────── */
 .notif-zone {
-  position: fixed; bottom: 24px; right: 24px;
+  position: fixed; top: 24px; right: 24px;
   z-index: 2000;
 }
 
@@ -888,7 +888,7 @@ const pctCharges = computed(() => {
 
   /* Notification */
   .notif-zone {
-    bottom: calc(72px + env(safe-area-inset-bottom));
+    top: 16px;
     right: 16px;
   }
 

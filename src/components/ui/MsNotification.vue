@@ -48,6 +48,6 @@ watch(() => props.visible, (val) => {
 .ms-notif__close:hover { opacity: 1; }
 
 .notif-enter-active, .notif-leave-active { transition: all 0.3s ease; }
-.notif-enter-from { opacity: 0; transform: translateY(-12px); }
-.notif-leave-to   { opacity: 0; transform: translateX(20px); }
+.notif-enter-from { opacity: 0; transform: translateY(-8px) scale(0.97); }
+.notif-leave-to   { opacity: 0; transform: translateX(16px); }
 </style>

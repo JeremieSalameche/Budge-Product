@@ -170,21 +170,13 @@
               />
             </div>
             <div class="se-panel__footer">
-              <Transition name="se-success">
-                <div v-if="saveSuccess" class="se-panel__success">
-                  <svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M1.5 6.5L4.5 9.5L10.5 2.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                  Modifications enregistrées
-                </div>
-              </Transition>
-              <div class="se-panel__footer-actions">
-                <button class="se-panel__btn-secondary" @click="fermerPanel" type="button">Fermer</button>
-                <button
-                  v-if="hasChanges"
-                  class="se-panel__btn-primary"
-                  @click="sauvegarder"
-                  type="button"
-                >Enregistrer</button>
-              </div>
+              <button class="se-panel__btn-secondary" @click="fermerPanel" type="button">Fermer</button>
+              <button
+                v-if="hasChanges"
+                class="se-panel__btn-primary"
+                @click="sauvegarder"
+                type="button"
+              >Enregistrer</button>
             </div>
           </div>
         </div>
@@ -356,7 +348,6 @@ const chartOption = computed(() => {
 const panelGererOuvert = ref(false)
 const mouvementsEdition = ref([])
 const hasChanges = ref(false)
-const saveSuccess = ref(false)
 
 function ouvrirPanel() {
   mouvementsEdition.value = store.epargnes.map(e => ({ ...e }))
@@ -378,8 +369,7 @@ function onSupprimer(id) {
   store.supprimerEpargne(id)
   mouvementsEdition.value = mouvementsEdition.value.filter(m => m.id !== id)
   scheduleAutoSave()
-  saveSuccess.value = true
-  setTimeout(() => { saveSuccess.value = false }, 2500)
+  store.showNotification('Mouvement supprimé')
 }
 
 function sauvegarder() {
@@ -390,8 +380,7 @@ function sauvegarder() {
   mouvementsEdition.value.forEach(mvt => store.modifierEpargne(mvt))
   scheduleAutoSave()
   hasChanges.value = false
-  saveSuccess.value = true
-  setTimeout(() => { saveSuccess.value = false }, 2500)
+  store.showNotification('Modifications enregistrées')
 }
 
 // ── Modale Mouvement ──────────────────────────────────────
@@ -635,19 +624,10 @@ function enregistrerMouvement() {
 .se-panel__body { flex: 1; overflow-y: auto; }
 
 .se-panel__footer {
-  display: flex; align-items: center; justify-content: space-between;
+  display: flex; gap: 10px; justify-content: flex-end; align-items: center;
   padding: 16px 24px; border-top: 1px solid var(--border);
-  flex-shrink: 0; background: var(--card); gap: 12px;
+  flex-shrink: 0; background: var(--card);
 }
-.se-panel__footer-actions { display: flex; gap: 10px; align-items: center; margin-left: auto; }
-.se-panel__success {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-size: 12px; font-weight: 500; color: var(--color-success-text);
-  background: var(--color-success-subtle); border: 1px solid #bbf7d0;
-  padding: 5px 12px; border-radius: 99px;
-}
-.se-success-enter-active, .se-success-leave-active { transition: opacity 0.3s, transform 0.3s; }
-.se-success-enter-from, .se-success-leave-to { opacity: 0; transform: translateY(4px); }
 .se-panel__btn-secondary {
   height: 36px; padding: 0 18px; border-radius: var(--radius-md);
   font-size: 13px; font-weight: 500; font-family: inherit; cursor: pointer;
