@@ -226,11 +226,14 @@ const chartData = computed(() => {
   sorted.forEach(e => {
     const d = new Date(e.date + 'T12:00:00')
     const label = d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })
+    const hasP1 = (e.montantP1 || 0) !== 0
+    const hasP2 = (e.montantP2 || 0) !== 0
     cumulP1 += (e.montantP1 || 0)
     cumulP2 += (e.montantP2 || 0)
     labels.push(label)
-    dataP1.push(Math.round(cumulP1))
-    dataP2.push(Math.round(cumulP2))
+    // null = pas de marqueur pour cette personne à ce point
+    dataP1.push(hasP1 ? Math.round(cumulP1) : null)
+    dataP2.push(hasP2 ? Math.round(cumulP2) : null)
     notes.push(e.note || '')
   })
 
@@ -289,10 +292,18 @@ const chartOption = computed(() => {
       formatter: params => {
         const idx = params[0].dataIndex
         const note = notes[idx]
+        // Ne montrer que la personne qui a un mouvement à ce point
+        const active = params.filter(p => p.data !== null && p.data !== undefined)
+        if (!active.length) return ''
         let html = `<div style="font-weight:500;font-size:12px;color:#09090B;margin-bottom:6px">${params[0].axisValue}</div>`
-        params.forEach(p => {
+        active.forEach(p => {
           const seriesData = p.seriesIndex === 0 ? dataP1 : dataP2
-          const delta = idx > 0 ? p.data - seriesData[idx - 1] : p.data
+          // Chercher le dernier point non-null avant idx pour calculer le delta
+          let prev = 0
+          for (let i = idx - 1; i >= 0; i--) {
+            if (seriesData[i] !== null) { prev = seriesData[i]; break }
+          }
+          const delta = p.data - prev
           const deltaStr = delta >= 0 ? `+${fmtVal(delta)}` : fmtVal(delta)
           const deltaColor = delta >= 0 ? '#22C55E' : '#EF4444'
           html += `<div style="display:flex;align-items:center;gap:8px;margin:3px 0">
@@ -314,6 +325,7 @@ const chartOption = computed(() => {
         type: 'line',
         data: dataP1,
         smooth: isSmooth,
+        connectNulls: true,
         lineStyle: { color: '#7C6FCD', width: 2.5 },
         itemStyle: { color: '#7C6FCD', borderColor: '#fff', borderWidth: 2 },
         symbol: 'circle', symbolSize: 6,
@@ -332,6 +344,7 @@ const chartOption = computed(() => {
         type: 'line',
         data: dataP2,
         smooth: isSmooth,
+        connectNulls: true,
         lineStyle: { color: '#4A9EDB', width: 2.5 },
         itemStyle: { color: '#4A9EDB', borderColor: '#fff', borderWidth: 2 },
         symbol: 'circle', symbolSize: 6,
