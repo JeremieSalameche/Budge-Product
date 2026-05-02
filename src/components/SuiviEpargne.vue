@@ -378,6 +378,8 @@ function onSupprimer(id) {
   store.supprimerEpargne(id)
   mouvementsEdition.value = mouvementsEdition.value.filter(m => m.id !== id)
   scheduleAutoSave()
+  saveSuccess.value = true
+  setTimeout(() => { saveSuccess.value = false }, 2500)
 }
 
 function sauvegarder() {
