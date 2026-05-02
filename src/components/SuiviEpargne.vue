@@ -221,7 +221,7 @@ const chartData = computed(() => {
 
   const sorted = [...store.epargnes].sort((a, b) => new Date(a.date) - new Date(b.date))
 
-  const labels = [], dataP1 = [], dataP2 = []
+  const labels = [], dataP1 = [], dataP2 = [], notes = []
   let cumulP1 = 0, cumulP2 = 0
   sorted.forEach(e => {
     const d = new Date(e.date + 'T12:00:00')
@@ -231,14 +231,15 @@ const chartData = computed(() => {
     labels.push(label)
     dataP1.push(Math.round(cumulP1))
     dataP2.push(Math.round(cumulP2))
+    notes.push(e.note || '')
   })
 
-  return { labels, dataP1, dataP2 }
+  return { labels, dataP1, dataP2, notes }
 })
 
 // ── Graphique cumulatif (ECharts) ───────────────────────
 const chartOption = computed(() => {
-  const { labels, dataP1, dataP2 } = chartData.value
+  const { labels, dataP1, dataP2, notes } = chartData.value
   const p1 = store.personnes[0]
   const p2 = store.personnes[1]
   const isSmooth = dataP1.length >= 4 ? 0.6 : false
@@ -286,9 +287,10 @@ const chartOption = computed(() => {
       borderColor: '#E4E4E7',
       borderWidth: 1,
       formatter: params => {
+        const idx = params[0].dataIndex
+        const note = notes[idx]
         let html = `<div style="font-weight:500;font-size:12px;color:#09090B;margin-bottom:6px">${params[0].axisValue}</div>`
         params.forEach(p => {
-          const idx = p.dataIndex
           const seriesData = p.seriesIndex === 0 ? dataP1 : dataP2
           const delta = idx > 0 ? p.data - seriesData[idx - 1] : p.data
           const deltaStr = delta >= 0 ? `+${fmtVal(delta)}` : fmtVal(delta)
@@ -300,6 +302,9 @@ const chartOption = computed(() => {
             <span style="font-size:11px;color:${deltaColor}">${deltaStr}</span>
           </div>`
         })
+        if (note) {
+          html += `<div style="margin-top:7px;padding-top:7px;border-top:1px solid #E4E4E7;font-size:11px;color:#71717A;font-style:italic;max-width:200px;line-height:1.4">${note}</div>`
+        }
         return `<div style="padding:4px 2px">${html}</div>`
       }
     },
