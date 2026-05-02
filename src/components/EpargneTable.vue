@@ -42,8 +42,8 @@
             <div class="et__amount-wrap">
               <input
                 type="number"
-                class="et__amount-input"
-                :value="row.montant || 0"
+                :class="['et__amount-input', { 'et__amount-input--retrait': row.montant < 0 }]"
+                :value="Math.abs(row.montant || 0)"
                 step="1"
                 min="0"
                 @blur="onChangeMontant(row, Number($event.target.value))"
@@ -166,10 +166,11 @@ function onChangeDate(row, date) {
 
 
 function onChangeMontant(row, montant) {
+  const signed = row.montant < 0 ? -Math.abs(montant) : Math.abs(montant)
   const updated = {
     ...row.mvt,
-    montantP1: row.pi === 0 ? montant : row.mvt.montantP1,
-    montantP2: row.pi === 1 ? montant : row.mvt.montantP2,
+    montantP1: row.pi === 0 ? signed : row.mvt.montantP1,
+    montantP2: row.pi === 1 ? signed : row.mvt.montantP2,
   }
   emit('modifier', updated)
 }
@@ -262,6 +263,7 @@ function fmtDate(dateStr) {
   color: #16A34A; font-family: inherit;
   transition: border-color 120ms, background 120ms;
 }
+.et__amount-input--retrait { color: #DC2626; }
 .et__amount-input:hover { border-color: var(--border); background: var(--background); }
 .et__amount-input:focus { border-color: var(--ring); background: var(--background); outline: none; }
 .et__amount-suffix { font-size: 12px; color: var(--muted-foreground); }
