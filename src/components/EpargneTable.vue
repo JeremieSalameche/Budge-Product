@@ -40,6 +40,7 @@
           <!-- Montant -->
           <td class="et__td et__td--amount">
             <div class="et__amount-wrap">
+              <span :class="['et__amount-sign', row.montant < 0 ? 'et__amount-sign--retrait' : 'et__amount-sign--epargne']">{{ row.montant < 0 ? '−' : '+' }}</span>
               <input
                 type="number"
                 :class="['et__amount-input', { 'et__amount-input--retrait': row.montant < 0 }]"
@@ -255,7 +256,10 @@ function fmtDate(dateStr) {
 
 /* Montant */
 .et__td--amount { text-align: right; }
-.et__amount-wrap { display: inline-flex; align-items: center; justify-content: flex-end; gap: 4px; }
+.et__amount-wrap { display: inline-flex; align-items: center; justify-content: flex-end; gap: 2px; }
+.et__amount-sign { font-size: 13px; font-weight: 700; flex-shrink: 0; }
+.et__amount-sign--epargne { color: #16A34A; }
+.et__amount-sign--retrait { color: #DC2626; }
 .et__amount-input {
   width: 80px; text-align: right;
   background: transparent; border: 1px solid transparent; border-radius: 6px;
